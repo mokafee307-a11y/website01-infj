@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import HeroButtonParticles from "./HeroButtonParticles";
 
 type Mode = {
@@ -199,6 +199,9 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [customIssue, setCustomIssue] = useState("");
   const [customDiagnosis, setCustomDiagnosis] = useState<Mode | null>(null);
+  const diagnosisRef = useRef<HTMLDivElement | null>(null);
+  const customDiagnosisRef = useRef<HTMLDivElement | null>(null);
+  const scrollTargetRef = useRef<"preset" | "custom" | null>(null);
   const current = useMemo(() => modes.find((mode) => mode.id === selected), [selected]);
 
   const jumpTo = (id: string) => {
@@ -219,7 +222,14 @@ export default function Home() {
       : actionWords.test(text) ? modes[1]
       : modes[0];
     setSelected(null);
+    scrollTargetRef.current = "custom";
     setCustomDiagnosis(matched);
+  };
+
+  const selectMode = (id: string) => {
+    scrollTargetRef.current = "preset";
+    setSelected(id);
+    setCustomDiagnosis(null);
   };
 
   useEffect(() => {
@@ -234,6 +244,17 @@ export default function Home() {
     window.addEventListener("scroll", updateActiveSection, { passive: true });
     return () => window.removeEventListener("scroll", updateActiveSection);
   }, []);
+
+  useEffect(() => {
+    const target = scrollTargetRef.current;
+    if (!target) return;
+    const element = target === "custom" ? customDiagnosisRef.current : diagnosisRef.current;
+    if (!element) return;
+    scrollTargetRef.current = null;
+    window.requestAnimationFrame(() => {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [current, customDiagnosis]);
 
   return (
     <main>
@@ -277,7 +298,7 @@ export default function Home() {
         </div>
         <div className="mode-grid">
           {modes.map((mode) => (
-            <button key={mode.id} className={`mode-card ${selected === mode.id ? "selected" : ""}`} onClick={() => { setSelected(mode.id); setCustomDiagnosis(null); }} aria-pressed={selected === mode.id}>
+            <button key={mode.id} className={`mode-card ${selected === mode.id ? "selected" : ""}`} onClick={() => selectMode(mode.id)} aria-pressed={selected === mode.id}>
               <span className="mode-icon">{mode.icon}</span>
               <span className="mode-content"><b>{mode.title}</b><small>{mode.short}</small></span>
               <span className="mode-arrow">↗</span>
@@ -294,7 +315,7 @@ export default function Home() {
         </div>
 
         {current && (
-          <div className="diagnosis" role="status">
+          <div className="diagnosis" ref={diagnosisRef} role="status" tabIndex={-1}>
             <div className="diag-label"><span /> CURRENT LOOP · {current.function}</div>
             <div className="diag-grid">
               <div><small>你可能正在经历</small><p>{current.loop}</p></div>
@@ -303,7 +324,7 @@ export default function Home() {
           </div>
         )}
         {customDiagnosis && (
-          <div className="diagnosis custom-result" role="status">
+          <div className="diagnosis custom-result" ref={customDiagnosisRef} role="status" tabIndex={-1}>
             <div className="diag-label"><span /> CUSTOM LOOP · {customDiagnosis.function}</div>
             <div className="custom-question">“{customIssue.trim()}”</div>
             <div className="diag-grid">
