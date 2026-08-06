@@ -21,8 +21,17 @@ const modes: Mode[] = [
   { id: "perfect", icon: "△", title: "我陷入完美主义了", short: "你正在用首稿质量换取迭代速度。", loop: "高标准 → 不愿暴露半成品 → 推迟 → 标准继续升高", action: "今天只交付 70 分版本。把剩下 30 分留给真实反馈。", function: "Ni/Ti → Se" },
 ];
 
+const functions = [
+  { key: "Ni", name: "内倾直觉", role: "主导 · Pattern", level: 92, healthy: "洞察模式，形成长期判断", overload: "过度预演，把推测当成事实", switchTo: "Se", color: "#245b41" },
+  { key: "Fe", name: "外倾情感", role: "辅助 · Relation", level: 78, healthy: "理解他人，建立关系感知", overload: "过度共情，为他人情绪负责", switchTo: "Ti", color: "#548468" },
+  { key: "Ti", name: "内倾思维", role: "第三 · Logic", level: 67, healthy: "独立判断，建立内部逻辑", overload: "无限分析，困在自洽闭环", switchTo: "Se", color: "#7da08a" },
+  { key: "Se", name: "外倾感觉", role: "劣势 · Reality", level: 38, healthy: "接触现实，用反馈校准判断", overload: "忽略身体与当下，现实断联", switchTo: "ACT", color: "#aac4b2" },
+];
+
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
+  const [question, setQuestion] = useState("");
+  const [experiment, setExperiment] = useState(false);
   const current = useMemo(() => modes.find((mode) => mode.id === selected), [selected]);
 
   return (
@@ -76,11 +85,77 @@ export default function Home() {
         )}
       </section>
 
+      <section className="functions-section" id="functions">
+        <div className="section-head functions-head">
+          <div><span className="section-no">02</span><h2>我的认知运行地图</h2></div>
+          <p>不排名能力。观察每个功能如何帮你，以及如何困住你。</p>
+        </div>
+        <div className="function-layout">
+          <div className="function-orbit" aria-label="INFJ 核心认知功能示意">
+            <div className="orbit-ring ring-a" /><div className="orbit-ring ring-b" />
+            <div className="orbit-core"><span>INFJ</span><b>FUNCTION<br/>STACK</b><small>observe the system</small></div>
+            {functions.map((fn, i) => <div key={fn.key} className={`orbit-node node-${i}`}><b>{fn.key}</b><span>{fn.name}</span></div>)}
+          </div>
+          <div className="function-list">
+            {functions.map((fn) => (
+              <article className="function-row" key={fn.key}>
+                <div className="fn-key" style={{borderColor:fn.color}}><b>{fn.key}</b><small>{fn.role}</small></div>
+                <div className="fn-body">
+                  <div className="fn-meter"><span style={{width:`${fn.level}%`, background:fn.color}} /></div>
+                  <div className="fn-states"><p><small>NORMAL</small>{fn.healthy}</p><p><small>OVERLOAD</small>{fn.overload}</p></div>
+                </div>
+                <div className="fn-switch"><small>SWITCH</small><b>→ {fn.switchTo}</b></div>
+              </article>
+            ))}
+            <p className="map-note">* 数值不是心理测量结果，只用于表达你当前的功能使用倾向。真正重要的是「什么时候切换」。</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="loops-section">
+        <div className="section-head">
+          <div><span className="section-no">03</span><h2>三个需要警惕的回路</h2></div>
+          <p>当你能给循环命名，就不必再完全相信循环里的每个念头。</p>
+        </div>
+        <div className="loop-cards">
+          <article><span>LOOP A · THINKING</span><h3>预演替代行动</h3><p>Ni 预演 <b>→</b> 完美主义 <b>→</b> 等待确定 <b>→</b> 没有反馈 <b>↺</b></p><small>EXIT / 做一个 70 分版本，接触一次真实反馈</small></article>
+          <article><span>LOOP B · RELATION</span><h3>理解变成自证</h3><p>Fe 感知 <b>→</b> 担心误解 <b>→</b> 反复解释 <b>→</b> 自我消耗 <b>↺</b></p><small>EXIT / 允许误解。让结果承担解释工作</small></article>
+          <article><span>LOOP C · EXPRESSION</span><h3>表达变成表演</h3><p>真实表达 <b>→</b> 数据评分 <b>→</b> 刷新反馈 <b>→</b> 为流量改观点 <b>↺</b></p><small>EXIT / 流量优化表达，不生产观点</small></article>
+        </div>
+      </section>
+
+      <section className="lab-section" id="lab">
+        <div className="lab-grid">
+          <div className="lab-intro">
+            <span className="section-no">04 / REALITY LAB</span>
+            <h2>别再多想一轮。<br/><em>做一个现实实验。</em></h2>
+            <p>把一个抽象困惑变成：假设、最小行动、现实证据、更新判断。现实不是思考的敌人，是思考的数据源。</p>
+            <div className="lab-principle"><b>30%</b><span>允许不确定<br/><small>START BEFORE CERTAINTY</small></span></div>
+          </div>
+          <div className="lab-console">
+            <div className="console-top"><span>NEW EXPERIMENT</span><i>● READY</i></div>
+            <label htmlFor="question">现在有什么问题，在你脑子里循环很久了？</label>
+            <textarea id="question" value={question} onChange={(e)=>{setQuestion(e.target.value);setExperiment(false)}} placeholder="例如：我是不是应该转去 AI 行业？" />
+            {!experiment ? (
+              <button className="generate-button" disabled={!question.trim()} onClick={()=>setExperiment(true)}>把它变成一个现实实验 <span>↗</span></button>
+            ) : (
+              <div className="experiment-result">
+                <div><small>01 / HYPOTHESIS</small><p>暂时不要证明“{question}”对不对。先假设其中一个方向值得验证。</p></div>
+                <div><small>02 / MINIMUM ACTION</small><p>在 48 小时内，做一个可以接触真实的人、岗位、作品或结果的最小动作。</p></div>
+                <div><small>03 / EVIDENCE</small><p>只记录你实际看到的反馈。把“我觉得”与“现实发生”分开写。</p></div>
+                <div className="result-last"><small>04 / UPDATE</small><p>根据新证据更新判断，然后进入下一轮。只复盘一次。</p></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section className="manifesto">
         <span>CORE PRINCIPLE 001</span>
         <blockquote>“实践不是思考的对立面。<br />它是让思考获得现实坐标的方式。”</blockquote>
         <p>允许 30% 的不确定就开始 · 迭代速度 &gt; 首稿质量 · 行动 → 一次复盘 → 下一次行动</p>
       </section>
+      <footer><span>COGNITIVE OS · V0.1</span><p>不是定义自己。是持续更新自己。</p><a href="#top">BACK TO TOP ↑</a></footer>
     </main>
   );
 }
