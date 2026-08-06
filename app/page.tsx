@@ -341,9 +341,18 @@ export default function Home() {
           <p>当你能给循环命名，就不必再完全相信循环里的每个念头。</p>
         </div>
         <div className="loop-cards">
-          <article><span>LOOP A · THINKING</span><h3>预演替代行动</h3><p>Ni 预演 <b>→</b> 完美主义 <b>→</b> 等待确定 <b>→</b> 没有反馈 <b>↺</b></p><small>EXIT / 做一个 70 分版本，接触一次真实反馈</small></article>
-          <article><span>LOOP B · RELATION</span><h3>理解变成自证</h3><p>Fe 感知 <b>→</b> 担心误解 <b>→</b> 反复解释 <b>→</b> 自我消耗 <b>↺</b></p><small>EXIT / 允许误解。让结果承担解释工作</small></article>
-          <article><span>LOOP C · EXPRESSION</span><h3>表达变成表演</h3><p>真实表达 <b>→</b> 数据评分 <b>→</b> 刷新反馈 <b>→</b> 为流量改观点 <b>↺</b></p><small>EXIT / 流量优化表达，不生产观点</small></article>
+          <article>
+            <div className="loop-warning"><span className="loop-icon">!</span><div><small>WARNING · 不要停在这里</small><h3>预演替代行动</h3><p>Ni 预演 <b>→</b> 完美主义 <b>→</b> 等待确定 <b>→</b> 没有反馈 <b>↺</b></p></div></div>
+            <div className="loop-exit"><span className="loop-icon">✓</span><div><small>SWITCH TO SE · 正确切换</small><p>做一个 70 分版本，接触一次真实反馈。</p></div></div>
+          </article>
+          <article>
+            <div className="loop-warning"><span className="loop-icon">!</span><div><small>WARNING · 不要停在这里</small><h3>理解变成自证</h3><p>Fe 感知 <b>→</b> 担心误解 <b>→</b> 反复解释 <b>→</b> 自我消耗 <b>↺</b></p></div></div>
+            <div className="loop-exit"><span className="loop-icon">✓</span><div><small>SWITCH TO TI · 正确切换</small><p>允许误解。让结果承担解释工作。</p></div></div>
+          </article>
+          <article>
+            <div className="loop-warning"><span className="loop-icon">!</span><div><small>WARNING · 不要停在这里</small><h3>表达变成表演</h3><p>真实表达 <b>→</b> 数据评分 <b>→</b> 刷新反馈 <b>→</b> 为流量改观点 <b>↺</b></p></div></div>
+            <div className="loop-exit"><span className="loop-icon">✓</span><div><small>SWITCH TO OWNERSHIP · 正确切换</small><p>流量只优化表达，不生产观点。</p></div></div>
+          </article>
         </div>
       </section>
 
