@@ -12,6 +12,19 @@ type Mode = {
   function: string;
 };
 
+type ExperimentPlan = {
+  id: string;
+  title: string;
+  route: string;
+  reading: string;
+  trap: string;
+  hypothesis: string;
+  action: string;
+  evidence: string;
+  update: string;
+  keywords: RegExp;
+};
+
 const modes: Mode[] = [
   { id: "overthink", icon: "◎", title: "我又开始想太多了", short: "脑内预演很多，但现实信息很少。", loop: "Ni 过度模拟 → 等待确定 → 缺少反馈 → 继续模拟", action: "把你最担心的判断写成一个可验证的假设，今天只找一条现实证据。", function: "Ni → Se" },
   { id: "decision", icon: "↗", title: "我迟迟无法做决定", short: "不是信息不足，是想一次选到最优解。", loop: "寻找最优解 → 补充信息 → 新变量出现 → 再次比较", action: "接受 30% 的不确定。选一个可逆动作，先走 48 小时。", function: "Ni → Se" },
@@ -38,6 +51,100 @@ const radarDimensions = [
   { key: "Te", name: "效率与执行", score: 42 },
   { key: "Si", name: "经验与稳定", score: 50 },
 ];
+
+const experimentPlans: ExperimentPlan[] = [
+  {
+    id: "career",
+    title: "方向焦虑：别在脑内选人生，去现实里采样",
+    route: "Ni 主导在寻找长期趋势；Ti 想证明路线正确；Se 信息不足，所以越想越像悬崖。",
+    reading: "这个问题通常不是“你不够清楚”，而是你想在行动前获得过高确定性。INFJ 容易把一个职业选择想成命运分叉，但现实更像连续实验：先获得样本，再调整判断。",
+    trap: "把“未来会不会后悔”误当成今天必须解决的问题。",
+    hypothesis: "把问题改写成一句可验证假设：如果这个方向适合我，我应该能在一次真实接触后，看见至少一个明确的能力迁移点或兴奋点。",
+    action: "48 小时内做一次现实采样：找 1 个岗位 JD / 1 个从业者访谈 / 1 个小作品原型。只选一个，不扩散研究。",
+    evidence: "记录三列：我已有能力能迁移什么、我缺口最大是什么、我接触后身体是更有能量还是更消耗。",
+    update: "如果出现 2 个以上正向证据，进入下一轮 7 天实验；如果只有想象中的吸引力，先降低投入，不要立刻押身家。",
+    keywords: /工作|职业|事业|求职|转行|行业|岗位|offer|公司|领导|AI|前沿|离职|gap|作品集|面试/,
+  },
+  {
+    id: "relationship",
+    title: "关系内耗：先切断“替别人感受负责”的自动程序",
+    route: "Fe 正在高速扫描对方反应；Ni 开始补完对方潜台词；Ti 又试图为整段关系找一个解释。",
+    reading: "INFJ 的关系困扰常常不是没有判断，而是共情太快，把别人的情绪、评价、失望提前放进自己身体里。此时最需要的不是更多理解，而是边界校准。",
+    trap: "把“我理解他为什么这样”误认为“我需要配合他这样”。",
+    hypothesis: "如果这段关系值得继续，它应该能承受一次清晰、温和、不自证的表达。",
+    action: "写一句边界句并真的发出/说出：我理解你的感受，但这件事我目前只能做到 X，做不到 Y。",
+    evidence: "观察对方是否回应事实、是否尊重边界、是否把你的拒绝变成你的内疚。",
+    update: "如果对方能讨论事实，关系可继续优化；如果对方只放大你的愧疚，下一轮实验不是解释，而是减少投入。",
+    keywords: /关系|朋友|同事|伴侣|家人|别人|对方|拒绝|讨好|理解|误解|不爽|边界|人际|社交/,
+  },
+  {
+    id: "expression",
+    title: "表达焦虑：别让外部评分系统接管你的观点",
+    route: "Ni 想表达洞察；Fe 捕捉反馈；Se 被点赞、浏览、评论拉走；最后观点开始向平台奖励机制弯曲。",
+    reading: "这个问题的核心不是“能不能要流量”，而是观点的主权在哪里。INFJ 一旦把表达放进可计分场域，很容易从“我想说什么”滑向“什么会被喜欢”。",
+    trap: "用数据证明自我价值，最后让数据反过来生产观点。",
+    hypothesis: "如果这是你的真实表达，即使它不被马上奖励，你仍然愿意为它负责，并能说出它来自哪段经验。",
+    action: "下一条内容先写 3 句未经优化的原始判断，再允许 AI 只优化结构和语言，不新增观点。",
+    evidence: "发布后只看两类反馈：有没有人被具体经验击中；有没有人提出能让观点更准确的问题。不要把播放量当作唯一证据。",
+    update: "如果观点更真实但数据一般，保留方向；如果数据好但你不认同，标记为平台诱导，不继续加仓。",
+    keywords: /表达|视频|小红书|播客|点赞|浏览|流量|数据|评论|粉丝|内容|自媒体|脚本|观点|AI写/,
+  },
+  {
+    id: "decision",
+    title: "选择困难：别追求最优解，设计一个可逆试错",
+    route: "Ni 看见多条后果线；Ti 不断比较变量；Se 没有进入现场，所以每个选项都像未完成推演。",
+    reading: "INFJ 做决定时，常想一次选到“意义正确、长期正确、别人也能理解”的解。但多数现实决定不是终局审判，而是阶段性下注。",
+    trap: "把可逆选择当成不可逆命运。",
+    hypothesis: "如果 A 更适合我，做一个小版本 A 后，我会获得更多现实能量，而不是只获得脑内安慰。",
+    action: "给 A 和 B 各设一个 30 分钟现实动作：不是继续查资料，而是发消息、投递、试做、报价、预约、打开文件。",
+    evidence: "比较两个动作之后的真实反馈：阻力来自事实限制，还是来自害怕暴露、害怕失败、害怕被评价。",
+    update: "选择证据更清晰的一边推进 72 小时；72 小时后再复盘，不允许中途反复重开比较表。",
+    keywords: /选择|决定|要不要|是否|应该|哪个|纠结|犹豫|怎么办|路线|方案|比较/,
+  },
+  {
+    id: "stuck",
+    title: "行动冻结：先让 Se 接管 20 分钟",
+    route: "Ni 已经想出很多版本；Ti 还在精修逻辑；Se 没被调用，所以身体没有进入开始状态。",
+    reading: "这类卡住不是因为你懒，而是大脑把“开始”包装成了“必须准备到足够好”。INFJ 需要用现实动作打断预演，而不是再想一轮动机。",
+    trap: "用准备感替代行动感。",
+    hypothesis: "如果这件事真的重要，20 分钟的低质量开始也会产生下一步线索。",
+    action: "设置 20 分钟，只做最粗糙版本：打开文件、写 100 字、画第一屏、发一条询问、列 5 个标题。结束就停。",
+    evidence: "只记录行动后出现了什么：更清楚、发现缺口、得到反馈、还是发现它其实不重要。",
+    update: "如果行动后更清楚，明天继续 20 分钟；如果更抗拒，问题可能不是执行，而是目标不属于你。",
+    keywords: /拖延|行动|开始|做不动|卡住|没动力|执行|推进|动不了|懒|准备|计划/,
+  },
+  {
+    id: "selfworth",
+    title: "自我怀疑：把羞耻感和事实证据拆开",
+    route: "Fe 在想别人怎么看；Ti 在审判自己是否足够好；Ni 把一次挫败推演成长期失败。",
+    reading: "INFJ 的自我怀疑经常带着很强的道德审判：我是不是不够好、是不是不配、是不是会被看穿。这里需要的不是鸡血，而是事实层面的去融合。",
+    trap: "把情绪强度当作事实强度。",
+    hypothesis: "如果这个判断是真的，它应该能找到具体事实；如果只能找到笼统羞耻，那它暂时不能指挥行动。",
+    action: "写下 3 条事实证据和 3 条情绪解释。事实必须能被摄像机拍到，解释不算事实。",
+    evidence: "看哪一列更多、更具体。如果事实不足，今天不做自我定罪，只做一个补证据动作。",
+    update: "把结论从“我不行”改成“我在 X 场景缺 Y 证据/能力”，再设一个小训练。",
+    keywords: /不配|不够好|失败|丢脸|羞耻|证明|自证|认可|价值|评价|看法|否定|怀疑自己/,
+  },
+];
+
+const fallbackExperiment: ExperimentPlan = {
+  id: "default",
+  title: "抽象困惑：先把它从脑内世界搬到现实世界",
+  route: "Ni 正在形成整体判断，但现实样本不足；如果继续只在脑内推演，结论会越来越像真相。",
+  reading: "当问题很难分类时，通常说明它还太抽象。对 INFJ 来说，抽象问题会自动吸附意义、关系、未来和自我价值，所以第一步不是解决，而是缩小。",
+  trap: "把一个模糊问题升级成整个人生判断。",
+  hypothesis: "把问题压缩成一句今天能验证的话：我想知道 X 是否成立，所以我要观察 Y。",
+  action: "今天只做一个能得到现实反馈的小动作：问一个人、看一个真实案例、做一个粗糙版本、走到现场、发出一个请求。",
+  evidence: "记录现实发生了什么，不记录二次脑补。尤其区分：事实、解释、身体感受、下一步线索。",
+  update: "只根据新证据更新 10% 判断。不要一次性推翻或重建人生系统。",
+  keywords: /./,
+};
+
+function buildExperiment(question: string) {
+  const text = question.trim();
+  const matched = experimentPlans.find((plan) => plan.keywords.test(text)) ?? fallbackExperiment;
+  return matched;
+}
 
 function RadarChart() {
   const center = 210;
@@ -75,7 +182,7 @@ function RadarChart() {
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
-  const [experiment, setExperiment] = useState(false);
+  const [experiment, setExperiment] = useState<ExperimentPlan | null>(null);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [customIssue, setCustomIssue] = useState("");
   const [customDiagnosis, setCustomDiagnosis] = useState<Mode | null>(null);
@@ -239,15 +346,18 @@ export default function Home() {
           <div className="lab-console">
             <div className="console-top"><span>NEW EXPERIMENT</span><i>● READY</i></div>
             <label htmlFor="question">现在有什么问题，在你脑子里循环很久了？</label>
-            <textarea id="question" value={question} onChange={(e)=>{setQuestion(e.target.value);setExperiment(false)}} placeholder="例如：我是不是应该转去 AI 行业？" />
+            <textarea id="question" value={question} onChange={(e)=>{setQuestion(e.target.value);setExperiment(null)}} placeholder="例如：我总在纠结一个选择，越想越像人生分叉，但又迟迟不敢真的往前走一步。" />
             {!experiment ? (
-              <button className="generate-button" disabled={!question.trim()} onClick={()=>setExperiment(true)}>把它变成一个现实实验 <span>↗</span></button>
+              <button className="generate-button" disabled={!question.trim()} onClick={()=>setExperiment(buildExperiment(question))}>把它变成一个现实实验 <span>↗</span></button>
             ) : (
               <div className="experiment-result">
-                <div><small>01 / HYPOTHESIS</small><p>暂时不要证明“{question}”对不对。先假设其中一个方向值得验证。</p></div>
-                <div><small>02 / MINIMUM ACTION</small><p>在 48 小时内，做一个可以接触真实的人、岗位、作品或结果的最小动作。</p></div>
-                <div><small>03 / EVIDENCE</small><p>只记录你实际看到的反馈。把“我觉得”与“现实发生”分开写。</p></div>
-                <div className="result-last"><small>04 / UPDATE</small><p>根据新证据更新判断，然后进入下一轮。只复盘一次。</p></div>
+                <div className="result-head"><small>INFJ ROUTE · {experiment.id.toUpperCase()}</small><h3>{experiment.title}</h3><p>{experiment.route}</p></div>
+                <div><small>01 / COGNITIVE READING</small><p>{experiment.reading}</p></div>
+                <div><small>02 / WATCH THE TRAP</small><p>{experiment.trap}</p></div>
+                <div><small>03 / TESTABLE HYPOTHESIS</small><p>{experiment.hypothesis}</p></div>
+                <div><small>04 / MINIMUM ACTION</small><p>{experiment.action}</p></div>
+                <div><small>05 / EVIDENCE TO COLLECT</small><p>{experiment.evidence}</p></div>
+                <div className="result-last"><small>06 / UPDATE RULE</small><p>{experiment.update}</p></div>
               </div>
             )}
           </div>
