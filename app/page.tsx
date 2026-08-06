@@ -128,7 +128,15 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top">
-        <div className="hero-glow" />
+        <div className="hero-glow" aria-hidden="true">
+          <div className="sage-orbit"><i /><i /><i /></div>
+          <div className="green-sage">
+            <span className="sage-head"><i className="sage-glasses left" /><i className="sage-glasses right" /></span>
+            <span className="sage-beard" />
+            <span className="sage-leaf">⌁</span>
+          </div>
+          <span className="sage-signature">绿老头 · STILL THINKING</span>
+        </div>
         <div className="eyebrow"><span>INFJ</span> / PERSONAL COGNITIVE SYSTEM</div>
         <h1>别急着想明白。<br /><em>先看看，你现在是怎么运行的。</em></h1>
         <p className="hero-copy">把脑内循环变成可以观察、验证和行动的系统。<br />不是成为“更好的 INFJ”，而是更清醒地使用自己。</p>
@@ -158,7 +166,7 @@ export default function Home() {
         <div className="custom-diagnosis">
           <div className="custom-copy"><span>CUSTOM INPUT</span><h3>这 6 个都不像你？</h3><p>不用迁就选项。直接写下此刻真正困扰你的事情，越具体越好。</p></div>
           <div className="custom-form">
-            <textarea value={customIssue} onChange={(e) => { setCustomIssue(e.target.value); setCustomDiagnosis(null); }} placeholder="例如：离职一个月了，我一边觉得应该尽快找工作，一边又觉得还没想清楚自己真正想去哪里……" />
+            <textarea value={customIssue} onChange={(e) => { setCustomIssue(e.target.value); setCustomDiagnosis(null); }} placeholder="例如：最近有一件事我总在反复想，明知道继续想也不会马上有答案，但脑子就是停不下来……" />
             <button type="button" disabled={!customIssue.trim()} onClick={diagnoseCustomIssue}>诊断这个问题 <span>↗</span></button>
           </div>
         </div>
