@@ -130,12 +130,8 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="hero-glow" aria-hidden="true">
           <div className="sage-orbit"><i /><i /><i /></div>
-          <div className="green-sage">
-            <span className="sage-head"><i className="sage-glasses left" /><i className="sage-glasses right" /></span>
-            <span className="sage-beard" />
-            <span className="sage-leaf">⌁</span>
-          </div>
-          <span className="sage-signature">绿老头 · STILL THINKING</span>
+          <img className="sage-asset" src="/green-sage-hero.png" alt="" />
+          <span className="sage-signature">绿老头 · OBSERVE / THINK / ACT</span>
         </div>
         <div className="eyebrow"><span>INFJ</span> / PERSONAL COGNITIVE SYSTEM</div>
         <h1>别急着想明白。<br /><em>先看看，你现在是怎么运行的。</em></h1>
