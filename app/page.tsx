@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Mode = {
   id: string;
@@ -28,20 +28,101 @@ const functions = [
   { key: "Se", name: "外倾感觉", role: "劣势 · Reality", level: 38, healthy: "接触现实，用反馈校准判断", overload: "忽略身体与当下，现实断联", switchTo: "ACT", color: "#aac4b2" },
 ];
 
+const radarDimensions = [
+  { key: "Ni", name: "洞察与预判", score: 90 },
+  { key: "Fe", name: "共情与关系", score: 78 },
+  { key: "Ti", name: "分析与逻辑", score: 65 },
+  { key: "Se", name: "行动与当下", score: 38 },
+  { key: "Ne", name: "发散与可能", score: 48 },
+  { key: "Fi", name: "价值与感受", score: 60 },
+  { key: "Te", name: "效率与执行", score: 42 },
+  { key: "Si", name: "经验与稳定", score: 50 },
+];
+
+function RadarChart() {
+  const center = 210;
+  const radius = 145;
+  const point = (index: number, ratio: number) => {
+    const angle = -Math.PI / 2 + index * (Math.PI / 4);
+    return [center + Math.cos(angle) * radius * ratio, center + Math.sin(angle) * radius * ratio];
+  };
+  const polygon = (ratio: number) => radarDimensions.map((_, index) => point(index, ratio).join(",")).join(" ");
+  const dataPolygon = radarDimensions.map((item, index) => point(index, item.score / 100).join(",")).join(" ");
+
+  return (
+    <div className="radar-wrap">
+      <svg className="radar-chart" viewBox="0 0 420 420" role="img" aria-label="典型 INFJ 八维认知功能雷达示意图">
+        {[1, .75, .5, .25].map((ratio) => <polygon key={ratio} points={polygon(ratio)} className="radar-grid" />)}
+        {radarDimensions.map((_, index) => {
+          const [x, y] = point(index, 1);
+          return <line key={index} x1={center} y1={center} x2={x} y2={y} className="radar-axis" />;
+        })}
+        <polygon points={dataPolygon} className="radar-data" />
+        {radarDimensions.map((item, index) => {
+          const [x, y] = point(index, item.score / 100);
+          return <circle key={item.key} cx={x} cy={y} r="4" className="radar-dot" />;
+        })}
+        {radarDimensions.map((item, index) => {
+          const [x, y] = point(index, 1.17);
+          return <g key={item.key} transform={`translate(${x},${y})`}><text className="radar-label-key" textAnchor="middle" y="-2">{item.key}</text><text className="radar-label-name" textAnchor="middle" y="13">{item.name}</text></g>;
+        })}
+      </svg>
+      <div className="radar-center"><b>INFJ</b><span>FUNCTIONS</span></div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
   const [experiment, setExperiment] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [customIssue, setCustomIssue] = useState("");
+  const [customDiagnosis, setCustomDiagnosis] = useState<Mode | null>(null);
   const current = useMemo(() => modes.find((mode) => mode.id === selected), [selected]);
+
+  const jumpTo = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const diagnoseCustomIssue = () => {
+    const text = customIssue.trim();
+    if (!text) return;
+    const relationWords = /别人|关系|朋友|同事|领导|伴侣|拒绝|讨好|理解|喜欢|不爽/;
+    const actionWords = /行动|开始|拖延|工作|求职|转行|选择|决定|未来|机会|要不要|应该/;
+    const perfectWords = /完美|做好|标准|出错|失败|不够好|准备好/;
+    const approvalWords = /点赞|流量|数据|认可|看法|眼光|丢脸|证明|自证/;
+    const matched = approvalWords.test(text) ? modes[2]
+      : relationWords.test(text) ? modes[4]
+      : perfectWords.test(text) ? modes[5]
+      : actionWords.test(text) ? modes[1]
+      : modes[0];
+    setSelected(null);
+    setCustomDiagnosis(matched);
+  };
+
+  useEffect(() => {
+    const updateActiveSection = () => {
+      const functionsTop = document.getElementById("functions")?.getBoundingClientRect().top ?? Infinity;
+      const labTop = document.getElementById("lab")?.getBoundingClientRect().top ?? Infinity;
+      if (labTop <= 150) setActiveSection("lab");
+      else if (functionsTop <= 150) setActiveSection("functions");
+      else setActiveSection("dashboard");
+    };
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    return () => window.removeEventListener("scroll", updateActiveSection);
+  }, []);
 
   return (
     <main>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="认知操作系统首页"><span className="brand-mark">N</span><span>COGNITIVE OS</span></a>
         <nav className="topnav" aria-label="主导航">
-          <a className="active" href="#dashboard">驾驶舱</a>
-          <a href="#functions">八维地图</a>
-          <a href="#lab">现实实验室</a>
+          <button type="button" className={activeSection === "dashboard" ? "active" : ""} onClick={() => jumpTo("dashboard")}>驾驶舱</button>
+          <button type="button" className={activeSection === "functions" ? "active" : ""} onClick={() => jumpTo("functions")}>八维地图</button>
+          <button type="button" className={activeSection === "lab" ? "active" : ""} onClick={() => jumpTo("lab")}>现实实验室</button>
         </nav>
         <div className="status-dot"><span /> SYSTEM ONLINE</div>
       </header>
@@ -66,12 +147,20 @@ export default function Home() {
         </div>
         <div className="mode-grid">
           {modes.map((mode) => (
-            <button key={mode.id} className={`mode-card ${selected === mode.id ? "selected" : ""}`} onClick={() => setSelected(mode.id)} aria-pressed={selected === mode.id}>
+            <button key={mode.id} className={`mode-card ${selected === mode.id ? "selected" : ""}`} onClick={() => { setSelected(mode.id); setCustomDiagnosis(null); }} aria-pressed={selected === mode.id}>
               <span className="mode-icon">{mode.icon}</span>
               <span className="mode-content"><b>{mode.title}</b><small>{mode.short}</small></span>
               <span className="mode-arrow">↗</span>
             </button>
           ))}
+        </div>
+
+        <div className="custom-diagnosis">
+          <div className="custom-copy"><span>CUSTOM INPUT</span><h3>这 6 个都不像你？</h3><p>不用迁就选项。直接写下此刻真正困扰你的事情，越具体越好。</p></div>
+          <div className="custom-form">
+            <textarea value={customIssue} onChange={(e) => { setCustomIssue(e.target.value); setCustomDiagnosis(null); }} placeholder="例如：离职一个月了，我一边觉得应该尽快找工作，一边又觉得还没想清楚自己真正想去哪里……" />
+            <button type="button" disabled={!customIssue.trim()} onClick={diagnoseCustomIssue}>诊断这个问题 <span>↗</span></button>
+          </div>
         </div>
 
         {current && (
@@ -83,6 +172,17 @@ export default function Home() {
             </div>
           </div>
         )}
+        {customDiagnosis && (
+          <div className="diagnosis custom-result" role="status">
+            <div className="diag-label"><span /> CUSTOM LOOP · {customDiagnosis.function}</div>
+            <div className="custom-question">“{customIssue.trim()}”</div>
+            <div className="diag-grid">
+              <div><small>这个问题里，最值得警惕的认知回路</small><p>{customDiagnosis.loop}</p></div>
+              <div className="diag-action"><small>先别解决整个人生，只做下一步</small><p>{customDiagnosis.action}</p></div>
+            </div>
+            <p className="diagnosis-note">这不是心理或医学诊断，而是用认知功能框架帮你找到一个可以开始行动的切口。</p>
+          </div>
+        )}
       </section>
 
       <section className="functions-section" id="functions">
@@ -91,10 +191,10 @@ export default function Home() {
           <p>不排名能力。观察每个功能如何帮你，以及如何困住你。</p>
         </div>
         <div className="function-layout">
-          <div className="function-orbit" aria-label="INFJ 核心认知功能示意">
-            <div className="orbit-ring ring-a" /><div className="orbit-ring ring-b" />
-            <div className="orbit-core"><span>INFJ</span><b>FUNCTION<br/>STACK</b><small>observe the system</small></div>
-            {functions.map((fn, i) => <div key={fn.key} className={`orbit-node node-${i}`}><b>{fn.key}</b><span>{fn.name}</span></div>)}
+          <div className="radar-panel">
+            <div className="radar-title"><span>8 FUNCTIONS / OVERVIEW</span><h3>典型 INFJ 的八维倾向</h3><p>越靠外代表越常被调用。它不是能力高低，而是你的大脑更习惯从哪里处理世界。</p></div>
+            <RadarChart />
+            <div className="radar-summary"><div><small>CORE STRENGTH</small><b>Ni · 洞察模式</b><span>擅长从复杂信息里找到方向</span></div><div><small>GROWTH EDGE</small><b>Se · 回到现实</b><span>用行动与感官反馈校准预判</span></div></div>
           </div>
           <div className="function-list">
             {functions.map((fn) => (
