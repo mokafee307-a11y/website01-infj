@@ -248,14 +248,20 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="hero-glow" aria-hidden="true">
-          <div className="sage-orbit"><i /><i /><i /></div>
-          <img className="sage-asset" src="/green-sage-hero.png" alt="" />
-          <span className="sage-signature">绿老头 · OBSERVE / THINK / ACT</span>
+          <span className="soft-leaf leaf-a" />
+          <span className="soft-leaf leaf-b" />
+          <span className="soft-dot dot-a" />
+          <span className="soft-dot dot-b" />
+          <img className="sage-asset" src="/healing-sage-left.png" alt="" />
+          <span className="sage-signature">绿老头 · GENTLE OBSERVER</span>
         </div>
         <div className="eyebrow"><span>INFJ</span> / PERSONAL COGNITIVE SYSTEM</div>
-        <h1>别急着想明白。<br /><em>先看看，你现在是怎么运行的。</em></h1>
-        <p className="hero-copy">把脑内循环变成可以观察、验证和行动的系统。<br />不是成为“更好的 INFJ”，而是更清醒地使用自己。</p>
-        <a className="start-button" href="#dashboard"><span>开始一次自检</span><b>↓</b></a>
+        <h1>先别急着想明白。<br /><em>回到现实里看一看。</em></h1>
+        <p className="hero-copy">把脑内循环变成一次可观察、可验证、可行动的自检。</p>
+        <a className="start-button" href="#dashboard" aria-label="开始一次 INFJ 自检">
+          <i className="cta-particles" aria-hidden="true"><span /><span /><span /><span /><span /></i>
+          <span>开始一次自检</span><b>↓</b>
+        </a>
         <div className="hero-meta">
           <span>MODE <b>SELF OBSERVATION</b></span>
           <span>PRINCIPLE <b>ACTION &gt; SIMULATION</b></span>
