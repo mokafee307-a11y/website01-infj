@@ -54,6 +54,18 @@ const radarDimensions = [
 
 const experimentPlans: ExperimentPlan[] = [
   {
+    id: "crisis",
+    title: "先暂停分析：这不是一个该被实验化的问题",
+    route: "当问题触及“结束生命/不想活/伤害自己”时，系统不再做 Ni 推演，也不把它当成选择题。此刻优先级只有一个：让你先安全地留在现实里。",
+    reading: "这类念头出现时，往往不是你的真实愿望，而是痛苦已经超过了一个人独自承受的阈值。INFJ 容易把痛苦解释成终局判断，但情绪高峰期的大脑不适合替整个人生下结论。",
+    trap: "把“我现在太痛了”误判成“我必须结束一切”。",
+    hypothesis: "先不判断人生是否值得继续，只验证一件事：如果我把接下来的 10 分钟安全度过，并让一个真实的人知道我的状态，危险强度可能会下降一点。",
+    action: "现在先离开可能伤害自己的物品或地点；给一个可信任的人发一句话：我现在有伤害自己的念头，需要你陪我一下。若已经有立即危险，请立刻联系当地紧急救援或身边的人。",
+    evidence: "只观察接下来 10 分钟：身体有没有稍微稳定、是否有人回应、危险物品是否已经远离、自己是否从独处状态变成被看见。",
+    update: "在安全感恢复前，不做人生决定、不复盘意义、不继续追问为什么。下一步只需要：待在人群附近、联系真人支持、让危险窗口过去。",
+    keywords: /结束生命|自杀|轻生|不想活|不活了|去死|死了算了|伤害自己|自残|活不下去|活着没意思|结束一切|了结/,
+  },
+  {
     id: "career",
     title: "方向焦虑：别在脑内选人生，去现实里采样",
     route: "Ni 主导在寻找长期趋势；Ti 想证明路线正确；Se 信息不足，所以越想越像悬崖。",
@@ -350,7 +362,7 @@ export default function Home() {
             {!experiment ? (
               <button className="generate-button" disabled={!question.trim()} onClick={()=>setExperiment(buildExperiment(question))}>把它变成一个现实实验 <span>↗</span></button>
             ) : (
-              <div className="experiment-result">
+                <div className={`experiment-result ${experiment.id === "crisis" ? "crisis-result" : ""}`}>
                 <div className="result-head"><small>INFJ ROUTE · {experiment.id.toUpperCase()}</small><h3>{experiment.title}</h3><p>{experiment.route}</p></div>
                 <div><small>01 / COGNITIVE READING</small><p>{experiment.reading}</p></div>
                 <div><small>02 / WATCH THE TRAP</small><p>{experiment.trap}</p></div>
