@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import HeroButtonParticles from "./HeroButtonParticles";
 
 type Mode = {
   id: string;
@@ -252,14 +253,14 @@ export default function Home() {
           <span className="soft-leaf leaf-b" />
           <span className="soft-dot dot-a" />
           <span className="soft-dot dot-b" />
-          <img className="sage-asset" src="/healing-sage-left.png" alt="" />
+          <img className="sage-asset sage-reference" src="/green-sage-reference.webp" alt="" />
           <span className="sage-signature">绿老头 · GENTLE OBSERVER</span>
         </div>
         <div className="eyebrow"><span>INFJ</span> / PERSONAL COGNITIVE SYSTEM</div>
         <h1>先别急着想明白。<br /><em>回到现实里看一看。</em></h1>
         <p className="hero-copy">把脑内循环变成一次可观察、可验证、可行动的自检。</p>
         <a className="start-button" href="#dashboard" aria-label="开始一次 INFJ 自检">
-          <i className="cta-particles" aria-hidden="true"><span /><span /><span /><span /><span /></i>
+          <HeroButtonParticles />
           <span>开始一次自检</span><b>↓</b>
         </a>
         <div className="hero-meta">
