@@ -31,22 +31,28 @@ export default function HeroButtonParticles() {
       const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
       camera.position.z = 2;
 
-      const count = 180;
+      const count = 160;
       const positions = new Float32Array(count * 3);
-      const seeds = new Float32Array(count);
+      const seeds = new Float32Array(count * 4);
 
       for (let i = 0; i < count; i += 1) {
-        const x = THREE.MathUtils.randFloatSpread(2.05);
-        const y = THREE.MathUtils.randFloatSpread(0.82);
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
+        const lane = i % 5;
+        const radiusX = 1.08 + lane * 0.08 + Math.random() * 0.14;
+        const radiusY = 0.42 + (lane % 3) * 0.045 + Math.random() * 0.08;
+        const phase = Math.random() * Math.PI * 2;
+        const speed = (Math.random() > 0.45 ? 1 : -1) * (0.32 + Math.random() * 0.22);
+        positions[i * 3] = 0;
+        positions[i * 3 + 1] = 0;
         positions[i * 3 + 2] = THREE.MathUtils.randFloat(-0.25, 0.25);
-        seeds[i] = Math.random() * Math.PI * 2;
+        seeds[i * 4] = phase;
+        seeds[i * 4 + 1] = radiusX;
+        seeds[i * 4 + 2] = radiusY;
+        seeds[i * 4 + 3] = speed;
       }
 
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+      geometry.setAttribute("aOrbit", new THREE.BufferAttribute(seeds, 4));
 
       const material = new THREE.ShaderMaterial({
         transparent: true,
@@ -54,19 +60,25 @@ export default function HeroButtonParticles() {
         blending: THREE.AdditiveBlending,
         uniforms: { uTime: { value: 0 }, uHover: { value: 0 } },
         vertexShader: `
-          attribute float aSeed;
+          attribute vec4 aOrbit;
           uniform float uTime;
           uniform float uHover;
           varying float vAlpha;
           void main() {
             vec3 p = position;
-            float wave = sin(uTime * 0.85 + aSeed);
-            p.y += wave * 0.045;
-            p.x += cos(uTime * 0.55 + aSeed * 1.7) * 0.025;
-            p.x += uHover * sin(aSeed * 3.0) * 0.035;
-            vAlpha = 0.52 + 0.46 * (0.5 + 0.5 * wave) + uHover * 0.24;
+            float phase = aOrbit.x;
+            float rx = aOrbit.y + uHover * 0.08;
+            float ry = aOrbit.z + uHover * 0.035;
+            float speed = aOrbit.w;
+            float t = phase + uTime * speed;
+            float wobble = sin(uTime * 0.45 + phase * 2.7) * 0.035;
+            p.x = cos(t) * rx + sin(t * 1.7 + phase) * wobble;
+            p.y = sin(t) * ry + cos(t * 1.35 + phase) * wobble;
+            float edgeFade = smoothstep(1.16, 0.72, abs(p.x));
+            float crossGlow = 0.5 + 0.5 * sin(t * 2.0 + phase);
+            vAlpha = (0.36 + 0.5 * crossGlow) * edgeFade + uHover * 0.22;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-            gl_PointSize = 4.2 + 4.8 * (0.5 + 0.5 * sin(uTime + aSeed * 2.0)) + uHover * 2.4;
+            gl_PointSize = 3.4 + 4.2 * crossGlow + uHover * 2.2;
           }
         `,
         fragmentShader: `
