@@ -30,4 +30,12 @@ test("renders the finished INFJ cognitive system metadata", async () => {
     assert.ok(html.includes(`/portraits/${person}.webp`), `Missing portrait for ${person}`);
   }
   assert.doesNotMatch(html, /three-button-particles/);
+  const panels = [...html.matchAll(/<section\b[^>]*role="tabpanel"[^>]*>/g)].map(([tag]) => tag);
+  assert.equal(panels.length, 6, "Every workspace module must have a tab panel");
+  assert.equal(panels.filter(tag => !/\bhidden(?:=|\s|>)/.test(tag)).length, 1, "Only one module is visible on first render");
+  for (const id of ["now", "map", "lab", "boundary", "salon", "archive"]) {
+    assert.match(html, new RegExp(`id="tab-${id}"[^>]*role="tab"[^>]*aria-controls="${id}"`));
+    assert.ok(panels.some(tag => tag.includes(`aria-labelledby="tab-${id}"`)));
+  }
+  assert.doesNotMatch(html, /class="hero"|class="manifesto"/);
 });

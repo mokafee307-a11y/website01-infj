@@ -39,6 +39,12 @@ type EvidenceEntry = {
 
 type Topic = "career" | "relationship" | "action" | "selfworth" | "meaning" | "default";
 
+const workspaceTabs = [
+  ["now", "当前状态"], ["map", "认知地图"], ["lab", "现实实验"],
+  ["boundary", "边界排练"], ["salon", "深潜会客厅"], ["archive", "心智档案"],
+] as const;
+type WorkspaceTab = typeof workspaceTabs[number][0];
+
 type Thinker = {
   id: string;
   name: string;
@@ -442,7 +448,7 @@ function SectionHeading({ number, eyebrow, title, copy }: { number: string; eyeb
 }
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState("now");
+  const [activeSection, setActiveSection] = useState<WorkspaceTab>("now");
   const [selected, setSelected] = useState<string | null>(null);
   const [customIssue, setCustomIssue] = useState("");
   const [customDiagnosisId, setCustomDiagnosisId] = useState<string | null>(null);
@@ -461,6 +467,7 @@ export default function Home() {
   const [selectedThinkers, setSelectedThinkers] = useState<string[]>(["jung", "frankl", "camus"]);
   const [salonQuestion, setSalonQuestion] = useState("");
   const [salonStarted, setSalonStarted] = useState(false);
+  const [salonView, setSalonView] = useState<"guests" | "conversation">("guests");
   const [reportMode, setReportMode] = useState<"private" | "share">("private");
   const [reportUrl, setReportUrl] = useState<string | null>(null);
   const [todayShort, setTodayShort] = useState("--.--");
@@ -571,35 +578,48 @@ export default function Home() {
   ]);
 
   useEffect(() => {
-    const sectionIds = ["now", "map", "lab", "boundary", "salon", "archive"];
-    const updateActiveSection = () => {
-      let next = sectionIds[0];
-      for (const id of sectionIds) {
-        const top = document.getElementById(id)?.getBoundingClientRect().top ?? Infinity;
-        if (top <= 150) next = id;
-      }
-      setActiveSection(next);
+    const syncTab = () => {
+      const id = window.location.hash.slice(1);
+      setActiveSection(workspaceTabs.some(([tab]) => tab === id) ? id as WorkspaceTab : "now");
     };
-    updateActiveSection();
-    window.addEventListener("scroll", updateActiveSection, { passive: true });
-    return () => window.removeEventListener("scroll", updateActiveSection);
+    syncTab();
+    window.addEventListener("hashchange", syncTab);
+    window.addEventListener("popstate", syncTab);
+    return () => {
+      window.removeEventListener("hashchange", syncTab);
+      window.removeEventListener("popstate", syncTab);
+    };
   }, []);
 
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, [activeSection]);
+
   const jumpTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const next = id === "top" ? "now" : id;
+    if (!workspaceTabs.some(([tab]) => tab === next)) return;
+    setActiveSection(next as WorkspaceTab);
+    if (window.location.hash !== `#${next}`) window.history.pushState(null, "", `#${next}`);
+  };
+
+  const revealDiagnosis = () => {
+    window.requestAnimationFrame(() => {
+      diagnosisRef.current?.focus({ preventScroll: true });
+      if (window.matchMedia("(max-width: 1023px), (max-height: 649px)").matches) {
+        diagnosisRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
   };
 
   const selectMode = (id: string) => {
     setSelected(id);
     setCustomDiagnosisId(null);
-    window.requestAnimationFrame(() => diagnosisRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }));
+    revealDiagnosis();
   };
 
   const diagnoseCustomIssue = () => {
     const mode = diagnoseIssue(customIssue);
     setSelected(null);
     setCustomDiagnosisId(mode.id);
-    window.requestAnimationFrame(() => diagnosisRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }));
+    revealDiagnosis();
   };
 
   const sendDiagnosisToLab = () => {
@@ -861,7 +881,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="workspace-shell">
       <CustomCursor />
       <div className="global-noise" aria-hidden="true" />
       <div className="ambient ambient-a" aria-hidden="true" />
@@ -872,16 +892,17 @@ export default function Home() {
           <span className="brand-mark">N</span>
           <span className="brand-copy"><b>COGNITIVE OS</b><small>FOR INFJ MINDS</small></span>
         </button>
-        <nav className="topnav" aria-label="主导航">
-          {[
-            ["now", "当前状态"],
-            ["map", "认知地图"],
-            ["lab", "现实实验"],
-            ["boundary", "边界排练"],
-            ["salon", "深潜会客厅"],
-            ["archive", "心智档案"],
-          ].map(([id, label]) => (
-            <button key={id} type="button" className={activeSection === id ? "active" : ""} onClick={() => jumpTo(id)}>{label}</button>
+        <nav className="topnav" role="tablist" aria-label="主导航">
+          {workspaceTabs.map(([id, label], index) => (
+            <button key={id} id={`tab-${id}`} role="tab" aria-selected={activeSection === id} aria-controls={id} tabIndex={activeSection === id ? 0 : -1} type="button" className={activeSection === id ? "active" : ""} onClick={() => jumpTo(id)} onKeyDown={(event) => {
+              const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+              if (!offset && event.key !== "Home" && event.key !== "End") return;
+              event.preventDefault();
+              const target = event.key === "Home" ? 0 : event.key === "End" ? workspaceTabs.length - 1 : (index + offset + workspaceTabs.length) % workspaceTabs.length;
+              const next = workspaceTabs[target][0];
+              jumpTo(next);
+              document.getElementById(`tab-${next}`)?.focus();
+            }}>{label}</button>
           ))}
         </nav>
         <button className="header-report" type="button" onClick={() => jumpTo("archive")}>
@@ -889,47 +910,14 @@ export default function Home() {
         </button>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-aurora" aria-hidden="true">
-          <span className="hero-orbit orbit-one" />
-          <span className="hero-orbit orbit-two" />
-          <span className="hero-orbit orbit-three" />
-          <span className="hero-spark spark-one" />
-          <span className="hero-spark spark-two" />
-          <span className="hero-spark spark-three" />
+      <div className="workspace-panels">
+      <section className="workspace-panel content-section now-section" id="now" role="tabpanel" aria-labelledby="tab-now" hidden={activeSection !== "now"} tabIndex={0}>
+        <div className="workspace-welcome">
+          <div><span className="mini-label">CURRENT STATE / 此刻的你</span><h1>别急着想明白。<em>先看看，你现在怎么运行。</em></h1><p>选一个接近你的状态，或写下此刻的困扰。</p></div>
+          <img src="/green-sage-reference.webp" alt="绿老头，温和的观察者" width={88} height={100} />
         </div>
-        <div className="hero-copy-wrap">
-          <div className="eyebrow"><span>INFJ</span> / PERSONAL COGNITIVE SYSTEM</div>
-          <h1>别急着想明白。<br /><em>先看看，你现在是怎么运行的。</em></h1>
-          <p>一个帮助高内省者识别回路、练习边界，并把内耗转化为现实行动的个人系统。</p>
-          <a className="start-button" href="#now" aria-label="扫描当前状态">
-            <span>扫描当前状态</span><b>↓</b>
-          </a>
-          <div className="hero-principles">
-            <span><i>01</i> 看见回路</span>
-            <span><i>02</i> 接触现实</span>
-            <span><i>03</i> 更新判断</span>
-          </div>
-        </div>
-        <div className="sage-stage" aria-label="绿老头，温和的观察者">
-          <div className="sage-aura" />
-          <div className="sage-caption"><span>GENTLE OBSERVER</span><b>不是定义自己。<br />是持续更新自己。</b></div>
-          <img src="/green-sage-reference.webp" alt="低多边形绿色老人，手持一片叶子并朝向左侧文案" />
-        </div>
-        <div className="hero-bottom">
-          <span>MODE <b>SELF OBSERVATION</b></span>
-          <span>PRINCIPLE <b>ACTION &gt; SIMULATION</b></span>
-          <span>LOCAL MEMORY <b>ON THIS DEVICE</b></span>
-        </div>
-      </section>
-
-      <section className="content-section now-section" id="now">
-        <SectionHeading
-          number="01"
-          eyebrow="CURRENT STATE"
-          title="你现在，卡在哪？"
-          copy="不再测试你是不是 INFJ。先识别此刻正在运行的模式。"
-        />
+        <div className="now-layout">
+        <div className="now-inputs">
         <div className="mode-grid">
           {modes.map((mode) => (
             <button
@@ -946,9 +934,7 @@ export default function Home() {
         </div>
         <div className="custom-diagnosis glass-card">
           <div>
-            <span className="mini-label">CUSTOM INPUT</span>
             <h3>选项都不像你？</h3>
-            <p>直接写下此刻真正困扰你的事。越具体，越容易找到现实切口。</p>
           </div>
           <div className="input-action">
             <textarea
@@ -960,7 +946,8 @@ export default function Home() {
             <button type="button" disabled={!customIssue.trim()} onClick={diagnoseCustomIssue}>识别当前回路 <span>↗</span></button>
           </div>
         </div>
-        {currentDiagnosis && (
+        </div>
+        {currentDiagnosis ? (
           <div className={"diagnosis-panel glass-card " + (currentDiagnosis.id === "crisis" ? "crisis-panel" : "")} ref={diagnosisRef} role="status" tabIndex={-1}>
             <div className="diagnosis-top"><span className="live-dot" /> CURRENT LOOP · {currentDiagnosis.function}</div>
             {customIssue.trim() && customDiagnosis && <blockquote>“{customIssue.trim()}”</blockquote>}
@@ -973,10 +960,13 @@ export default function Home() {
             )}
             <p className="diagnosis-disclaimer">这是认知功能框架下的自我观察，不是心理或医学诊断。</p>
           </div>
+        ) : (
+          <div className="diagnosis-empty glass-card"><span className="mini-label">YOUR CURRENT LOOP</span><h2>从一个真实感受开始。</h2><p>不必先整理好思绪。选一个状态后，这里会呈现正在发生的回路，以及你现在能做的一小步。</p><div className="empty-path"><span>看见回路</span><span>找到切口</span><span>接触现实</span></div></div>
         )}
+        </div>
       </section>
 
-      <section className="content-section map-section" id="map">
+      <section className="workspace-panel content-section map-section" id="map" role="tabpanel" aria-labelledby="tab-map" hidden={activeSection !== "map"} tabIndex={0}>
         <SectionHeading
           number="02"
           eyebrow="COGNITIVE MAP"
@@ -1011,10 +1001,7 @@ export default function Home() {
             <p className="map-note">示意值仅用于理解典型倾向，不构成心理测量结果。</p>
           </div>
         </div>
-        <div className="subsection-heading">
-          <div><span>03</span><h3>三个需要警惕的回路</h3></div>
-          <p>误区和正确转向使用不同层级，不再让危险想法看起来像答案。</p>
-        </div>
+        <details className="workspace-details map-loops"><summary>三个需要警惕的回路 <span>查看误区与转向</span></summary>
         <div className="loop-grid">
           {[
             ["预演替代行动", "Ni 预演 → 等待确定 → 没有反馈 → 继续预演", "切换到 Se", "做一个 70 分版本，接触一次真实反馈。"],
@@ -1033,9 +1020,10 @@ export default function Home() {
             </article>
           ))}
         </div>
+        </details>
       </section>
 
-      <section className="full-section lab-section" id="lab">
+      <section className="workspace-panel full-section lab-section" id="lab" role="tabpanel" aria-labelledby="tab-lab" hidden={activeSection !== "lab"} tabIndex={0}>
         <div className="lab-light" aria-hidden="true" />
         <div className="lab-inner">
           <SectionHeading
@@ -1045,17 +1033,6 @@ export default function Home() {
             copy="把抽象困惑变成假设、最小行动、现实证据和更新判断。"
           />
           <div className="lab-layout">
-            <aside className="lab-manifesto">
-              <span>START BEFORE CERTAINTY</span>
-              <b>30%</b>
-              <h3>允许不确定，<br />再开始。</h3>
-              <p>现实不是思考的敌人。它是思考的数据源。</p>
-              <div className="lab-path">
-                <i>01</i><span>写下预测</span><b>→</b>
-                <i>02</i><span>执行小实验</span><b>→</b>
-                <i>03</i><span>记录现实</span>
-              </div>
-            </aside>
             <div className="lab-console glass-card">
               <div className="console-top"><span>NEW EXPERIMENT</span><i><b /> READY</i></div>
               <label htmlFor="lab-question">什么问题已经在你脑子里循环很久？</label>
@@ -1065,12 +1042,24 @@ export default function Home() {
                 onChange={(event) => { setQuestion(event.target.value); setExperimentId(null); }}
                 placeholder="例如：我总在纠结一个选择，越想越像人生分叉，却迟迟不敢往前走一步。"
               />
-              {!currentExperiment && (
-                <button className="primary-button" disabled={!question.trim()} onClick={generateExperiment}>
-                  把它变成现实实验 <span>↗</span>
-                </button>
-              )}
-              {currentExperiment && (
+              <button className="primary-button" disabled={!question.trim()} onClick={generateExperiment}>
+                {currentExperiment ? "重新生成实验" : "把它变成现实实验"} <span>↗</span>
+              </button>
+              {currentExperiment && currentExperiment.id !== "crisis" ? (
+                <div className="prediction-panel">
+                  <div className="prediction-title"><div><small>PREDICTION → REALITY</small><h4>预测—现实偏差镜</h4></div><span>{probability}%</span></div>
+                  <label htmlFor="prediction">行动前，你最担心发生什么？</label>
+                  <textarea id="prediction" value={prediction} onChange={(event) => setPrediction(event.target.value)} placeholder="写下你的预测，之后用事实核对。" />
+                  <label htmlFor="probability">你觉得它发生的概率</label>
+                  <input id="probability" type="range" min="10" max="100" step="10" value={probability} onChange={(event) => setProbability(Number(event.target.value))} />
+                  <label htmlFor="actual-result">完成行动后，现实真正发生了什么？</label>
+                  <textarea id="actual-result" value={actualResult} onChange={(event) => setActualResult(event.target.value)} placeholder="回来记录事实，不记录二次脑补。" />
+                  <button className="secondary-button" type="button" disabled={!actualResult.trim()} onClick={saveEvidence}>把结果种进证据森林 <span>＋</span></button>
+                </div>
+              ) : currentExperiment?.id !== "crisis" ? <p className="lab-guidance">允许不确定，再开始。现实不是思考的敌人，它是思考的数据源。</p> : null}
+            </div>
+            <div className="lab-output glass-card" aria-live="polite">
+              {currentExperiment ? (
                 <div className={"experiment-result " + (currentExperiment.id === "crisis" ? "crisis-result" : "")}>
                   <div className="experiment-head">
                     <small>INFJ ROUTE · {currentExperiment.id.toUpperCase()}</small>
@@ -1090,29 +1079,14 @@ export default function Home() {
                       <div><small>{item[0]}</small><p>{item[1]}</p></div>
                     </div>
                   ))}
-                  {currentExperiment.id !== "crisis" && (
-                    <div className="prediction-panel">
-                      <div className="prediction-title">
-                        <div><small>PREDICTION → REALITY</small><h4>预测—现实偏差镜</h4></div>
-                        <span>{probability}%</span>
-                      </div>
-                      <label htmlFor="prediction">行动前，你最担心发生什么？</label>
-                      <textarea id="prediction" value={prediction} onChange={(event) => setPrediction(event.target.value)} placeholder="例如：我拒绝以后，对方会觉得我很自私，以后不再信任我。" />
-                      <label htmlFor="probability">你觉得它发生的概率</label>
-                      <input id="probability" type="range" min="10" max="100" step="10" value={probability} onChange={(event) => setProbability(Number(event.target.value))} />
-                      <label htmlFor="actual-result">完成行动后，现实真正发生了什么？</label>
-                      <textarea id="actual-result" value={actualResult} onChange={(event) => setActualResult(event.target.value)} placeholder="回来记录事实，不记录二次脑补。" />
-                      <button className="secondary-button" type="button" disabled={!actualResult.trim()} onClick={saveEvidence}>把结果种进证据森林 <span>＋</span></button>
-                    </div>
-                  )}
                 </div>
-              )}
+              ) : <div className="experiment-empty"><span className="mini-label">FROM THOUGHT TO EVIDENCE</span><h3>让现实，参与这次判断。</h3><p>写下一个具体困惑。这里会给你一个可验证的假设、一小步行动和需要留意的现实证据。</p><div className="empty-path"><span>写下预测</span><span>执行小实验</span><span>记录现实</span></div></div>}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="content-section boundary-section" id="boundary">
+      <section className="workspace-panel content-section boundary-section" id="boundary" role="tabpanel" aria-labelledby="tab-boundary" hidden={activeSection !== "boundary"} tabIndex={0}>
         <SectionHeading
           number="05"
           eyebrow="BOUNDARY REHEARSAL"
@@ -1168,7 +1142,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="full-section salon-section" id="salon">
+      <section className="workspace-panel full-section salon-section" id="salon" role="tabpanel" aria-labelledby="tab-salon" hidden={activeSection !== "salon"} tabIndex={0}>
         <div className="salon-light" aria-hidden="true" />
         <div className="salon-inner">
           <SectionHeading
@@ -1179,8 +1153,12 @@ export default function Home() {
           />
           <div className="salon-toolbar">
             <div><span>INVITED THINKERS</span><b>{selectedThinkers.length} / 3</b></div>
-            <button type="button" onClick={autoAssemble}>替我组局 <span>✦</span></button>
+            <div className="salon-view-actions">
+              {salonResponses.length > 0 && <button type="button" onClick={() => setSalonView(salonView === "guests" ? "conversation" : "guests")}>{salonView === "guests" ? "回到会谈 →" : "← 调整嘉宾"}</button>}
+              <button type="button" onClick={() => { autoAssemble(); setSalonView("guests"); }}>替我组局 <span>✦</span></button>
+            </div>
           </div>
+          <div className="salon-selection" hidden={salonView === "conversation" && salonResponses.length > 0}>
           <div className="thinker-deck">
             {thinkers.map((thinker, index) => {
               const chosen = selectedThinkers.includes(thinker.id);
@@ -1208,6 +1186,7 @@ export default function Home() {
             <p>真实历史照片与画像，经缩小、格式转换及页面裁切／灰度呈现；采用 CC BY-SA 许可的图片，其图像衍生版本沿用对应许可。</p>
             <ul>{portraitCredits.map((credit) => <li key={credit.id}><a href={credit.sourcePage} target="_blank" rel="noopener noreferrer">{thinkers.find((thinker) => thinker.id === credit.id)?.name}</a> · {credit.author} · <a href={credit.licenseUrl} target="_blank" rel="noopener noreferrer">{credit.license}</a></li>)}</ul>
           </details>
+          </div>
           <div className="salon-input glass-card">
             <div className="guest-stack">
               {salonGuests.map((thinker) => <span key={thinker.id} style={{ borderColor: thinker.color }} title={thinker.name}><img src={`/portraits/${thinker.id}.webp`} alt={thinker.name} width={32} height={32} loading="lazy" /></span>)}
@@ -1219,10 +1198,10 @@ export default function Home() {
               placeholder="把一个真实问题交给他们……"
               aria-label="深潜会客厅问题"
             />
-            <button type="button" disabled={!salonQuestion.trim() || !selectedThinkers.length} onClick={() => setSalonStarted(true)}>开始会谈 <span>↗</span></button>
+            <button type="button" disabled={!salonQuestion.trim() || !selectedThinkers.length} onClick={() => { setSalonStarted(true); setSalonView("conversation"); }}>开始会谈 <span>↗</span></button>
           </div>
           {salonResponses.length > 0 && (
-            <div className="salon-conversation">
+            <div className="salon-conversation" hidden={salonView !== "conversation"}>
               <header className="conversation-head">
                 <div><span>YOU ARE LISTENING</span><h3>{salonGuests.map((thinker) => thinker.name).join(" × ")} 的讨论</h3></div>
                 <p>“{salonQuestion.trim()}”</p>
@@ -1250,7 +1229,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="content-section archive-section" id="archive">
+      <section className="workspace-panel content-section archive-section" id="archive" role="tabpanel" aria-labelledby="tab-archive" hidden={activeSection !== "archive"} tabIndex={0}>
         <SectionHeading
           number="07"
           eyebrow="MIND ARCHIVE"
@@ -1301,17 +1280,10 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section className="manifesto">
-        <span>CORE PRINCIPLE 001</span>
-        <blockquote>“实践不是思考的对立面。<br />它是让思考获得现实坐标的方式。”</blockquote>
-        <p>状态扫描 → 回路识别 → 多元理解 → 边界 / 实验 → 现实反馈 → 心智切片</p>
-      </section>
-
-      <footer>
-        <div><span className="brand-mark">N</span><b>COGNITIVE OS</b></div>
-        <p>不是定义自己。是持续更新自己。</p>
-        <button type="button" onClick={() => jumpTo("top")}>BACK TO TOP ↑</button>
+      </div>
+      <footer className="workspace-footer">
+        <span>不是定义自己。是持续更新自己。</span>
+        <span>记录保存在当前设备 · 用于自我观察，不替代专业帮助</span>
       </footer>
 
       {reportUrl && (
