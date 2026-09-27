@@ -14,14 +14,9 @@
 .module-toolbar, .thinker-gallery .module-toolbar { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
 .category-tabs, .example-row { justify-content: center; }
 .panel-heading { justify-content: center; flex-wrap: wrap; text-align: center; }
-.function-detail > :is(.eyebrow, h2, .lead), .intro-copy, .report-title, .thinker-info, .room-sidebar > h2 { text-align: center; }
-.map-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-.map-layout .function-list { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: transparent; border: 0; padding: 0; }
-.function-list > :is(.eyebrow, .hint) { flex-basis: 100%; margin: 0; text-align: center; }
-.function-list .function-item { width: auto; justify-content: center; margin: 0; padding: 12px 18px; }
-.function-list .function-item > span:last-child { display: none; }
-.map-layout .function-detail { grid-column: auto; }
-.function-detail .detail-block { display: block; width: auto; padding: 0; }
+.intro-copy, .report-title, .thinker-info, .room-sidebar > h2 { text-align: center; }
+/* Keep the cognitive map's original list / radar / interpretation structure. */
+.map-layout .panel-heading { justify-content: space-between; text-align: left; }
 .salon-selection > .selection-panel { justify-content: center; text-align: center; }
 .salon-selection > .selection-panel > .guest-list { flex: 0 1 auto; justify-content: center; }
 .salon-selection > .selection-panel > .full-width { margin-left: 0; }
@@ -37,7 +32,6 @@
   .side-tabs a[aria-current=location] { font-size: 1.125rem; }
   .exploration-layout, .salon-room { grid-template-columns: minmax(0, 1fr); }
   .history-panel, .room-sidebar { position: static; }
-  .map-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 700px) {
   .side-tabs { right: 6px; width: 88px; gap: 10px; }
@@ -45,8 +39,6 @@
   .side-tabs a[aria-current=location] { font-size: 1rem; }
   .app-shell main { padding-inline: 12px; }
   .workspace-heading h1 { font-size: 1.5rem; }
-  .function-list .function-item { padding: 10px; flex: 1 1 90px; }
-  .function-item .function-key { width: auto; }
   .card-deck { --card-width: calc(100% - 16px); --card-height: 550px; height: 660px; margin: 0; }
   .deck-front-content { padding: 20px 16px; }
   .deck-back-content { padding: 18px 14px; }
