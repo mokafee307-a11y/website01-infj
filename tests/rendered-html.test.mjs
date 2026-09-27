@@ -41,6 +41,8 @@ test("renders the cosmic four-module experience", async () => {
   assert.doesNotMatch(html, /未接入模型|class="section-number"|class="portrait-index"|class="deck-question-number"/);
   assert.match(html, /class="option-wheel/);
   assert.match(html, /绿老头认知运行地图/);
+  assert.match(html, /奇点会客厅/);
+  assert.doesNotMatch(html, /老头会客厅|左右滑动查看全部\s*10\s*位人物/);
   assert.match(html, /class="click-spark-canvas"/);
   assert.match(html, /border-glow-card/);
   assert.match(html, /panel texture/);

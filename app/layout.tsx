@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://mokafee.com"),
   title: "INFJ漫游飞船",
-  description: "认知运行地图、卡点梳理、自由探索与老头会客厅。带上你的困惑，开启一段向内觉察的漫游。",
+  description: "认知运行地图、卡点梳理、自由探索与奇点会客厅。带上你的困惑，开启一段向内觉察的漫游。",
   openGraph: {
     title: "INFJ 认知操作系统｜把内耗转化为现实行动",
     description: "别急着想明白。先看看，你现在是怎么运行的。",

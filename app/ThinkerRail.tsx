@@ -36,8 +36,8 @@ export default function ThinkerRail({ selected, toggle }: { selected: string[]; 
     if (rail.current) rail.current.scrollBy({ left: direction * Math.max(240, rail.current.clientWidth * 0.7), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   };
   return <div className="thinker-gallery">
-    <div className="module-toolbar"><div><p>选择想邀请的人物，可以单选或多选。</p><span className="hint">左右滑动查看全部 10 位人物</span></div><div className="rail-arrows"><button aria-label="向左浏览人物" disabled={edges.start} onClick={() => scroll(-1)}>‹</button><button aria-label="向右浏览人物" disabled={edges.end} onClick={() => scroll(1)}>›</button></div></div>
-    <div ref={rail} className="thinker-rail" role="region" aria-label="人物卡牌，可左右滑动" tabIndex={0} {...gesture} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === "ArrowLeft" || event.key === "ArrowRight")) { event.preventDefault(); scroll(event.key === "ArrowLeft" ? -1 : 1); } }}>
+<div className="module-toolbar"><div><p>选择想邀请的人物，可以单选或多选。</p></div><div className="rail-arrows"><button aria-label="向左浏览人物" disabled={edges.start} onClick={() => scroll(-1)}>‹</button><button aria-label="向右浏览人物" disabled={edges.end} onClick={() => scroll(1)}>›</button></div></div>
+<div ref={rail} className="thinker-rail" role="region" aria-label="人物卡牌，可左右滑动" tabIndex={0} {...gesture} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === "ArrowLeft" || event.key === "ArrowRight")) { event.preventDefault(); scroll(event.key === "ArrowLeft" ? -1 : 1); } }}>
       {thinkers.map(person => <ThinkerCard key={person.id} person={person} selected={selected.includes(person.id)} toggle={() => toggle(person.id)} />)}
     </div>
     <details className="portrait-credits"><summary>肖像来源与授权</summary><ul>{portraitCredits.filter(item => thinkers.some(person => person.id === item.id)).map(item => <li key={item.id}><a href={item.sourcePage} target="_blank" rel="noreferrer">{thinkers.find(person => person.id === item.id)?.name}</a> · {item.author} · <a href={item.licenseUrl} target="_blank" rel="noreferrer">{item.license}</a>（页面展示为灰度及裁切版本）</li>)}</ul></details>

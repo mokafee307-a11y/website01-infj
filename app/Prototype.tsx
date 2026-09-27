@@ -10,7 +10,7 @@ const tabs = [
     { id: "map", title: "认知运行地图", description: "了解典型 INFJ 的内在运行机制" },
     { id: "cards", title: "卡点梳理", description: "从熟悉的生活场景，换一个角度看问题" },
     { id: "explore", title: "自由探索", description: "把一件具体的困惑慢慢说清楚" },
-    { id: "salon", title: "老头会客厅", description: "同一个问题，听见不同的理解" },
+    { id: "salon", title: "奇点会客厅", description: "同一个问题，听见不同的理解" },
 ] as const;
 const cognition = [
     { key: "Ni", name: "内倾直觉", role: "主导功能", plain: "串联线索，看见潜在走向", strength: "善于把零散信息联系起来，形成整体理解和长期构想。", blind: "线索不足时，可能把自己的推测当成已经发生的事实。", example: "对方今天话很少 → 我是不是做错了什么 → 他是不是不想再和我来往了？", reminder: "区分“我观察到了什么”和“我推测了什么”。为同一件事保留不止一种解释。" },
