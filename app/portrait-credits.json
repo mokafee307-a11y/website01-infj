@@ -52,5 +52,50 @@
     "date": "1945",
     "license": "Public domain in France (PD-France), collective work published more than 70 years ago",
     "licenseUrl": "https://commons.wikimedia.org/wiki/File:Albert_Camus_1945_(cropped).jpg#Licensing"
+  },
+  {
+    "id": "tolstoy",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:L.N.Tolstoy_Prokudin-Gorsky_Portrait.jpg",
+    "imageUrl": "https://philosophynow.org/media/images/issues/139/Leo%20Tolstoy.jpg",
+    "author": "Sergei Prokudin-Gorskii",
+    "date": "1908-05-23",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  {
+    "id": "plato",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Plato_Silanion_Musei_Capitolini_MC1377.jpg",
+    "imageUrl": "https://www.aip.de/media/images/Plato_Silanion_Musei_Capitolini_MC.2e16d0ba.fill-720x720.jpg",
+    "author": "© Marie-Lan Nguyen / Wikimedia Commons",
+    "date": "2009",
+    "license": "CC BY 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.5/"
+  },
+  {
+    "id": "spinoza",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Spinoza.jpg",
+    "imageUrl": "https://www.worldhistory.org/uploads/images/18390.png",
+    "author": "Anonymous painter; Herzog August Library",
+    "date": "circa 1665",
+    "license": "Public domain (PD-Art)",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  {
+    "id": "king",
+    "sourcePage": "https://www.loc.gov/pictures/item/00651714/",
+    "imageUrl": "https://tile.loc.gov/storage-services/service/pnp/cph/3c20000/3c26000/3c26500/3c26559r.jpg",
+    "author": "Dick DeMarsico, New York World-Telegram & Sun; Library of Congress",
+    "date": "1964",
+    "license": "Public domain; no known copyright restrictions, NYWTS collection",
+    "licenseUrl": "https://www.loc.gov/rr/print/res/076_nyw.html"
+  },
+  {
+    "id": "mandela",
+    "sourcePage": "https://clinton.presidentiallibraries.us/items/show/99655",
+    "imageUrl": "https://clinton.presidentiallibraries.us/files/original/33b6a44b05e4b93c78c75dd9f1e4a2b1.jpg",
+    "author": "Robert McNeely / White House Photograph Office, Clinton Administration",
+    "date": "1993-07-04",
+    "license": "Public domain — official U.S. federal government photograph",
+    "licenseUrl": "https://commons.wikimedia.org/wiki/File:President_Bill_Clinton_with_Nelson_Mandela.jpg#Licensing"
   }
 ]

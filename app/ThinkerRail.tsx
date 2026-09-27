@@ -4,15 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { thinkers, type Thinker } from "./prototype-data";
 import { useCardTilt, useHorizontalDrag } from "./CardMotion";
 import portraitCredits from "./portrait-credits.json";
+import BorderGlow from "./BorderGlow";
 
 function ThinkerCard({ person, selected, toggle }: { person: Thinker; selected: boolean; toggle: () => void }) {
   const tilt = useCardTilt(12);
   const portrait = portraitCredits.find(item => item.id === person.id);
   return <div className="thinker-motion" {...tilt}>
-    <button className={`thinker-card ${selected ? "selected" : ""}`} aria-pressed={selected} aria-label={`${selected ? "取消选择" : "选择"}${person.name}`} onClick={toggle}>
+    <BorderGlow>
+    <button className={`thinker-card texture ${selected ? "selected" : ""}`} aria-pressed={selected} aria-label={`${selected ? "取消选择" : "选择"}${person.name}`} onClick={toggle}>
       <div className="portrait-placeholder" aria-hidden="true">{portrait ? <img className="thinker-portrait" src={`/portraits/${person.id}.webp`} alt="" loading="lazy" width={600} height={800} draggable={false} /> : <span className="portrait-monogram">{person.short}</span>}<span className="selection-check">{selected ? "✓" : "+"}</span><span className="portrait-hover-caption">{selected ? "点击移出本次邀请" : "点击邀请，一起探索"}</span></div>
       <div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p></div><span className="card-glare" aria-hidden="true" />
     </button>
+    </BorderGlow>
   </div>;
 }
 

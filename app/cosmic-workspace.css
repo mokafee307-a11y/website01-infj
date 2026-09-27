@@ -1,8 +1,9 @@
 /* A quiet observatory beyond the launch screen. Existing layout and motion stay intact. */
 body { background: #060f14; }
-.launch-workspace { background: radial-gradient(ellipse at 12% 14%, #18494338, transparent 42%), radial-gradient(ellipse at 90% 45%, #233e5938, transparent 40%), #060f14; }
-.launch-workspace::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(#060f14db, #060f14f2), url('/media/cosmic-launch-poster.jpg') center / cover; }
-.app-shell { position: relative; }
+.launch-workspace { background: #060f14; }
+.launch-workspace::before { display: none; }
+.app-shell { position: relative; isolation: isolate; }
+.blinking-dots-background { position: fixed; inset: 0; z-index: -1; width: 100vw; height: 100dvh; display: block; pointer-events: none; }
 .site-header { background: #08151bc9; backdrop-filter: blur(22px); border-bottom: 1px solid var(--line); }
 .site-header .brand strong { font-family: var(--serif); font-size: 1.125rem; font-weight: 500; letter-spacing: .08em; }
 .brand-mark { color: var(--accent); border-color: #8ac6b45c; border-radius: 50%; font: italic 22px Georgia, serif; box-shadow: 0 0 22px #83cbb01a; }

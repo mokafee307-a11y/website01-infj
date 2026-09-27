@@ -39,7 +39,11 @@ test("renders the cosmic four-module experience", async () => {
   assert.doesNotMatch(html, /黑白原型|交互原型/);
   assert.match(html, /非实测分数/);
   assert.doesNotMatch(html, /未接入模型|class="section-number"|class="portrait-index"|class="deck-question-number"/);
-  assert.match(html, /class="main-tabs side-tabs"/);
+  assert.match(html, /class="option-wheel/);
+  assert.match(html, /绿老头认知运行地图/);
+  assert.match(html, /class="click-spark-canvas"/);
+  assert.match(html, /border-glow-card/);
+  assert.match(html, /panel texture/);
   assert.doesNotMatch(html, /刷新即清空|刷新将清空|class="tab-number"/);
   for (const person of ["荣格", "弗兰克尔", "黑塞", "陀思妥耶夫斯基", "克尔凯郭尔", "托尔斯泰", "柏拉图", "斯宾诺莎", "马丁·路德·金", "曼德拉"]) {
     assert.ok(html.includes(person), `Missing thinker ${person}`);
@@ -58,6 +62,7 @@ test("renders the cosmic four-module experience", async () => {
   assert.match(html, /class="flip-rotator"/);
   assert.match(html, /class="thinker-rail"/);
   assert.match(html, /class="thinker-portrait"/);
+  assert.equal([...html.matchAll(/class="thinker-portrait"/g)].length, 10, "Every thinker has a real portrait");
   assert.match(html, /肖像来源与授权/);
   assert.doesNotMatch(html, /3 : 4 占位/);
   assert.doesNotMatch(html, /左右滑动切换 · 点击中央卡片翻面|class="type-label"/);

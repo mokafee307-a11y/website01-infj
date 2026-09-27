@@ -76,8 +76,8 @@ export function FlipCard({ front, back, flipped, active }: {
   return <div className={`flip-card ${flipped ? "is-flipped" : ""}`} {...(active ? tilt : {})}>
     <div className="flip-tilt">
       <div className="flip-rotator">
-        <div className="flip-face flip-front-face" aria-hidden={!active || flipped} inert={!active || flipped}>{front}<span className="card-glare" aria-hidden="true" /></div>
-        <div className="flip-face flip-back-face" aria-hidden={!active || !flipped} inert={!active || !flipped}>{back}<span className="card-glare" aria-hidden="true" /></div>
+        <div className="flip-face texture flip-front-face" aria-hidden={!active || flipped} inert={!active || flipped}>{front}<span className="card-glare" aria-hidden="true" /></div>
+        <div className="flip-face texture flip-back-face" aria-hidden={!active || !flipped} inert={!active || !flipped}>{back}<span className="card-glare" aria-hidden="true" /></div>
       </div>
     </div>
   </div>;

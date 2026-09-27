@@ -1,0 +1,42 @@
+.site-header { background: transparent; backdrop-filter: none; border: 0; box-shadow: none; }
+.launch-workspace::after { content: none; }
+.texture { --texture-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='.045'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cpath d='M0 0h160v160H0z' filter='url(%23grain)' opacity='.55'/%3E%3C/svg%3E"); }
+.panel.texture { background-image: var(--texture-noise), radial-gradient(ellipse at 0 0, #5286781a, transparent 70%), linear-gradient(135deg, #15282df2, #0b1922f5); background-size: 160px 160px, auto, auto; }
+.radar-panel.texture { background-image: var(--texture-noise), radial-gradient(ellipse at 50% 38%, #539a8b25, transparent 66%), linear-gradient(145deg, #11252be8, #0b1922f5); background-size: 160px 160px, auto, auto; }
+.flip-face.texture { background-image: var(--texture-noise), radial-gradient(ellipse at 6% 0, #558f795e, transparent 62%), radial-gradient(ellipse at 100% 100%, #3256725e, transparent 65%); background-color: #102328; background-size: 160px 160px, auto, auto; }
+.deck-card:not(.is-current) .flip-face.texture { background-image: var(--texture-noise), linear-gradient(135deg, #1c3739, #0c1b25); background-size: 160px 160px, auto; }
+.app-shell .thinker-card.texture { background-image: var(--texture-noise), linear-gradient(150deg, #1b3131, #0d1b24); background-size: 160px 160px, auto; }
+@media (hover: hover) and (pointer: fine) { .deck-card.is-current .flip-card:hover .card-glare { opacity: .5; } }
+.split-parent { overflow: hidden; padding-block: 4px; }
+.split-char { will-change: transform, opacity; }
+.click-spark-root { display: contents; }
+.click-spark-canvas { position: fixed; inset: 0; width: 100vw; height: 100dvh; pointer-events: none; user-select: none; z-index: 3000; }
+.option-wheel { --ow-row: 54px; position: fixed; z-index: 1000; top: 50%; right: 0; transform: translateY(-50%); width: 210px; height: 370px; overflow: hidden; cursor: grab; user-select: none; touch-action: none; background: none; }
+.option-wheel--dragging { cursor: grabbing; }
+.option-wheel__item { position: absolute; top: 50%; right: 20px; white-space: nowrap; font-size: calc(.9rem + var(--ow-p, 0) * .35rem); font-family: var(--serif); line-height: 1.5; padding: 10px 0; text-decoration: none; transform-origin: right center; color: color-mix(in srgb, #e1f8eb calc(var(--ow-p, 0) * 100%), #a1b6b0); text-shadow: 0 2px 14px #020b10; cursor: pointer; will-change: transform, opacity, filter; }
+.option-wheel__item--selected { font-weight: 500; }
+.option-wheel__item { right: 40px; }
+.option-wheel__item:hover { text-shadow: 0 0 14px #afe9d05e; }
+.option-wheel__item:focus-visible { outline: 1px solid #b6e7d5; outline-offset: 3px; border-radius: 3px; }
+.border-glow-card { --edge-proximity: 0; --cursor-angle: 45deg; --color-sensitivity: calc(var(--edge-sensitivity) + 20); position: relative; border-radius: var(--border-radius); isolation: isolate; display: grid; height: 100%; background: var(--card-bg); overflow: visible; }
+.border-glow-card::before, .border-glow-card::after, .border-glow-card > .edge-light { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; transition: opacity .25s ease-out; z-index: 2; }
+.border-glow-card::before { padding: 1px; background: var(--gradient-one), var(--gradient-two), var(--gradient-three), var(--gradient-four), var(--gradient-five), var(--gradient-six), var(--gradient-seven), var(--gradient-base); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; opacity: clamp(0, calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity))), 1); }
+.border-glow-card::after { background: var(--gradient-one), var(--gradient-two), var(--gradient-three), var(--gradient-base); mask-image: radial-gradient(ellipse at 50% 50%, transparent 45%, #000 100%); opacity: clamp(0, calc(var(--fill-opacity) * (var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity))), 1); mix-blend-mode: soft-light; }
+.border-glow-card > .edge-light { inset: calc(var(--glow-padding) * -1); mask-image: conic-gradient(from var(--cursor-angle) at center, #000 2.5%, transparent calc(var(--cone-spread) * .4%), transparent calc(100% - var(--cone-spread) * .4%), #000 97.5%); opacity: clamp(0, calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity))), 1); mix-blend-mode: plus-lighter; }
+.edge-light::before { content: ""; position: absolute; inset: var(--glow-padding); border-radius: inherit; box-shadow: inset 0 0 0 1px var(--glow-color), inset 0 0 3px var(--glow-color-50), inset 0 0 15px var(--glow-color-30), inset 0 0 25px 2px var(--glow-color-20), 0 0 3px var(--glow-color-50), 0 0 15px var(--glow-color-30), 0 0 25px 2px var(--glow-color-20); }
+.border-glow-card:not(:hover)::before, .border-glow-card:not(:hover)::after, .border-glow-card:not(:hover) > .edge-light { opacity: 0; transition-duration: .6s; }
+.border-glow-inner { display: flex; flex-direction: column; position: relative; z-index: 1; border-radius: inherit; min-width: 0; }
+.thinker-motion .border-glow-card { transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)); transition: transform 220ms ease-out; }
+.thinker-motion .border-glow-inner .thinker-card { transform: none!important; }
+.thinker-motion .border-glow-inner .card-glare { display: none; }
+@media (hover: hover) and (pointer: fine) { .thinker-motion:hover .border-glow-card { transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) scale(1.025); } }
+@media (max-width: 700px) {
+  .option-wheel { --ow-row: 46px; width: 140px; height: 310px; }
+  .option-wheel__item { right: 30px; font-size: calc(.75rem + var(--ow-p, 0) * .125rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .click-spark-canvas { display: none; }
+  .thinker-motion .border-glow-card { transform: none!important; }
+  .border-glow-card::before, .border-glow-card::after, .border-glow-card > .edge-light { display: none; }
+  .split-char { will-change: auto; }
+}
