@@ -1,7 +1,8 @@
-/* Reserve a separate right track so navigation never covers the content. */
-.app-shell { --nav-track: 200px; }
+/* Content stays viewport-centered; navigation floats above it without a track. */
 .site-header { display: flex; justify-content: space-between; }
-.app-shell main { padding-right: var(--nav-track); }
+.app-shell main { padding-inline: 32px; }
+.side-tabs { z-index: 1000; pointer-events: none; }
+.side-tabs a { pointer-events: auto; }
 .side-tabs { position: fixed; top: 50%; right: max(20px, calc((100vw - 1800px) / 2 + 20px)); transform: translateY(-50%); width: 164px; max-height: calc(100dvh - 160px); overflow-y: auto; display: flex; flex-direction: column; align-items: stretch; gap: 12px; padding: 16px 0; border: 0; background: transparent; }
 .side-tabs a { justify-content: flex-end; text-align: right; min-height: 52px; padding: 12px 14px 12px 0; border: 0; border-right: 2px solid transparent; font-size: .875rem; color: #777; transition: font-size 180ms ease, color 180ms ease, border-color 180ms ease; }
 .side-tabs a:hover { color: #222; background: transparent; border-right-color: #bbb; }
@@ -32,7 +33,6 @@
 .report-block-title { justify-content: center; text-align: center; }
 .report-block-title small { margin-left: 0; }
 @media (max-width: 1100px) {
-  .app-shell { --nav-track: 172px; }
   .side-tabs { width: 140px; right: 16px; }
   .side-tabs a[aria-current=location] { font-size: 1.125rem; }
   .exploration-layout, .salon-room { grid-template-columns: minmax(0, 1fr); }
@@ -40,11 +40,10 @@
   .map-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 700px) {
-  .app-shell { --nav-track: 104px; }
   .side-tabs { right: 6px; width: 88px; gap: 10px; }
   .side-tabs a { white-space: normal; overflow-wrap: anywhere; font-size: .875rem; padding: 10px 8px 10px 4px; min-height: 60px; }
   .side-tabs a[aria-current=location] { font-size: 1rem; }
-  .app-shell main { padding-left: 12px; }
+  .app-shell main { padding-inline: 12px; }
   .workspace-heading h1 { font-size: 1.5rem; }
   .function-list .function-item { padding: 10px; flex: 1 1 90px; }
   .function-item .function-key { width: auto; }
