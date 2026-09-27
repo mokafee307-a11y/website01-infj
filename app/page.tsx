@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CustomCursor from "./CustomCursor";
-import portraitCredits from "../public/portraits/credits.json";
+import portraitCredits from "./portrait-credits.json";
 
 type Mode = {
   id: string;
