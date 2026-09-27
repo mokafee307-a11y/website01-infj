@@ -1,0 +1,246 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
+import { categories, scenarioCards, examples, sampleReports, defaultQuestion, thinkers, getExampleId, hasCrisisLanguage, type ExampleId } from "./prototype-data";
+export type SavedInsight = {
+    id: string;
+    source: string;
+    title: string;
+    text: string;
+};
+type SaveProps = {
+    saved: SavedInsight[];
+    onSave: (item: SavedInsight) => void;
+};
+type Report = {
+    id: string;
+    question: string;
+    answer: string;
+    sample: ExampleId;
+    safety: boolean;
+    time: string;
+    correction: string;
+};
+function SavedButton({ item, saved, onSave }: SaveProps & {
+    item: SavedInsight;
+}) {
+    const previous = saved.find(entry => entry.id === item.id);
+    const added = previous?.text === item.text;
+    return <button className="text-button" onClick={() => onSave(item)} disabled={added}>{added ? "已加入今日切片" : previous ? "更新今日切片" : "加入今日切片"}</button>;
+}
+export function Flashcards({ saved, onSave }: SaveProps) {
+    const [category, setCategory] = useState(categories[0]);
+    const [flipped, setFlipped] = useState<string[]>([]);
+    const cards = scenarioCards.filter(card => card.category === category);
+    const toggle = (id: string) => setFlipped(current => current.includes(id) ? current.filter(value => value !== id) : [...current, id]);
+    return <div>
+    <div className="module-toolbar"><div className="category-tabs" aria-label="问题分类">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => setCategory(item)}>{item}<span className="count">6</span></button>)}</div><span className="hint">选择一个熟悉的场景，翻面看看</span></div>
+    <div className="flash-grid">{cards.map((card, index) => {
+            const isFlipped = flipped.includes(card.id);
+            return <article key={card.id} className={`flash-card ${isFlipped ? "is-flipped" : ""}`}>
+        <div className="flash-meta"><span>{category} / 0{index + 1}</span><span>{isFlipped ? "背面 · 换个角度" : "正面 · 生活场景"}</span></div>
+        {!isFlipped ? <button className="flash-front" onClick={() => toggle(card.id)} aria-label={`翻开：${card.title}`}><h2>{card.title}</h2><p>{card.scene}</p><span className="flip-hint">翻开卡片 <span aria-hidden="true">↻</span></span></button> : <div className="flash-back"><h2>{card.title}</h2><div className="blindspot"><h3>! 常见盲区 · 不是结论</h3><p>{card.blind}</p></div><div><h3>换一种理解</h3><p>{card.reframe}</p></div><div><h3>可以试一试</h3><p>{card.action}</p></div><div className="flash-actions"><button className="text-button" onClick={() => toggle(card.id)}>翻回正面</button><SavedButton item={{ id: card.id, source: "卡点梳理", title: card.title, text: `${card.reframe}\n可以试试：${card.action}` }} saved={saved} onSave={onSave}/></div></div>}
+      </article>;
+        })}</div>
+    <p className="hint section-note">这些是常见的观察角度，不是唯一正确答案。只留下与你的经历贴近的部分。</p>
+  </div>;
+}
+export function SafetySupport() {
+    return <section className="safety-box" role="status"><span className="badge">优先照顾安全</span><h2>先暂停分析，让一个真实的人陪着你。</h2><p>这段表达可能涉及人身安全。我们先不继续认知报告或人物演绎。</p><ol><li>如果现在有立即危险、已经受伤或服用了可能有害的物质，请立即联系当地急救服务，或请身边的人协助求助。</li><li>尽量远离可能伤害自己的物品和地点，去一个有人陪伴的安全空间。</li><li>联系一个可信任的人，可以直接说：“我现在很难受，需要你陪我，帮我一起获得支持。”</li></ol><p>如果你是在谈论他人或引用作品，也可以补充说明。原型采用保守的关键词提示，可能误判，不能替代专业风险评估或紧急救援。</p></section>;
+}
+export function Exploration({ saved, onSave }: SaveProps) {
+    const [reports, setReports] = useState<Report[]>([]);
+    const [selected, setSelected] = useState<string | null>(null);
+    const [question, setQuestion] = useState("");
+    const [answer, setAnswer] = useState("");
+    const [pending, setPending] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState("");
+    const [correcting, setCorrecting] = useState(false);
+    const [correction, setCorrection] = useState("");
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const resultRef = useRef<HTMLElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
+    const current = reports.find(report => report.id === selected);
+    useEffect(() => () => { if (timer.current)
+        clearTimeout(timer.current); }, []);
+    useEffect(() => { if (selected && resultRef.current && !resultRef.current.closest("[hidden]"))
+        resultRef.current.focus({ preventScroll: true }); }, [selected]);
+    function startNew() { setSelected(null); setPending(false); setQuestion(""); setAnswer(""); setError(""); setCorrecting(false); inputRef.current?.focus(); }
+    function generate(skip = false) {
+        if (busy)
+            return;
+        const q = question.trim();
+        if (!q) {
+            setError("先写下一件你想梳理的事情。");
+            inputRef.current?.focus();
+            return;
+        }
+        const safety = hasCrisisLanguage(q + " " + answer);
+        if (!safety && !skip && !pending && q.length < 40) {
+            setPending(true);
+            setError("");
+            return;
+        }
+        if (pending && !skip && !answer.trim() && !safety) {
+            setError("可以补充一个片段，也可以直接跳过。");
+            return;
+        }
+        setBusy(true);
+        setError("");
+        timer.current = setTimeout(() => {
+            try {
+                const report: Report = { id: crypto.randomUUID(), question: q, answer: skip ? "" : answer.trim(), sample: getExampleId(q), safety, time: new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false }), correction: "" };
+                setReports(items => [report, ...items]);
+                setSelected(report.id);
+                setPending(false);
+                setCorrecting(false);
+                setBusy(false);
+            }
+            catch {
+                setBusy(false);
+                setError("这次没能准备好报告，输入已保留，请再试一次。");
+            }
+        }, 450);
+    }
+    const content = current ? sampleReports[current.sample] : null;
+    return <div className="exploration-layout">
+    <aside className="panel history-panel"><button className="primary full-width" onClick={startNew} disabled={busy}>＋ 新建问题</button><div className="panel-heading history-heading"><h2>本次咨询</h2><span className="badge">{reports.length} 条</span></div><p className="hint">仅本次页面保留，刷新即清空。</p><div className="history-list">{reports.length === 0 ? <p className="history-empty">还没有咨询记录。<br />生成的报告会出现在这里。</p> : reports.map(report => <button key={report.id} className={`history-item ${report.id === selected ? "selected" : ""}`} disabled={busy} onClick={() => { setSelected(report.id); setCorrecting(false); }}><strong>{report.question}</strong><span>{report.time} · {report.safety ? "安全支持" : "报告已生成"}</span></button>)}</div></aside>
+    <div className="exploration-main">{!current ? <section className="panel input-panel"><div className="panel-heading"><h2>从一件具体的事情开始</h2><span className="badge">原型演示 · 未接入模型</span></div><p className="intro-copy">发生了什么？你如何理解它？又有什么让你犹豫？不需要先组织得很完整。</p><div className="example-row"><span className="hint">体验样例</span>{examples.map(example => <button key={example.id} disabled={busy} onClick={() => { setQuestion(example.question); setAnswer(""); setPending(false); setError(""); }}>{example.title}</button>)}</div><label className="field-label" htmlFor="exploration-question">想梳理的问题</label><textarea id="exploration-question" ref={inputRef} value={question} onChange={event => { setQuestion(event.target.value); setPending(false); setAnswer(""); setError(""); }} disabled={busy} maxLength={2000} placeholder="例如：同事临时让我帮忙，我不想答应，却又担心拒绝会影响关系……"/><div className="input-meta"><span>避免填写姓名、联系方式等身份信息。</span><span>{question.length}/2000</span></div>
+      {pending && <div className="clarify-box"><span className="badge">补充一个细节 · 可跳过</span><label className="field-label" htmlFor="clarification">最近一次出现这种感受时，具体发生了什么？你当时做了什么？</label><textarea id="clarification" value={answer} onChange={event => { setAnswer(event.target.value); setError(""); }} maxLength={1200} disabled={busy} placeholder="只说一个片段就好。"/></div>}
+      {error && <p className="error-text" role="alert">{error}</p>}<div className="form-actions"><span className="hint">信息足够直接生成，不足时简短追问。</span><div className="button-row">{pending && <button onClick={() => generate(true)} disabled={busy}>跳过，直接生成</button>}<button className="primary" onClick={() => generate()} disabled={busy || !question.trim()}>{busy ? "正在准备演示报告…" : pending ? "补充并生成报告" : "生成认知拆解报告"}</button></div></div><div className="prototype-disclosure">演示规则：短输入触发一次追问，预设样例展示对应报告；自由输入展示报告结构，不冒充真实 AI 分析。</div></section> : <section className="panel report-panel" ref={resultRef} tabIndex={-1} aria-label="认知拆解报告"><div className="panel-heading"><span className="eyebrow">本次咨询 / {current.time}</span><button onClick={startNew}>新建问题</button></div><div className="original-question"><h3>你提出的问题</h3><p>{current.question}</p>{current.answer && <><h3>你的补充</h3><p>{current.answer}</p></>}</div>{current.safety ? <SafetySupport /> : content && <><div className="report-title"><span className="badge">{current.sample === "custom" ? "结构演示 · 未对输入进行 AI 分析" : "预设样例 · 非实时 AI 分析"}</span><h2>{content.title}</h2><p className="hint">系统推测需要你的确认；不贴诊断标签，不生成个人认知分数。</p></div><div className="cognitive-flow" aria-label="事件、解释、感受、应对和反馈的关系">{["事件", "解释", "感受", "应对", "反馈"].map((label, index) => <div key={label}><span>{String(index + 1).padStart(2, "0")} / {label}</span><p>{content.loop[index]}</p></div>)}</div><div className="report-sections">{[["01", "发生了什么", "事实整理", content.facts], ["02", "可能卡在哪里", "待确认的理解", content.hypothesis], ["03", "你在保护什么", "需要与现实责任", content.needs], ["04", "还有什么解释", "信息缺口", content.alternative], ["05", "接下来可以怎样", "可选，不是任务", content.next]].map(([number, title, caption, body]) => <div className="report-block" key={number}><div className="report-block-title"><span>{number}</span><h3>{title}</h3><small>{caption}</small></div><p>{body}</p></div>)}</div><details className="lens-detail"><summary>INFJ 认知功能参考视角</summary><p>{content.lens}</p></details><div className="report-actions"><button onClick={() => { setCorrecting(!correcting); setCorrection(current.correction); }}>这不符合我，补充说明</button><SavedButton item={{ id: current.id, source: "自由探索", title: content.title, text: `演示报告，非实时 AI 分析\n我的问题：${current.question}\n${current.answer ? `我的补充：${current.answer}\n` : ""}${content.hypothesis}\n可以继续观察：${content.next}${current.correction ? `\n我的修正：${current.correction}` : ""}` }} saved={saved} onSave={onSave}/></div>{correcting && <div className="clarify-box"><label className="field-label" htmlFor="report-correction">哪些地方与你的经历不符？</label><textarea id="report-correction" value={correction} onChange={event => setCorrection(event.target.value)} maxLength={1200}/><div className="form-actions"><span className="hint">原型会记录补充，不会自动重新分析。</span><button onClick={() => { setReports(items => items.map(item => item.id === current.id ? { ...item, correction: correction.trim() } : item)); setCorrecting(false); }} disabled={!correction.trim()}>保存补充</button></div></div>}{current.correction && <div className="note correction-note"><h3>我的修正</h3><p>{current.correction}</p></div>}</>}</section>}</div>
+  </div>;
+}
+type SalonRound = {
+    id: string;
+    question: string;
+    people: string[];
+    safety: boolean;
+    isDefault: boolean;
+};
+export function Salon({ saved, onSave }: SaveProps) {
+    const [selected, setSelected] = useState<string[]>(["jung", "hesse", "frankl"]);
+    const [inRoom, setInRoom] = useState(false);
+    const [question, setQuestion] = useState(defaultQuestion);
+    const [rounds, setRounds] = useState<SalonRound[]>([]);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState("");
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const latest = useRef<HTMLDivElement>(null);
+    const people = thinkers.filter(person => selected.includes(person.id));
+    useEffect(() => () => { if (timer.current)
+        clearTimeout(timer.current); }, []);
+    useEffect(() => { if (rounds.length && latest.current && !latest.current.closest("[hidden]"))
+        latest.current.scrollIntoView({ block: "nearest", behavior: "auto" }); }, [rounds.length]);
+    function toggle(id: string) { setSelected(current => current.includes(id) ? current.filter(value => value !== id) : [...current, id]); }
+    function send() {
+        if (busy || !question.trim() || !people.length)
+            return;
+        const q = question.trim();
+        setBusy(true);
+        setError("");
+        timer.current = setTimeout(() => {
+            try {
+                setRounds(items => [...items, { id: crypto.randomUUID(), question: q, people: [...selected], safety: hasCrisisLanguage(q), isDefault: q === defaultQuestion }]);
+                setQuestion("");
+                setBusy(false);
+            }
+            catch {
+                setBusy(false);
+                setError("这次没能准备好回复，问题仍保留，请再试一次。");
+            }
+        }, 450);
+    }
+    if (!inRoom)
+        return <div className="salon-selection"><div><div className="module-toolbar"><p>选择想邀请的人物，可以单选或多选。</p><span className="hint">10 位候选人物</span></div><div className="thinker-grid">{thinkers.map((person, index) => <button className={`thinker-card ${selected.includes(person.id) ? "selected" : ""}`} key={person.id} aria-pressed={selected.includes(person.id)} aria-label={`${selected.includes(person.id) ? "取消选择" : "选择"}${person.name}`} onClick={() => toggle(person.id)}><div className="portrait-placeholder" aria-hidden="true"><span className="portrait-index">{String(index + 1).padStart(2, "0")}</span><span>人物肖像</span><small>3 : 4 占位</small><span className="selection-check">{selected.includes(person.id) ? "✓" : "+"}</span></div><div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p><span className="type-label">INFJ · 推测类型</span></div></button>)}</div></div><aside className="panel selection-panel"><h2>本次邀请</h2><p className="hint">已选择 {selected.length} 位</p><div className="guest-list">{people.length ? people.map(person => <div key={person.id}><span>{person.name}</span><button onClick={() => toggle(person.id)} aria-label={`移除${person.name}`}>×</button></div>) : <p className="hint">先选一位你想听听的人。</p>}</div><button className="primary full-width" disabled={!people.length} onClick={() => setInRoom(true)}>进入会客厅{people.length ? `（${people.length}）` : ""}</button><div className="note"><h3>分别回答，不自动辩论</h3><p>每个人从自己的思想视角回应同一问题。</p></div><p className="hint">历史人物的 INFJ 类型属于公开推测，并非已证实身份。回复为思想演绎，不是本人言论。</p><p className="hint">本版只演示“稳定与自我”这一组预设回答，尚未接入模型。</p></aside></div>;
+    return <div className="salon-room"><aside className="panel room-sidebar"><button className="full-width" onClick={() => setInRoom(false)} disabled={busy}>← 调整邀请人物</button><h2>本次在场 · {people.length} 位</h2>{people.map(person => <div className="room-person" key={person.id}><span className="avatar-placeholder" aria-hidden="true">{person.short.slice(0, 1)}</span><div><strong>{person.name}</strong><small>{person.angle}</small></div></div>)}<div className="note">每轮问题独立回答，不会自动串联自由探索中的内容，也不会让人物彼此辩论。</div></aside><section className="panel conversation-panel"><div className="panel-heading"><h2>一个问题，不同的理解</h2><span className="badge">预设演示 · 未接入模型</span></div><div className="conversation-scroll" aria-live="polite">{rounds.length === 0 ? <div className="conversation-empty"><h3>想从什么话题开始？</h3><p>默认问题：生活稳定，却越来越不像自己。</p><p className="hint">可以直接发送下方问题，查看已讨论的第 3 组样例。</p></div> : rounds.map((round, index) => <div className="conversation-round" key={round.id} ref={index === rounds.length - 1 ? latest : null}><div className="user-message"><span className="eyebrow">我的问题 / {String(index + 1).padStart(2, "0")}</span><p>{round.question}</p></div>{round.safety ? <SafetySupport /> : !round.isDefault ? <div className="note"><h3>问题已保留，这个话题还没有预设回复。</h3><p>原型不会把默认问题的回答套到你的问题上。接入模型后，这里将显示所选人物的独立回应。</p><button onClick={() => setQuestion(defaultQuestion)} disabled={busy}>填入默认问题，体验分别回答</button></div> : thinkers.filter(person => round.people.includes(person.id)).map(person => <article className="persona-response" key={person.id}><div className="response-header"><span className="avatar-placeholder" aria-hidden="true">{person.short.slice(0, 1)}</span><div><h3>{person.name}</h3><small>{person.angle} · 思想演绎，非本人原话</small></div></div><div className="response-body">{person.response.split("\n\n").map((paragraph, i) => <p key={i}>{paragraph}</p>)}</div><div className="response-actions"><a href={person.source} target="_blank" rel="noreferrer">思想背景资料 ↗</a><SavedButton item={{ id: `${round.id}-${person.id}`, source: "老头会客厅", title: `${person.name} · ${person.angle}`, text: `预设思想演绎，非人物原话\n话题：稳定与自我\n${person.response}` }} saved={saved} onSave={onSave}/></div></article>)}</div>)}</div><div className="salon-composer"><div className="composer-caption"><label className="field-label" htmlFor="salon-question">想听他们怎么看？</label><button className="text-button" disabled={busy} onClick={() => setQuestion(defaultQuestion)}>使用默认问题</button></div><textarea id="salon-question" value={question} disabled={busy} maxLength={2000} onChange={event => setQuestion(event.target.value)} placeholder="写下一个困惑或你想探讨的话题……"/><div className="form-actions"><span className="hint">{question.length}/2000 · 思想演绎，不替代专业支持</span><button className="primary" disabled={busy || !question.trim()} onClick={send}>{busy ? "正在准备演示回复…" : `请 ${people.length} 位分别回答`}</button></div>{error && <p role="alert" className="error-text">{error}</p>}</div></section></div>;
+}
+export function DailySlice({ saved }: {
+    saved: SavedInsight[];
+}) {
+    const dialog = useRef<HTMLDialogElement>(null);
+    const [selected, setSelected] = useState<string[]>([]);
+    const [note, setNote] = useState("");
+    const [preview, setPreview] = useState<string | null>(null);
+    const [error, setError] = useState("");
+    const [busy, setBusy] = useState(false);
+    const chosen = saved.filter(item => selected.includes(item.id));
+    const completeText = ["本次探索记录（含预设演示内容）", ...chosen.map(item => `【${item.source}】${item.title}\n${item.text}`), ...(note.trim() ? [`【我的一句话】\n${note.trim()}`] : [])].join("\n\n");
+    useEffect(() => {
+        if (preview !== null && completeText.length > 6000) {
+            setPreview(null);
+            setError("所选内容超过单张图片的 6000 字上限，请减少选项后再预览。内容没有被截断或丢弃。");
+        }
+    }, [completeText, preview]);
+    function open() { setSelected(saved.map(item => item.id)); setPreview(null); setError(""); dialog.current?.showModal(); }
+    async function download() {
+        if (busy || !preview?.trim())
+            return;
+        setBusy(true);
+        setError("");
+        try {
+            await document.fonts.ready;
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            if (!ctx)
+                throw new Error("Canvas unavailable");
+            const width = 1080, padding = 80, fontSize = 30, lineHeight = 52;
+            ctx.font = `${fontSize}px sans-serif`;
+            const lines: string[] = [];
+            for (const paragraph of preview.split("\n")) {
+                if (!paragraph) {
+                    lines.push("");
+                    continue;
+                }
+                let line = "";
+                for (const character of paragraph) {
+                    if (ctx.measureText(line + character).width > width - padding * 2) {
+                        lines.push(line);
+                        line = character;
+                    }
+                    else
+                        line += character;
+                }
+                if (line)
+                    lines.push(line);
+            }
+            canvas.width = width;
+            canvas.height = Math.max(960, 300 + lines.length * lineHeight + 140);
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#222";
+            ctx.font = "bold 52px sans-serif";
+            ctx.fillText("今日切片", padding, 112);
+            ctx.font = "24px sans-serif";
+            ctx.fillStyle = "#666";
+            ctx.fillText(`${new Date().toLocaleDateString("zh-CN")}  /  INFJ 认知操作系统 · 交互原型`, padding, 164);
+            ctx.strokeStyle = "#ccc";
+            ctx.beginPath();
+            ctx.moveTo(padding, 208);
+            ctx.lineTo(width - padding, 208);
+            ctx.stroke();
+            ctx.fillStyle = "#222";
+            ctx.font = `${fontSize}px sans-serif`;
+            lines.forEach((line, i) => ctx.fillText(line, padding, 284 + i * lineHeight));
+            ctx.font = "22px sans-serif";
+            ctx.fillStyle = "#777";
+            ctx.fillText("演示内容与思想演绎，不是心理诊断或人物原话。", padding, canvas.height - 66);
+            const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error("Export failed")), "image/png"));
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `今日切片-${new Date().toLocaleDateString("sv-SE")}.png`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+        }
+        catch {
+            setError("图片暂时未能导出，已保留你的选择与文字，请重试。");
+        }
+        finally {
+            setBusy(false);
+        }
+    }
+    return <><button onClick={open}>今日切片{saved.length ? `（${saved.length}）` : ""}</button><dialog ref={dialog} className="slice-dialog" aria-labelledby="slice-title" onCancel={() => { if (busy)
+        setBusy(false); }}><div className="dialog-heading"><div><h2 id="slice-title">今日切片</h2><p className="hint">只带走你愿意留下的内容</p></div><button onClick={() => dialog.current?.close()} aria-label="关闭今日切片">×</button></div><div className="dialog-body">{preview === null ? <><p className="hint">勾选本次探索中留下的内容。导出前可编辑、删去私人信息；不会自动保存到服务器。</p><div className="slice-list">{saved.length ? saved.map(item => <label className="slice-option" key={item.id}><input type="checkbox" checked={selected.includes(item.id)} onChange={() => setSelected(items => items.includes(item.id) ? items.filter(id => id !== item.id) : [...items, item.id])}/><span><small>{item.source}</small><strong>{item.title}</strong></span></label>) : <div className="note">还没有选中的内容。可以在卡片背面、报告或人物回答下点击“加入今日切片”，也可以直接写下此刻的觉察。</div>}</div><label className="field-label" htmlFor="slice-note">此刻，我想留给自己的一句话</label><textarea id="slice-note" value={note} onChange={event => setNote(event.target.value)} maxLength={600} placeholder="不需要总结得很好，只留下你觉得有用的一点。"/><p className="hint">刷新将清空当前问题、报告与选中的内容。需要保留，请先下载。</p></> : <><label className="field-label" htmlFor="slice-preview">导出文字预览 · 可以直接编辑</label><textarea id="slice-preview" className="export-preview" value={preview} onChange={event => setPreview(event.target.value)} maxLength={6000}/><p className="hint">将导出为黑白 PNG 长图。请确认是否保留原始问题等私人内容。</p></>}{error && <p role="alert" className="error-text">{error}</p>}</div><div className="dialog-footer">{preview === null ? <><span className="hint">已选 {chosen.length} 条</span><button className="primary" disabled={!chosen.length && !note.trim()} onClick={() => setPreview(["本次探索记录（含预设演示内容）", ...chosen.map(item => `【${item.source}】${item.title}\n${item.text}`), ...(note.trim() ? [`【我的一句话】\n${note.trim()}`] : [])].join("\n\n").slice(0, 6000))}>预览并编辑</button></> : <><button onClick={() => setPreview(null)} disabled={busy}>返回选择</button><button className="primary" onClick={download} disabled={busy || !preview.trim()}>{busy ? "正在导出…" : "下载图片 PNG"}</button></>}</div></dialog></>;
+}

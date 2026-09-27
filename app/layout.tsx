@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./workspace.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mokafee.com"),
-  title: "INFJ 认知操作系统｜把内耗转化为现实行动",
-  description: "为 INFJ 与高内省人群设计的状态调节、认知解码与现实行动系统。",
+  title: "INFJ 认知操作系统｜交互原型",
+  description: "认知运行地图、卡点梳理、自由探索与老头会客厅。黑白交互原型，报告及人物回复为演示内容。",
   openGraph: {
     title: "INFJ 认知操作系统｜把内耗转化为现实行动",
     description: "别急着想明白。先看看，你现在是怎么运行的。",
