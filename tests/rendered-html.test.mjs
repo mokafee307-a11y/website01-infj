@@ -29,9 +29,10 @@ test("renders the monochrome four-module prototype", async () => {
   assert.match(html, /开始漫游/);
   assert.match(html, /class="launch-workspace" inert="" aria-hidden="true"/);
   assert.doesNotMatch(html, /codex-preview/);
-  assert.match(html, /交互原型/);
+  assert.doesNotMatch(html, /黑白原型|交互原型/);
   assert.match(html, /非实测分数/);
-  assert.match(html, /未接入模型/);
+  assert.doesNotMatch(html, /未接入模型|class="section-number"|class="portrait-index"|class="deck-question-number"/);
+  assert.match(html, /class="main-tabs side-tabs"/);
   assert.doesNotMatch(html, /刷新即清空|刷新将清空|class="tab-number"/);
   for (const person of ["荣格", "弗兰克尔", "黑塞", "陀思妥耶夫斯基", "克尔凯郭尔", "托尔斯泰", "柏拉图", "斯宾诺莎", "马丁·路德·金", "曼德拉"]) {
     assert.ok(html.includes(person), `Missing thinker ${person}`);

@@ -82,9 +82,9 @@ export default function Prototype() {
     }, [active]);
     function handleTabKey(event: KeyboardEvent<HTMLAnchorElement>, index: number) {
         let next = index;
-        if (event.key === "ArrowRight")
+        if (event.key === "ArrowRight" || event.key === "ArrowDown")
             next = (index + 1) % tabs.length;
-        else if (event.key === "ArrowLeft")
+        else if (event.key === "ArrowLeft" || event.key === "ArrowUp")
             next = (index + tabs.length - 1) % tabs.length;
         else if (event.key === "Home")
             next = 0;
@@ -99,12 +99,12 @@ export default function Prototype() {
     return <LaunchScreen><div className="app-shell">
     <a href="#workspace" className="skip-link">跳到模块内容</a>
     <header ref={header} className="site-header"><div className="brand"><span className="brand-mark" aria-hidden="true">I</span><strong>INFJ漫游飞船</strong></div>
-    <nav ref={navigation} className="main-tabs" aria-label="功能模块">{tabs.map((tab, index) => <a key={tab.id} id={`tab-${tab.id}`} href={`#${tab.id}`} aria-current={active === tab.id ? "location" : undefined} onKeyDown={event => handleTabKey(event, index)}>{tab.title}</a>)}</nav>
     <div className="header-actions"><DailySlice saved={saved}/></div></header>
-    <main id="workspace" tabIndex={-1}>{tabs.map((tab, index) => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
-      <div className="workspace-heading"><div><span className="section-number">0{index + 1}</span><h1 id={`heading-${tab.id}`}>{tab.title}</h1><p>{tab.description}</p></div></div>
+    <nav ref={navigation} className="main-tabs side-tabs" aria-label="功能模块">{tabs.map((tab, index) => <a key={tab.id} id={`tab-${tab.id}`} href={`#${tab.id}`} aria-current={active === tab.id ? "location" : undefined} onKeyDown={event => handleTabKey(event, index)}>{tab.title}</a>)}</nav>
+    <main id="workspace" tabIndex={-1}>{tabs.map(tab => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
+      <div className="workspace-heading"><div><h1 id={`heading-${tab.id}`}>{tab.title}</h1><p>{tab.description}</p></div></div>
       {tab.id === "map" ? <CognitiveMap /> : tab.id === "cards" ? <Flashcards saved={saved} onSave={onSave}/> : tab.id === "explore" ? <Exploration saved={saved} onSave={onSave}/> : <Salon saved={saved} onSave={onSave}/>}
     </section>)}
-    </main><footer className="site-footer"><span>自我觉察工具，不替代专业心理支持。</span><span>黑白原型 / 信息架构与交互验证</span></footer>
+    </main>
   </div></LaunchScreen>;
 }

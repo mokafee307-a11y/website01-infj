@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { thinkers, type Thinker } from "./prototype-data";
 import { useCardTilt, useHorizontalDrag } from "./CardMotion";
 
-function ThinkerCard({ person, index, selected, toggle }: { person: Thinker; index: number; selected: boolean; toggle: () => void }) {
+function ThinkerCard({ person, selected, toggle }: { person: Thinker; selected: boolean; toggle: () => void }) {
   const tilt = useCardTilt(12);
   return <div className="thinker-motion" {...tilt}>
     <button className={`thinker-card ${selected ? "selected" : ""}`} aria-pressed={selected} aria-label={`${selected ? "取消选择" : "选择"}${person.name}`} onClick={toggle}>
-      <div className="portrait-placeholder" aria-hidden="true"><span className="portrait-index">{String(index + 1).padStart(2, "0")}</span><span>人物肖像</span><small>3 : 4 占位</small><span className="selection-check">{selected ? "✓" : "+"}</span><span className="portrait-hover-caption">{selected ? "点击移出本次邀请" : "点击邀请，一起探索"}</span></div>
+      <div className="portrait-placeholder" aria-hidden="true"><span>人物肖像</span><small>3 : 4 占位</small><span className="selection-check">{selected ? "✓" : "+"}</span><span className="portrait-hover-caption">{selected ? "点击移出本次邀请" : "点击邀请，一起探索"}</span></div>
       <div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p><span className="type-label">INFJ · 推测类型</span></div><span className="card-glare" aria-hidden="true" />
     </button>
   </div>;
@@ -33,7 +33,7 @@ export default function ThinkerRail({ selected, toggle }: { selected: string[]; 
   return <div className="thinker-gallery">
     <div className="module-toolbar"><div><p>选择想邀请的人物，可以单选或多选。</p><span className="hint">左右滑动查看全部 10 位人物</span></div><div className="rail-arrows"><button aria-label="向左浏览人物" disabled={edges.start} onClick={() => scroll(-1)}>‹</button><button aria-label="向右浏览人物" disabled={edges.end} onClick={() => scroll(1)}>›</button></div></div>
     <div ref={rail} className="thinker-rail" role="region" aria-label="人物卡牌，可左右滑动" tabIndex={0} {...gesture} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === "ArrowLeft" || event.key === "ArrowRight")) { event.preventDefault(); scroll(event.key === "ArrowLeft" ? -1 : 1); } }}>
-      {thinkers.map((person, index) => <ThinkerCard key={person.id} person={person} index={index} selected={selected.includes(person.id)} toggle={() => toggle(person.id)} />)}
+      {thinkers.map(person => <ThinkerCard key={person.id} person={person} selected={selected.includes(person.id)} toggle={() => toggle(person.id)} />)}
     </div>
   </div>;
 }
