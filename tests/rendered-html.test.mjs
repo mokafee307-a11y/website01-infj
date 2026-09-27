@@ -27,6 +27,10 @@ test("renders the monochrome four-module prototype", async () => {
   assert.match(html, /<strong>INFJ漫游飞船<\/strong>/);
   assert.match(html, /绿老头漫游飞船/);
   assert.match(html, /开始漫游/);
+  assert.match(html, /launch-screen cosmic-launch/);
+  assert.match(html, /poster="\/media\/cosmic-launch-poster.jpg"/);
+  assert.match(html, /在浩瀚之中，总有一盏灯为你而亮/);
+  assert.match(html, /class="launch-edge edge-left"/);
   assert.match(html, /class="launch-workspace" inert="" aria-hidden="true"/);
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /黑白原型|交互原型/);
