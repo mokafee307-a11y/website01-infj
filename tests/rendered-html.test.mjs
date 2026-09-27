@@ -25,6 +25,9 @@ test("renders the monochrome four-module prototype", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /INFJ 认知操作系统/);
+  assert.match(html, /绿老头漫游飞船/);
+  assert.match(html, /开始漫游/);
+  assert.match(html, /class="launch-workspace" inert="" aria-hidden="true"/);
   assert.doesNotMatch(html, /codex-preview/);
   assert.match(html, /交互原型/);
   assert.match(html, /非实测分数/);

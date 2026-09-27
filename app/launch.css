@@ -1,0 +1,58 @@
+.launch-workspace { position: relative; isolation: isolate; }
+.launch-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  background: radial-gradient(ellipse at 50% 42%, #fff 0%, #f8f8f8 46%, #ededed 100%);
+  color: var(--ink);
+  padding: max(40px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom));
+  transition: opacity 650ms ease, visibility 650ms;
+}
+.launch-content {
+  margin: auto;
+  max-width: 100%;
+  text-align: center;
+  padding: 32px 0;
+  transition: opacity 450ms ease, transform 650ms cubic-bezier(.22,.61,.36,1);
+}
+.launch-content h1 { font-weight: 500; line-height: 1.45; letter-spacing: .055em; }
+.launch-content h1 span:first-child { display: block; font-size: clamp(1.15rem, 2vw, 1.5rem); font-weight: 400; color: #666; margin-bottom: 20px; }
+.launch-content h1 span:last-child { display: block; font-size: clamp(1.75rem, 4.7vw, 3.5rem); text-wrap: balance; }
+.launch-content p { color: #666; font-size: clamp(1rem, 1.6vw, 1.125rem); line-height: 2; margin-top: 28px; }
+.launch-content p span { display: block; }
+.launch-enter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  min-width: 208px;
+  min-height: 58px;
+  margin-top: 52px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  border: 1px solid #222;
+  background: #222;
+  color: #fff;
+  letter-spacing: .09em;
+  transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+.launch-enter span { font-size: 1.2rem; transition: transform 220ms ease; }
+.launch-enter:hover { color: #fff; background: #3a3a3a; border-color: #3a3a3a; box-shadow: 0 8px 24px #00000014; transform: translateY(-2px); }
+.launch-enter:hover span { transform: translate(2px, -2px); }
+.launch-enter:active { transform: translateY(0); }
+.launch-screen.is-leaving { opacity: 0; }
+.launch-screen.is-leaving .launch-content { opacity: 0; transform: translateY(-14px); }
+#workspace:focus:not(:focus-visible) { outline: none; }
+@media (max-width: 480px) {
+  .launch-screen { padding-left: 20px; padding-right: 20px; }
+  .launch-content h1 { letter-spacing: .025em; }
+  .launch-content p { margin-top: 24px; }
+  .launch-enter { margin-top: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-screen, .launch-content, .launch-enter, .launch-enter span { transition: none; }
+  .launch-screen.is-leaving .launch-content, .launch-enter:hover, .launch-enter:hover span { transform: none; }
+}

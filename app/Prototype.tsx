@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Flashcards, Exploration, Salon, DailySlice, type SavedInsight } from "./PrototypeModules";
+import LaunchScreen from "./LaunchScreen";
 const tabs = [
     { id: "map", title: "认知运行地图", description: "了解典型 INFJ 的内在运行机制" },
     { id: "cards", title: "卡点梳理", description: "从熟悉的生活场景，换一个角度看问题" },
@@ -93,14 +94,14 @@ export default function Prototype() {
         document.getElementById(`tab-${tabs[next].id}`)?.focus();
         document.getElementById(`tab-${tabs[next].id}`)?.click();
     }
-    return <div className="app-shell">
+    return <LaunchScreen><div className="app-shell">
     <a href="#workspace" className="skip-link">跳到模块内容</a>
     <header className="site-header"><div className="brand"><span className="brand-mark" aria-hidden="true">I</span><strong>INFJ 认知操作系统</strong><span className="badge">交互原型</span></div><div className="header-actions"><span className="hint header-note">四个独立空间</span><DailySlice saved={saved}/></div></header>
     <nav ref={navigation} className="main-tabs" aria-label="功能模块">{tabs.map((tab, index) => <a key={tab.id} id={`tab-${tab.id}`} href={`#${tab.id}`} aria-current={active === tab.id ? "location" : undefined} onKeyDown={event => handleTabKey(event, index)}><span className="tab-number">0{index + 1}</span>{tab.title}</a>)}</nav>
-    <main id="workspace">{tabs.map((tab, index) => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
+    <main id="workspace" tabIndex={-1}>{tabs.map((tab, index) => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
       <div className="workspace-heading"><div><span className="section-number">0{index + 1}</span><h1 id={`heading-${tab.id}`}>{tab.title}</h1><p>{tab.description}</p></div><span className="hint">内容仅在本次页面会话中保留，刷新即清空</span></div>
       {tab.id === "map" ? <CognitiveMap /> : tab.id === "cards" ? <Flashcards saved={saved} onSave={onSave}/> : tab.id === "explore" ? <Exploration saved={saved} onSave={onSave}/> : <Salon saved={saved} onSave={onSave}/>}
     </section>)}
     </main><footer className="site-footer"><span>自我觉察工具，不替代专业心理支持。</span><span>黑白原型 / 信息架构与交互验证</span></footer>
-  </div>;
+  </div></LaunchScreen>;
 }
