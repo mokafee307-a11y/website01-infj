@@ -2049,8 +2049,11 @@ textarea::placeholder {
 .thinker-card {
   --thinker-color: #8ee6b5;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   min-width: 0;
-  min-height: 430px;
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(196, 220, 208, 0.1);
@@ -2092,52 +2095,49 @@ textarea::placeholder {
 
 .thinker-portrait {
   position: relative;
-  display: flex;
-  height: 235px;
-  align-items: center;
-  justify-content: center;
+  flex: none;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .thinker-portrait img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: var(--portrait-position, center top);
   filter: grayscale(0.88) contrast(1.03);
-  transition: transform 450ms ease, filter 450ms ease;
+  transition: filter 450ms ease;
 }
 
 .thinker-card:hover .thinker-portrait img,
 .thinker-card.selected .thinker-portrait img {
-  transform: scale(1.035);
   filter: grayscale(0.3) contrast(1.03);
 }
 
 .thinker-portrait::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(4, 9, 11, 0.06) 40%, rgba(4, 9, 11, 0.86)),
-    repeating-linear-gradient(90deg, transparent 0 3px, rgba(255, 255, 255, 0.015) 3px 4px);
+  inset: auto 0 0;
+  height: 12%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(4, 9, 11, 0.32));
 }
 
-.thinker-portrait b {
-  position: absolute;
-  z-index: 3;
-  left: 12px;
-  bottom: 10px;
-  color: rgba(255, 255, 255, 0.22);
-  font: 600 7px/1 var(--mono);
-  letter-spacing: 0.08em;
-  writing-mode: vertical-rl;
+.thinker-english {
+  display: block;
+  margin-bottom: 8px;
+  color: #83968b;
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.02em;
 }
 
 .thinker-info {
-  padding: 17px 15px 0;
+  flex: 1;
+  padding: 17px 15px 20px;
 }
 
 .thinker-info small {
@@ -2161,10 +2161,8 @@ textarea::placeholder {
 }
 
 .thinker-select {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  left: 14px;
+  display: block;
+  margin: 0 14px 14px;
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   color: #6f8178;
@@ -3116,12 +3114,7 @@ footer button {
   }
 
   .thinker-card {
-    min-height: 390px;
     transform: none;
-  }
-
-  .thinker-portrait {
-    height: 205px;
   }
 
   .conversation-grid {
@@ -3476,13 +3469,9 @@ footer button {
   }
 
   .thinker-card {
+    flex: 0 0 72vw;
     min-width: 72vw;
-    min-height: 420px;
     scroll-snap-align: center;
-  }
-
-  .thinker-portrait {
-    height: 225px;
   }
 
   .guest-stack small {

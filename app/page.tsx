@@ -46,6 +46,7 @@ type Thinker = {
   years: string;
   field: string;
   mark: string;
+  portraitPosition: string;
   tone: string;
   color: string;
   insights: Record<Topic, string>;
@@ -246,6 +247,7 @@ const thinkers: Thinker[] = [
     years: "1875—1961",
     field: "分析心理学",
     mark: "J",
+    portraitPosition: "55% top",
     tone: "看见人格面具、阴影与整合",
     color: "#7fbfa0",
     insights: {
@@ -266,6 +268,7 @@ const thinkers: Thinker[] = [
     years: "1905—1997",
     field: "意义治疗",
     mark: "F",
+    portraitPosition: "50% top",
     tone: "把痛苦重新放回责任与意义",
     color: "#77b9c6",
     insights: {
@@ -286,6 +289,7 @@ const thinkers: Thinker[] = [
     years: "1877—1962",
     field: "文学与精神成长",
     mark: "H",
+    portraitPosition: "55% top",
     tone: "听见个体生命自己的声音",
     color: "#a2b984",
     insights: {
@@ -306,6 +310,7 @@ const thinkers: Thinker[] = [
     years: "1821—1881",
     field: "文学与人性",
     mark: "D",
+    portraitPosition: "50% top",
     tone: "直面矛盾、自由与自我欺骗",
     color: "#b08c76",
     insights: {
@@ -326,6 +331,7 @@ const thinkers: Thinker[] = [
     years: "1813—1855",
     field: "存在哲学",
     mark: "K",
+    portraitPosition: "50% top",
     tone: "在焦虑中作出属于自己的选择",
     color: "#8fa5cc",
     insights: {
@@ -346,6 +352,7 @@ const thinkers: Thinker[] = [
     years: "1913—1960",
     field: "荒诞与反抗",
     mark: "C",
+    portraitPosition: "50% top",
     tone: "不等待世界保证，仍选择清醒行动",
     color: "#d0a06c",
     insights: {
@@ -1184,14 +1191,13 @@ export default function Home() {
                   className={"thinker-card " + (chosen ? "selected" : "")}
                   onClick={() => toggleThinker(thinker.id)}
                   aria-pressed={chosen}
-                  style={{ "--thinker-color": thinker.color, "--card-index": index } as React.CSSProperties}
+                  style={{ "--thinker-color": thinker.color, "--card-index": index, "--portrait-position": thinker.portraitPosition } as React.CSSProperties}
                 >
                   <span className="thinker-number">0{index + 1}</span>
                   <div className="thinker-portrait">
                     <img src={`/portraits/${thinker.id}.webp`} alt={`${thinker.name}肖像`} width={600} height={800} loading="lazy" decoding="async" />
-                    <b>{thinker.en}</b>
                   </div>
-                  <div className="thinker-info"><small>{thinker.field} · {thinker.years}</small><h3>{thinker.name}</h3><p>{thinker.tone}</p></div>
+                  <div className="thinker-info"><span className="thinker-english">{thinker.en}</span><small>{thinker.field} · {thinker.years}</small><h3>{thinker.name}</h3><p>{thinker.tone}</p></div>
                   <span className="thinker-select">{chosen ? "已入席 ✓" : "邀请入席 ＋"}</span>
                 </button>
               );
