@@ -39,10 +39,9 @@
 .edge-top { top: -1px; } .edge-bottom { bottom: -1px; }
 .launch-destination { display: flex; align-items: center; gap: 14px; margin-top: 32px; font-size: .875rem; letter-spacing: .26em; color: #9bbeb3; }
 .launch-destination::before, .launch-destination::after { content: ""; width: 28px; height: 1px; background: #aacfc552; }
-.launch-side-note { position: absolute; top: 17%; bottom: 23%; right: 4.4%; display: flex; flex-direction: column; align-items: center; gap: 20px; color: #a4c7bb; }
-.launch-side-note::before, .launch-side-note::after { content: ""; width: 1px; flex: 1; min-height: 25px; background: #b1ddcb44; }
+.launch-side-note { position: absolute; top: 17%; bottom: 23%; right: 4.4%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; color: #a4c7bb; }
 .launch-side-note > span { font-size: 1.125rem; }
-.launch-side-note p { writing-mode: vertical-rl; font-size: .875rem; line-height: 1.6; letter-spacing: .48em; }
+.launch-side-note p { writing-mode: vertical-rl; white-space: nowrap; flex-shrink: 0; font-size: .875rem; line-height: 1.6; letter-spacing: .48em; }
 .launch-footer { position: absolute; left: 4%; right: 4%; bottom: max(28px, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 26px; font-size: .875rem; color: #b1cbc1; }
 .launch-journey { display: flex; gap: clamp(16px, 2.5vw, 38px); letter-spacing: .2em; white-space: nowrap; }
 .launch-footer-actions { margin-left: auto; display: flex; align-items: center; gap: 24px; }
