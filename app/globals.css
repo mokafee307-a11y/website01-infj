@@ -4,3 +4,16 @@
 @import "./header.css";
 @import "./centered-layout.css";
 @import "./launch-cosmic.css";
+@import "./cosmic-workspace.css";
+
+:root {
+  color-scheme: dark;
+  color: #e0ebe7;
+  background: #060f14;
+  --ink: #e0ebe7;
+  --muted: #9ab2af;
+  --paper: #101f27;
+  --line: #aecfc322;
+  --accent: #b6e7d5;
+  --serif: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", Georgia, serif;
+}

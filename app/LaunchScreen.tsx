@@ -64,7 +64,7 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (phase !== "leaving") return;
-    const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 160 : 2200;
+    const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 160 : 1100;
     const timer = window.setTimeout(() => setPhase("entered"), duration);
     return () => window.clearTimeout(timer);
   }, [phase]);

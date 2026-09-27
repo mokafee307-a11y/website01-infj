@@ -13,7 +13,7 @@
 .launch-media video { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .launch-media .video-unavailable { visibility: hidden; }
 .launch-shade { z-index: -2; background: linear-gradient(90deg, #020c11c7 0%, #020c1155 33%, #020c1100 68%), linear-gradient(180deg, #020c1166 0%, transparent 22%, transparent 73%, #020c1180 100%); }
-.launch-ui { transition: opacity 440ms ease, transform 650ms ease; }
+.launch-ui { transition: opacity 250ms ease, transform 350ms ease; }
 .cosmic-launch .launch-content { position: relative; margin: 0; padding: clamp(110px, 18vh, 190px) 0 150px; width: max-content; max-width: 88%; margin-left: 6%; text-align: left; }
 .launch-kicker { font-family: Georgia, serif; color: #99b7b0; font-size: .75rem; letter-spacing: .5em; line-height: 2.1; margin-bottom: 32px; }
 .launch-kicker::after { content: ""; display: block; width: 30px; height: 1px; background: #c7e8dd; margin-top: 26px; }
@@ -54,10 +54,10 @@
 .launch-continue { display: flex; gap: 22px; align-items: center; letter-spacing: .14em; }
 .launch-continue > span:last-child { display: grid; place-items: center; border: 1px solid #bad8cfa6; border-radius: 50%; width: 36px; height: 36px; font-family: sans-serif; font-size: 1.125rem; }
 .cosmic-launch :is(button, a):focus-visible { outline: 2px solid #d3fff1; outline-offset: 8px; }
-.cosmic-launch.is-leaving { opacity: 1; animation: launch-reveal 2200ms linear forwards; pointer-events: none; }
+.cosmic-launch.is-leaving { opacity: 1; animation: launch-reveal 1100ms linear forwards; pointer-events: none; }
 .cosmic-launch.is-leaving .launch-ui { opacity: 0; transform: translateY(-12px); }
-.cosmic-launch.is-leaving .launch-media { animation: launch-dive 2200ms cubic-bezier(.55,.02,.7,.6) forwards; }
-.cosmic-launch.is-leaving .launch-shade { transition: opacity 500ms; opacity: 0; }
+.cosmic-launch.is-leaving .launch-media { animation: launch-dive 1100ms cubic-bezier(.35,.1,.65,.75) forwards; }
+.cosmic-launch.is-leaving .launch-shade { transition: opacity 250ms; opacity: 0; }
 @keyframes launch-dive { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 68% { opacity: 1; } 100% { transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(7); opacity: 0; } }
 @keyframes launch-reveal { 0%, 72% { opacity: 1; } 100% { opacity: 0; } }
 @media (max-height: 760px) and (min-width: 761px) {

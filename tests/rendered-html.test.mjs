@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-test("renders the monochrome four-module prototype", async () => {
+test("renders the cosmic four-module experience", async () => {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
@@ -57,5 +57,8 @@ test("renders the monochrome four-module prototype", async () => {
   assert.match(html, /class="card-deck"/);
   assert.match(html, /class="flip-rotator"/);
   assert.match(html, /class="thinker-rail"/);
+  assert.match(html, /class="thinker-portrait"/);
+  assert.match(html, /肖像来源与授权/);
+  assert.doesNotMatch(html, /3 : 4 占位/);
   assert.doesNotMatch(html, /左右滑动切换 · 点击中央卡片翻面|class="type-label"/);
 });
