@@ -26,6 +26,8 @@ test("renders the cosmic four-module experience", async () => {
   const html = await response.text();
   assert.match(html, /<strong>INFJ漫游飞船<\/strong>/);
   assert.match(html, /绿老头漫游飞船/);
+  assert.match(html, /欢迎搭乘/);
+  assert.doesNotMatch(html, /欢迎来到|A KINDER UNIVERSE|FOR DEEP THINKERS|launch-kicker|launch-pause|launch-footer-line/);
   assert.match(html, /开始漫游/);
   assert.match(html, /launch-screen cosmic-launch/);
   assert.match(html, /poster="\/media\/cosmic-launch-poster.jpg"/);
