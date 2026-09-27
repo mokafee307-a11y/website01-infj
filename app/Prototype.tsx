@@ -44,13 +44,14 @@ function CognitiveMap() {
 export default function Prototype() {
     const [active, setActive] = useState<string>("map");
     const navigation = useRef<HTMLElement>(null);
+    const header = useRef<HTMLElement>(null);
     const [saved, setSaved] = useState<SavedInsight[]>([]);
     const onSave = (item: SavedInsight) => setSaved(items => items.some(entry => entry.id === item.id) ? items.map(entry => entry.id === item.id ? item : entry) : [...items, item]);
     useEffect(() => {
         let frame = 0;
         const sync = () => {
             frame = 0;
-            const navHeight = navigation.current?.offsetHeight ?? 62;
+            const navHeight = header.current?.offsetHeight ?? 62;
             document.documentElement.style.setProperty("--section-nav-height", `${navHeight}px`);
             const line = navHeight + Math.min(160, window.innerHeight * 0.2);
             let current: string = tabs[0].id;
@@ -67,6 +68,7 @@ export default function Prototype() {
         const workspace = document.getElementById("workspace");
         if (workspace) observer.observe(workspace);
         if (navigation.current) observer.observe(navigation.current);
+        if (header.current) observer.observe(header.current);
         schedule();
         return () => { window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); observer.disconnect(); cancelAnimationFrame(frame); };
     }, []);
@@ -74,7 +76,7 @@ export default function Prototype() {
         const nav = navigation.current;
         const link = document.getElementById(`tab-${active}`);
         if (nav && link) {
-            const x = link.offsetLeft - nav.offsetLeft;
+            const x = link.getBoundingClientRect().left - nav.getBoundingClientRect().left + nav.scrollLeft;
             if (x < nav.scrollLeft || x + link.offsetWidth > nav.scrollLeft + nav.clientWidth) nav.scrollTo({ left: x - 16 });
         }
     }, [active]);
@@ -96,10 +98,11 @@ export default function Prototype() {
     }
     return <LaunchScreen><div className="app-shell">
     <a href="#workspace" className="skip-link">跳到模块内容</a>
-    <header className="site-header"><div className="brand"><span className="brand-mark" aria-hidden="true">I</span><strong>INFJ 认知操作系统</strong><span className="badge">交互原型</span></div><div className="header-actions"><span className="hint header-note">四个独立空间</span><DailySlice saved={saved}/></div></header>
-    <nav ref={navigation} className="main-tabs" aria-label="功能模块">{tabs.map((tab, index) => <a key={tab.id} id={`tab-${tab.id}`} href={`#${tab.id}`} aria-current={active === tab.id ? "location" : undefined} onKeyDown={event => handleTabKey(event, index)}><span className="tab-number">0{index + 1}</span>{tab.title}</a>)}</nav>
+    <header ref={header} className="site-header"><div className="brand"><span className="brand-mark" aria-hidden="true">I</span><strong>INFJ漫游飞船</strong></div>
+    <nav ref={navigation} className="main-tabs" aria-label="功能模块">{tabs.map((tab, index) => <a key={tab.id} id={`tab-${tab.id}`} href={`#${tab.id}`} aria-current={active === tab.id ? "location" : undefined} onKeyDown={event => handleTabKey(event, index)}>{tab.title}</a>)}</nav>
+    <div className="header-actions"><DailySlice saved={saved}/></div></header>
     <main id="workspace" tabIndex={-1}>{tabs.map((tab, index) => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
-      <div className="workspace-heading"><div><span className="section-number">0{index + 1}</span><h1 id={`heading-${tab.id}`}>{tab.title}</h1><p>{tab.description}</p></div><span className="hint">内容仅在本次页面会话中保留，刷新即清空</span></div>
+      <div className="workspace-heading"><div><span className="section-number">0{index + 1}</span><h1 id={`heading-${tab.id}`}>{tab.title}</h1><p>{tab.description}</p></div></div>
       {tab.id === "map" ? <CognitiveMap /> : tab.id === "cards" ? <Flashcards saved={saved} onSave={onSave}/> : tab.id === "explore" ? <Exploration saved={saved} onSave={onSave}/> : <Salon saved={saved} onSave={onSave}/>}
     </section>)}
     </main><footer className="site-footer"><span>自我觉察工具，不替代专业心理支持。</span><span>黑白原型 / 信息架构与交互验证</span></footer>

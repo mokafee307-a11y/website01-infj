@@ -1,0 +1,43 @@
+/* Balanced side tracks keep the navigation centered on the page, not the gap. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 0 32px;
+  min-height: 72px;
+}
+.site-header .brand { justify-self: start; white-space: nowrap; gap: 10px; }
+.site-header .brand strong { font-size: 1rem; }
+.site-header .main-tabs {
+  position: relative;
+  top: auto;
+  z-index: auto;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  gap: 28px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+.site-header .main-tabs a { padding: 25px 2px 23px; font-size: .9375rem; }
+.site-header .header-actions { justify-self: end; white-space: nowrap; }
+.site-header .header-actions > button { font-size: .875rem; }
+@media (max-width: 1050px) {
+  .site-header { grid-template-columns: auto minmax(0, 1fr) auto; gap: 20px; padding: 0 20px; }
+  .site-header .main-tabs { justify-self: center; gap: 20px; }
+}
+@media (max-width: 700px) {
+  .site-header { gap: 12px; padding: 0 12px; min-height: 62px; }
+  .site-header .brand-mark { display: none; }
+  .site-header .brand strong { font-size: .875rem; }
+  .site-header .main-tabs { justify-self: stretch; gap: 18px; }
+  .site-header .main-tabs a { font-size: .875rem; padding: 21px 0 19px; }
+  .site-header .header-actions > button { font-size: .875rem; padding: 8px; }
+}
