@@ -34,13 +34,16 @@ test("renders the monochrome four-module prototype", async () => {
     assert.ok(html.includes(person), `Missing thinker ${person}`);
   }
   assert.doesNotMatch(html, /three-button-particles/);
-  const panels = [...html.matchAll(/<section\b[^>]*role="tabpanel"[^>]*>/g)].map(([tag]) => tag);
-  assert.equal(panels.length, 4, "Exactly four independent tab panels");
-  assert.equal(panels.filter(tag => !/\bhidden(?:=|\s|>)/.test(tag)).length, 1, "Only one module is visible on first render");
+  const panels = [...html.matchAll(/<section\b[^>]*class="module-panel scroll-section"[^>]*>/g)].map(([tag]) => tag);
+  assert.equal(panels.length, 4, "Exactly four independent anchored sections");
+  assert.equal(panels.filter(tag => !/\bhidden(?:=|\s|>)/.test(tag)).length, 4, "All four sections are available by page scrolling");
   for (const id of ["map", "cards", "explore", "salon"]) {
-    assert.match(html, new RegExp(`id="tab-${id}"[^>]*role="tab"[^>]*aria-controls="${id}"`));
-    assert.ok(panels.some(tag => tag.includes(`aria-labelledby="tab-${id}"`)));
+    assert.match(html, new RegExp(`id="tab-${id}"[^>]*href="#${id}"`));
+    assert.ok(panels.some(tag => tag.includes(`aria-labelledby="heading-${id}"`)));
   }
   assert.doesNotMatch(html, /class="hero"|class="manifesto"/);
   assert.doesNotMatch(html, /交互原型正在补全此模块/);
+  assert.match(html, /class="card-deck"/);
+  assert.match(html, /class="flip-rotator"/);
+  assert.match(html, /class="thinker-rail"/);
 });
