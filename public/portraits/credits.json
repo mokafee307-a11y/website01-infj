@@ -1,0 +1,56 @@
+[
+  {
+    "id": "jung",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:ETH-BIB-Jung,_Carl_Gustav_(1875-1961)-Portrait-Portr_14163_(cropped).tif",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/ETH-BIB-Jung%2C_Carl_Gustav_%281875-1961%29-Portrait-Portr_14163_%28cropped%29.tif/lossy-page1-960px-ETH-BIB-Jung%2C_Carl_Gustav_%281875-1961%29-Portrait-Portr_14163_%28cropped%29.tif.jpg",
+    "author": "Unknown photographer / ETH-Bibliothek, Portr_14163",
+    "date": "circa 1935",
+    "license": "Public Domain Mark 1.0, applied by rights holder (PDM-owner)",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  {
+    "id": "frankl",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Viktor_Frankl2.jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Viktor_Frankl2.jpg",
+    "author": "Prof. Dr. Franz Vesely / Viktor-Frankl-Archiv",
+    "date": "1965",
+    "license": "CC BY-SA 3.0 Germany",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en"
+  },
+  {
+    "id": "hesse",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Hermann_Hesse_2.jpg",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Hermann_Hesse_2.jpg/960px-Hermann_Hesse_2.jpg",
+    "author": "Unknown photographer / Nationaal Archief / Spaarnestad Photo / ANEFO",
+    "date": "Unknown date",
+    "license": "CC BY-SA 3.0 Netherlands",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/nl/deed.en"
+  },
+  {
+    "id": "dostoevsky",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Dostoevsky_(cropped).jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Dostoevsky_%28cropped%29.jpg",
+    "author": "Constantin Shapiro (1839–1900)",
+    "date": "1879",
+    "license": "Public domain (PD-old-100-expired / PD-scan)",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  {
+    "id": "kierkegaard",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Kierkegaard.jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/89/Kierkegaard.jpg",
+    "author": "Niels Christian Kierkegaard (1806–1882)",
+    "date": "circa 1840",
+    "license": "Public domain (PD-Art / PD-old-100-1996)",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  {
+    "id": "camus",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Albert_Camus_1945_(cropped).jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Albert_Camus_1945_%28cropped%29.jpg",
+    "author": "Studio Harcourt",
+    "date": "1945",
+    "license": "Public domain in France (PD-France), collective work published more than 70 years ago",
+    "licenseUrl": "https://commons.wikimedia.org/wiki/File:Albert_Camus_1945_(cropped).jpg#Licensing"
+  }
+]

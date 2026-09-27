@@ -717,20 +717,6 @@ body.has-custom-cursor select {
   animation: arrowBreathe 2s ease-in-out infinite;
 }
 
-.three-button-particles {
-  position: absolute !important;
-  inset: 0;
-  z-index: 2 !important;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-.three-button-particles canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
-
 .hero-principles {
   display: flex;
   gap: 28px;
@@ -2099,7 +2085,8 @@ textarea::placeholder {
   z-index: 3;
   left: 14px;
   top: 13px;
-  color: #7b8580;
+  color: #e2e9e3;
+  text-shadow: 0 1px 5px #000;
   font: 600 8px/1 var(--mono);
 }
 
@@ -2113,18 +2100,20 @@ textarea::placeholder {
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.thinker-portrait::before {
-  content: "";
-  position: absolute;
-  width: 150px;
-  height: 210px;
-  border-radius: 48% 48% 20% 20%;
-  background:
-    radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--thinker-color) 38%, #d7d7cf), transparent 28%),
-    linear-gradient(180deg, color-mix(in srgb, var(--thinker-color) 30%, #3c4240), #111817 78%);
-  filter: grayscale(0.78) contrast(1.08);
-  opacity: 0.66;
-  box-shadow: 0 -30px 80px color-mix(in srgb, var(--thinker-color) 14%, transparent);
+.thinker-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: grayscale(0.88) contrast(1.03);
+  transition: transform 450ms ease, filter 450ms ease;
+}
+
+.thinker-card:hover .thinker-portrait img,
+.thinker-card.selected .thinker-portrait img {
+  transform: scale(1.035);
+  filter: grayscale(0.3) contrast(1.03);
 }
 
 .thinker-portrait::after {
@@ -2132,17 +2121,8 @@ textarea::placeholder {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, transparent 48%, rgba(4, 9, 11, 0.95)),
+    linear-gradient(180deg, rgba(4, 9, 11, 0.06) 40%, rgba(4, 9, 11, 0.86)),
     repeating-linear-gradient(90deg, transparent 0 3px, rgba(255, 255, 255, 0.015) 3px 4px);
-}
-
-.thinker-portrait i {
-  position: relative;
-  z-index: 2;
-  color: rgba(235, 242, 236, 0.82);
-  font: 400 98px/1 var(--serif);
-  font-style: normal;
-  text-shadow: 0 10px 50px rgba(0, 0, 0, 0.55);
 }
 
 .thinker-portrait b {
@@ -2195,6 +2175,34 @@ textarea::placeholder {
   color: var(--thinker-color);
 }
 
+.portrait-credits {
+  margin-top: 24px;
+  color: #99aca2;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.portrait-credits summary {
+  width: fit-content;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.portrait-credits summary:hover,
+.portrait-credits a:hover {
+  color: var(--green);
+}
+
+.portrait-credits a {
+  color: #becfc4;
+  text-underline-offset: 3px;
+}
+
+.portrait-credits ul {
+  padding-left: 18px;
+}
+
 .salon-input {
   display: grid;
   grid-template-columns: 240px 1fr 128px;
@@ -2219,6 +2227,8 @@ textarea::placeholder {
   margin-left: -7px;
   border: 1px solid;
   border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
   background: #081013;
   font: 600 10px/1 Georgia, serif;
 }
@@ -2324,7 +2334,19 @@ textarea::placeholder {
   height: 44px;
   border: 1px solid;
   border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
   font: 500 19px/1 var(--serif);
+}
+
+.guest-stack img,
+.voice-person img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: grayscale(0.6);
 }
 
 .voice-person small {

@@ -26,4 +26,8 @@ test("renders the finished INFJ cognitive system metadata", async () => {
   const html = await response.text();
   assert.match(html, /INFJ 认知操作系统/);
   assert.doesNotMatch(html, /codex-preview/);
+  for (const person of ["jung", "frankl", "hesse", "dostoevsky", "kierkegaard", "camus"]) {
+    assert.ok(html.includes(`/portraits/${person}.webp`), `Missing portrait for ${person}`);
+  }
+  assert.doesNotMatch(html, /three-button-particles/);
 });

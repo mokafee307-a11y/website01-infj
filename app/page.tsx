@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CustomCursor from "./CustomCursor";
-import HeroButtonParticles from "./HeroButtonParticles";
+import portraitCredits from "../public/portraits/credits.json";
 
 type Mode = {
   id: string;
@@ -896,7 +896,6 @@ export default function Home() {
           <h1>别急着想明白。<br /><em>先看看，你现在是怎么运行的。</em></h1>
           <p>一个帮助高内省者识别回路、练习边界，并把内耗转化为现实行动的个人系统。</p>
           <a className="start-button" href="#now" aria-label="扫描当前状态">
-            <HeroButtonParticles />
             <span>扫描当前状态</span><b>↓</b>
           </a>
           <div className="hero-principles">
@@ -1188,16 +1187,24 @@ export default function Home() {
                   style={{ "--thinker-color": thinker.color, "--card-index": index } as React.CSSProperties}
                 >
                   <span className="thinker-number">0{index + 1}</span>
-                  <div className="thinker-portrait"><i>{thinker.mark}</i><b>{thinker.en}</b></div>
+                  <div className="thinker-portrait">
+                    <img src={`/portraits/${thinker.id}.webp`} alt={`${thinker.name}肖像`} width={600} height={800} loading="lazy" decoding="async" />
+                    <b>{thinker.en}</b>
+                  </div>
                   <div className="thinker-info"><small>{thinker.field} · {thinker.years}</small><h3>{thinker.name}</h3><p>{thinker.tone}</p></div>
                   <span className="thinker-select">{chosen ? "已入席 ✓" : "邀请入席 ＋"}</span>
                 </button>
               );
             })}
           </div>
+          <details className="portrait-credits">
+            <summary>肖像来源与许可</summary>
+            <p>真实历史照片与画像，经缩小、格式转换及页面裁切／灰度呈现；采用 CC BY-SA 许可的图片，其图像衍生版本沿用对应许可。</p>
+            <ul>{portraitCredits.map((credit) => <li key={credit.id}><a href={credit.sourcePage} target="_blank" rel="noopener noreferrer">{thinkers.find((thinker) => thinker.id === credit.id)?.name}</a> · {credit.author} · <a href={credit.licenseUrl} target="_blank" rel="noopener noreferrer">{credit.license}</a></li>)}</ul>
+          </details>
           <div className="salon-input glass-card">
             <div className="guest-stack">
-              {salonGuests.map((thinker) => <span key={thinker.id} style={{ borderColor: thinker.color }}>{thinker.mark}</span>)}
+              {salonGuests.map((thinker) => <span key={thinker.id} style={{ borderColor: thinker.color }} title={thinker.name}><img src={`/portraits/${thinker.id}.webp`} alt={thinker.name} width={32} height={32} loading="lazy" /></span>)}
               <small>已选择 {selectedThinkers.length} 位思想陪谈者</small>
             </div>
             <textarea
@@ -1218,7 +1225,7 @@ export default function Home() {
                 {salonResponses.map((response, index) => (
                   <article className="voice-card glass-card" key={response.thinker.id}>
                     <div className="voice-person">
-                      <span style={{ borderColor: response.thinker.color, color: response.thinker.color }}>{response.thinker.mark}</span>
+                      <span style={{ borderColor: response.thinker.color }}><img src={`/portraits/${response.thinker.id}.webp`} alt="" width={44} height={44} loading="lazy" /></span>
                       <div><small>VOICE 0{index + 1}</small><h4>{response.thinker.name}</h4></div>
                     </div>
                     <p>{response.insight}</p>
