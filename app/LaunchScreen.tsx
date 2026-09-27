@@ -49,9 +49,8 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [locked]);
 
-  function enter(target?: string) {
+  function enter() {
     if (phase !== "welcome") return;
-    if (target) window.history.replaceState(null, "", `#${target}`);
     setPhase("leaving");
   }
 
@@ -85,16 +84,12 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
         <video ref={video} className={videoFailed ? "video-unavailable" : ""} src={reducedMotion ? undefined : "/media/cosmic-launch.mp4"} poster="/media/cosmic-launch-poster.jpg" muted loop playsInline preload="metadata" disablePictureInPicture tabIndex={-1} onError={() => setVideoFailed(true)} />
       </div>
       <div className="launch-shade" aria-hidden="true" />
-      <header className="launch-masthead launch-ui">
-        <div className="launch-wordmark"><span aria-hidden="true">✧</span><div>绿老头漫游飞船<small>INFJ 宇宙漫游飞船</small></div></div>
-        <nav className="launch-navigation" aria-label="启动页功能入口">{[["map", "认知运行地图"], ["cards", "卡点梳理"], ["explore", "自由探索"], ["salon", "老头会客厅"]].map(([id, title]) => <button key={id} disabled={phase === "leaving"} onClick={() => enter(id)}>{title}</button>)}</nav>
-      </header>
       <div className="launch-content launch-ui">
         <div className="launch-kicker" aria-hidden="true">A KINDER UNIVERSE<br />FOR DEEP THINKERS</div>
         <h1 id="launch-title"><span>欢迎来到</span><span>绿老头漫游飞船</span></h1>
-        <p id="launch-description"><span>在这里，我为你留了一盏灯，</span><span>带上你的困惑，带上你自己</span></p>
+        <p id="launch-description">在这里，我为你留了一盏灯，带上你的困惑，带上你自己</p>
         <button ref={enterButton} type="button" className="launch-enter" aria-disabled={phase === "leaving"} onClick={() => enter()}>
-          <span className="launch-button-text">开始漫游 <span aria-hidden="true">→</span></span>
+          <span className="launch-button-text">开始漫游</span>
           <span className="launch-edge edge-left" aria-hidden="true" /><span className="launch-edge edge-right" aria-hidden="true" /><span className="launch-edge edge-top" aria-hidden="true" /><span className="launch-edge edge-bottom" aria-hidden="true" />
         </button>
         <div className="launch-destination" aria-hidden="true">通往更真实的自己</div>

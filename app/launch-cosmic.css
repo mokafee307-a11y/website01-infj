@@ -14,21 +14,13 @@
 .launch-media .video-unavailable { visibility: hidden; }
 .launch-shade { z-index: -2; background: linear-gradient(90deg, #020c11c7 0%, #020c1155 33%, #020c1100 68%), linear-gradient(180deg, #020c1166 0%, transparent 22%, transparent 73%, #020c1180 100%); }
 .launch-ui { transition: opacity 440ms ease, transform 650ms ease; }
-.launch-masthead { min-height: 92px; padding: 22px 4%; display: flex; align-items: center; gap: 6vw; border-bottom: 1px solid #b3d8ca12; }
-.launch-wordmark { display: flex; align-items: center; gap: 16px; font-size: 1.2rem; letter-spacing: .08em; white-space: nowrap; }
-.launch-wordmark > span { font-family: Georgia, serif; font-size: 2.5rem; line-height: 1; }
-.launch-wordmark small { display: block; font-family: inherit; font-size: .75rem; letter-spacing: .35em; color: var(--launch-muted); margin-top: 4px; }
-.launch-navigation { display: flex; align-items: center; justify-content: center; gap: clamp(20px, 4vw, 64px); flex: 1; }
-.launch-navigation button { padding: 8px 0; border: 0; border-radius: 0; background: transparent; color: #c1d8d0; letter-spacing: .1em; font-size: 1rem; white-space: nowrap; }
-.launch-navigation button:hover { color: #fff; text-shadow: 0 0 16px #b4f4e4; }
-.cosmic-launch .launch-content { position: relative; margin: 0; padding: clamp(38px, 7.5vh, 100px) 0 150px; width: max-content; max-width: 78%; margin-left: 6%; text-align: left; }
+.cosmic-launch .launch-content { position: relative; margin: 0; padding: clamp(110px, 18vh, 190px) 0 150px; width: max-content; max-width: 88%; margin-left: 6%; text-align: left; }
 .launch-kicker { font-family: Georgia, serif; color: #99b7b0; font-size: .75rem; letter-spacing: .5em; line-height: 2.1; margin-bottom: 32px; }
 .launch-kicker::after { content: ""; display: block; width: 30px; height: 1px; background: #c7e8dd; margin-top: 26px; }
 .cosmic-launch .launch-content h1 { font-family: var(--launch-serif); letter-spacing: .025em; font-weight: 500; line-height: 1.35; text-shadow: 0 2px 24px #020c1199; }
 .cosmic-launch .launch-content h1 span:first-child { font-size: clamp(1.5rem, 2.7vw, 2.8rem); color: var(--launch-ink); margin-bottom: 8px; }
 .cosmic-launch .launch-content h1 span:last-child { font-size: clamp(2.2rem, 4.7vw, 5rem); text-wrap: nowrap; font-weight: 600; }
-.cosmic-launch #launch-description { margin-top: 24px; font-size: clamp(1rem, 1.45vw, 1.5rem); letter-spacing: .1em; line-height: 1.9; color: #c5ded4; text-shadow: 0 2px 12px #020c11; }
-.cosmic-launch #launch-description span { display: block; }
+.cosmic-launch #launch-description { margin-top: 24px; font-size: clamp(.875rem, 1.15vw, 1.125rem); letter-spacing: .04em; line-height: 1.9; white-space: nowrap; color: #c5ded4; text-shadow: 0 2px 12px #020c11; }
 /* Adapted from the supplied four-edge glow button, without an oversized backdrop. */
 .cosmic-launch .launch-enter { position: relative; isolation: isolate; display: inline-flex; justify-content: center; align-items: center; width: 220px; min-width: 0; height: 58px; min-height: 58px; margin-top: 40px; padding: 0 26px; cursor: pointer; border: 0; border-radius: 0; background: #071316e6; color: #e5f8f0; letter-spacing: .15em; font-family: inherit; font-size: 1.125rem; box-shadow: none; transition: background 300ms, transform 300ms; }
 .cosmic-launch .launch-enter::before { content: ""; position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 50%, #0000 0, #0000 20%, #111111aa 50%), radial-gradient(ellipse 100% 100%, #d9fff3, #fff0); background-size: 3px 3px, auto auto; transition: opacity 300ms; }
@@ -37,7 +29,7 @@
 .cosmic-launch .launch-enter:active { transform: translateY(0); }
 .cosmic-launch .launch-enter span { font-size: inherit; }
 .cosmic-launch .launch-enter:hover span { transform: none; }
-.launch-button-text { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 32px; width: 100%; }
+.launch-button-text { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
 .launch-edge { pointer-events: none; position: absolute; --w: 1px; --t: -28px; --s: calc(var(--t) * -1); --e: calc(100% + var(--t)); --g: #d9fff300, #d9fff333 var(--s), #d9fff3aa var(--s), #eafff8, #d9fff3aa var(--e), #d9fff333 var(--e), #d9fff300; }
 .launch-edge::before, .launch-edge::after { content: ""; position: absolute; inset: 0; background: inherit; z-index: -1; }
 .launch-edge::before { filter: blur(4px); }
@@ -69,23 +61,18 @@
 @keyframes launch-dive { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 68% { opacity: 1; } 100% { transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(7); opacity: 0; } }
 @keyframes launch-reveal { 0%, 72% { opacity: 1; } 100% { opacity: 0; } }
 @media (max-height: 760px) and (min-width: 761px) {
-  .launch-masthead { min-height: 76px; padding-block: 16px; }
-  .cosmic-launch .launch-content { padding-top: 30px; padding-bottom: 100px; }
+  .cosmic-launch .launch-content { padding-top: 106px; padding-bottom: 100px; }
   .launch-kicker { margin-bottom: 20px; } .launch-kicker::after { margin-top: 16px; }
   .cosmic-launch .launch-content h1 span:last-child { font-size: clamp(2.2rem, 4.3vw, 4.25rem); }
   .cosmic-launch .launch-enter { margin-top: 28px; }
   .launch-destination { margin-top: 24px; }
 }
 @media (max-width: 760px) {
-  .launch-masthead { min-height: 80px; padding: 20px 6%; }
-  .launch-navigation { display: none; }
-  .launch-wordmark { font-size: 1rem; }
-  .launch-wordmark > span { font-size: 2rem; }
-  .cosmic-launch .launch-content { max-width: calc(100% - 76px); margin-left: 7%; padding-top: clamp(60px, 12vh, 120px); padding-bottom: 150px; }
+  .cosmic-launch .launch-content { max-width: 86%; margin-left: 7%; padding-top: clamp(110px, 22vh, 200px); padding-bottom: 150px; }
   .launch-kicker { font-size: .75rem; letter-spacing: .28em; margin-bottom: 28px; }
   .cosmic-launch .launch-content h1 span:first-child { font-size: 1.5rem; margin-bottom: 12px; }
   .cosmic-launch .launch-content h1 span:last-child { font-size: clamp(1.75rem, 6.7vw, 3rem); white-space: nowrap; }
-  .cosmic-launch #launch-description { font-size: 1rem; letter-spacing: .015em; line-height: 2; margin-top: 22px; }
+  .cosmic-launch #launch-description { font-size: clamp(.75rem, 2.9vw, .875rem); letter-spacing: -.025em; line-height: 2; margin-top: 22px; }
   .cosmic-launch .launch-enter { width: 200px; margin-top: 32px; }
   .launch-side-note { right: 5%; top: 19%; bottom: 26%; gap: 12px; }
   .launch-side-note p { font-size: .75rem; letter-spacing: .3em; }
@@ -97,7 +84,7 @@
   .launch-shade { background: linear-gradient(90deg, #020c11c4, #020c1126), linear-gradient(0deg, #020c11c9, transparent 35%); }
 }
 @media (max-height: 700px) and (max-width: 760px) {
-  .cosmic-launch .launch-content { padding-top: 26px; padding-bottom: 120px; }
+  .cosmic-launch .launch-content { padding-top: 106px; padding-bottom: 120px; }
   .launch-kicker { margin-bottom: 18px; } .launch-kicker::after { margin-top: 14px; }
   .launch-destination { margin-top: 24px; }
 }

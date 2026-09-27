@@ -31,6 +31,9 @@ test("renders the monochrome four-module prototype", async () => {
   assert.match(html, /poster="\/media\/cosmic-launch-poster.jpg"/);
   assert.match(html, /在浩瀚之中，总有一盏灯为你而亮/);
   assert.match(html, /class="launch-edge edge-left"/);
+  assert.doesNotMatch(html, /launch-masthead|launch-navigation/);
+  assert.match(html, /<p id="launch-description">在这里，我为你留了一盏灯，带上你的困惑，带上你自己<\/p>/);
+  assert.match(html, /<span class="launch-button-text">开始漫游<\/span>/);
   assert.match(html, /class="launch-workspace" inert="" aria-hidden="true"/);
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /黑白原型|交互原型/);
