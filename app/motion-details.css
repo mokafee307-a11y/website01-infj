@@ -8,7 +8,9 @@
 .app-shell .thinker-card.texture { background-image: var(--texture-noise), linear-gradient(150deg, #1b3131, #0d1b24); background-size: 160px 160px, auto; }
 @media (hover: hover) and (pointer: fine) { .deck-card.is-current .flip-card:hover .card-glare { opacity: .5; } }
 .split-parent { overflow: hidden; padding-block: 4px; }
-.split-char { will-change: transform, opacity; }
+.split-char { display: inline-block; opacity: 0; transform: translateY(40px); will-change: transform, opacity; }
+.split-parent.is-visible .split-char { animation: split-char-in var(--split-duration, 1.25s) cubic-bezier(.215,.61,.355,1) var(--split-delay, 0ms) both; }
+@keyframes split-char-in { to { opacity: 1; transform: translateY(0); } }
 .click-spark-root { display: contents; }
 .click-spark-canvas { position: fixed; inset: 0; width: 100vw; height: 100dvh; pointer-events: none; user-select: none; z-index: 3000; }
 .option-wheel { --ow-row: 54px; position: fixed; z-index: 1000; top: 50%; right: 0; transform: translateY(-50%); width: 210px; height: 370px; overflow: hidden; cursor: grab; user-select: none; touch-action: none; background: none; }
@@ -50,5 +52,5 @@
   .click-spark-canvas { display: none; }
   .thinker-motion .border-glow-card { transform: none!important; }
   .border-glow-card::before, .border-glow-card::after, .border-glow-card > .edge-light { display: none; }
-  .split-char { will-change: auto; }
+  .split-char { opacity: 1; transform: none; animation: none!important; will-change: auto; }
 }
