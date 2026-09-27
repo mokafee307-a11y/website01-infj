@@ -13,6 +13,7 @@
 .workspace-heading p { margin: 10px auto 0; max-width: 40rem; }
 .module-toolbar, .thinker-gallery .module-toolbar { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
 .category-tabs, .example-row { justify-content: center; }
+.thinker-info p:last-child { margin-bottom: 0; }
 .panel-heading { justify-content: center; flex-wrap: wrap; text-align: center; }
 .intro-copy, .report-title, .thinker-info, .room-sidebar > h2 { text-align: center; }
 /* Keep the cognitive map's original list / radar / interpretation structure. */

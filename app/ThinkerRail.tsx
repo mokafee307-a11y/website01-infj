@@ -9,7 +9,7 @@ function ThinkerCard({ person, selected, toggle }: { person: Thinker; selected: 
   return <div className="thinker-motion" {...tilt}>
     <button className={`thinker-card ${selected ? "selected" : ""}`} aria-pressed={selected} aria-label={`${selected ? "取消选择" : "选择"}${person.name}`} onClick={toggle}>
       <div className="portrait-placeholder" aria-hidden="true"><span>人物肖像</span><small>3 : 4 占位</small><span className="selection-check">{selected ? "✓" : "+"}</span><span className="portrait-hover-caption">{selected ? "点击移出本次邀请" : "点击邀请，一起探索"}</span></div>
-      <div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p><span className="type-label">INFJ · 推测类型</span></div><span className="card-glare" aria-hidden="true" />
+      <div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p></div><span className="card-glare" aria-hidden="true" />
     </button>
   </div>;
 }

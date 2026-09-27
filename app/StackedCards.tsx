@@ -21,7 +21,7 @@ export default function StackedCards({ saved, onSave }: { saved: SavedInsight[];
     onEnd: dx => { if (Math.abs(dx) > 42) choose(active + (dx < 0 ? 1 : -1)); },
   });
   return <div className="stacked-cards">
-    <div className="module-toolbar"><div className="category-tabs" aria-label="问题分类">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); choose(0); }}>{item}<span className="count">6</span></button>)}</div><span className="hint">左右滑动切换 · 点击中央卡片翻面</span></div>
+    <div className="module-toolbar"><div className="category-tabs" aria-label="问题分类">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); choose(0); }}>{item}<span className="count">6</span></button>)}</div></div>
     <div ref={stage} className="card-deck" role="region" aria-roledescription="卡片轮播" aria-label={`${category}场景卡片`} {...gesture} onKeyDown={event => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); choose(active + (event.key === "ArrowRight" ? 1 : -1)); }
     }}>

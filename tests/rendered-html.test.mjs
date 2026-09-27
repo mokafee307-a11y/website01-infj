@@ -50,4 +50,5 @@ test("renders the monochrome four-module prototype", async () => {
   assert.match(html, /class="card-deck"/);
   assert.match(html, /class="flip-rotator"/);
   assert.match(html, /class="thinker-rail"/);
+  assert.doesNotMatch(html, /左右滑动切换 · 点击中央卡片翻面|class="type-label"/);
 });
