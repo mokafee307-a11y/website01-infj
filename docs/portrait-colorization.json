@@ -1,0 +1,48 @@
+{
+  "mode": "built-in image_gen",
+  "note": "AI-assisted colorization, not historically verified colors. Original images remain unchanged; attribution and source licenses are retained in app/portrait-credits.json and the portrait credits UI.",
+  "assets": [
+    {
+      "id": "jung",
+      "input": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/jung.webp",
+      "output": "/Users/mokafee/.codex/generated_images/01a0e69d-b11e-7042-b0ba-673fb377a1ac/exec-eb767508-6eee-47b5-b3f8-bf482db24292.png",
+      "prompt": "Use case: identity-preserve. Asset type: website historical portrait. Input image 1 is the sole edit target, the existing photograph of Carl Jung seated outdoors holding a pipe. Primary request: colorize this exact historical photograph only, using restrained, plausible natural colors: lifelike aged skin, gray-white hair and mustache, off-white shirt, muted gray-brown tie, dark pipe, subdued natural green foliage. Preserve absolutely the person's identity, face geometry, age, wrinkles, expression, gaze, hair, glasses, body proportions, pose, hands, pipe, clothing details, original crop, background geometry, lighting and shadows. Keep original photographic grain and texture; no rejuvenation, skin smoothing, replacement face, invented details, or new elements. Do not change the pose or composition. No added text, no added border, no graphics, no watermark.",
+      "projectOutput": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/jung-color.webp"
+    },
+    {
+      "id": "hesse",
+      "input": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/hesse.webp",
+      "output": "/Users/mokafee/.codex/generated_images/01a0e69d-b11e-7042-b0ba-673fb377a1ac/exec-798ecfeb-5a55-4250-a6dc-fa00f439c3eb.png",
+      "prompt": "Use case: identity-preserve. Asset type: website historical portrait. Input image 1 is the sole edit target: Hermann Hesse seated reading a book before bookshelves. Primary request: colorize this exact historical portrait only, using restrained plausible natural colors. Color palette: Lifelike aged skin, gray hair, charcoal pinstripe suit, pale ivory shirt, muted brown-gray tie, creamy aged pages and subdued book-spine colors. Constraints: preserve absolutely the person's identity, exact face geometry, age, wrinkles, expression, gaze, hairstyle, facial hair, glasses if present, body proportions, pose, hands, clothing details, props, original crop and aspect ratio, background geometry, lighting and shadows. Retain original texture and grain; change only color. No rejuvenation, smoothing, replacement face, invented details, reframing, new objects, unrelated graphics, added text, added borders or watermark.",
+      "projectOutput": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/hesse-color.webp"
+    },
+    {
+      "id": "frankl",
+      "input": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/frankl.webp",
+      "output": "/Users/mokafee/.codex/generated_images/01a0e69d-b11e-7042-b0ba-673fb377a1ac/exec-acf54d64-bcdf-4617-bc02-6d0b9d2c1c40.png",
+      "prompt": "Use case: identity-preserve. Asset type: website historical portrait. Input image 1 is the sole edit target: Viktor Frankl wearing eyeglasses and a white coat, arms folded on a surface. Primary request: colorize this exact historical portrait only, using restrained plausible natural colors. Color palette: Natural skin, salt-and-pepper dark hair, pale eyeglass frames, white coat and shirt, dark tie, subdued warm-neutral background. Constraints: preserve absolutely the person's identity, exact face geometry, age, wrinkles, expression, gaze, hairstyle, facial hair, glasses if present, body proportions, pose, hands, clothing details, props, original crop and aspect ratio, background geometry, lighting and shadows. Retain original texture and grain; change only color. No rejuvenation, smoothing, replacement face, invented details, reframing, new objects, unrelated graphics, added text, added borders or watermark.",
+      "projectOutput": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/frankl-color.webp"
+    },
+    {
+      "id": "dostoevsky",
+      "input": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/dostoevsky.webp",
+      "output": "/Users/mokafee/.codex/generated_images/01a0e69d-b11e-7042-b0ba-673fb377a1ac/exec-bb56b301-831b-40ce-9d97-f2990b885a78.png",
+      "prompt": "Use case: identity-preserve. Asset type: website historical portrait. Input image 1 is the sole edit target: Fyodor Dostoevsky with a long beard in close-up. Primary request: colorize this exact historical portrait only, using restrained plausible natural colors. Color palette: Natural pale skin, muted brown and gray hair and beard, dark muted brown-gray clothing and subdued dark neutral backdrop. Constraints: preserve absolutely the person's identity, exact face geometry, age, wrinkles, expression, gaze, hairstyle, facial hair, glasses if present, body proportions, pose, hands, clothing details, props, original crop and aspect ratio, background geometry, lighting and shadows. Retain original texture and grain; change only color. No rejuvenation, smoothing, replacement face, invented details, reframing, new objects, unrelated graphics, added text, added borders or watermark.",
+      "projectOutput": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/dostoevsky-color.webp"
+    },
+    {
+      "id": "kierkegaard",
+      "input": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/kierkegaard.webp",
+      "output": "/Users/mokafee/.codex/generated_images/01a0e69d-b11e-7042-b0ba-673fb377a1ac/exec-49015477-d3aa-459a-86b1-8bce02fbed96.png",
+      "prompt": "Use case: identity-preserve. Asset type: website historical portrait. Input image 1 is the sole edit target: Søren Kierkegaard in a historical pencil or charcoal drawn portrait. Primary request: colorize this exact historical portrait only, using restrained plausible natural colors. Color palette: Only a subtle transparent color wash: natural pale skin, muted brown hair, pale cream paper and very lightly tinted neutral clothing. IMPORTANT: retain the original hand-drawn graphite/charcoal portrait medium, lines, hatching, paper texture and unfinished pale clothing. Do NOT convert drawing into a photograph. Constraints: preserve absolutely the person's identity, exact face geometry, age, wrinkles, expression, gaze, hairstyle, facial hair, glasses if present, body proportions, pose, hands, clothing details, props, original crop and aspect ratio, background geometry, lighting and shadows. Retain original texture and grain; change only color. No rejuvenation, smoothing, replacement face, invented details, reframing, new objects, unrelated graphics, added text, added borders or watermark.",
+      "projectOutput": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/kierkegaard-color.webp"
+    },
+    {
+      "id": "king",
+      "input": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/king.webp",
+      "output": "/Users/mokafee/.codex/generated_images/01a0e69d-b11e-7042-b0ba-673fb377a1ac/exec-d6a49f50-b72b-4b16-b548-8dd582a9802a.png",
+      "prompt": "Use case: identity-preserve. Asset type: website historical portrait. Input image 1 is the sole edit target: Martin Luther King Jr. in a suit raising his hand. Primary request: colorize this exact historical portrait only, using restrained plausible natural colors. Color palette: Natural medium-brown skin, black hair and mustache, dark charcoal suit and tie, white shirt, muted warm-neutral curtains and interior details. Keep original existing archival photo edges unchanged; add no new frame or text. Constraints: preserve absolutely the person's identity, exact face geometry, age, wrinkles, expression, gaze, hairstyle, facial hair, glasses if present, body proportions, pose, hands, clothing details, props, original crop and aspect ratio, background geometry, lighting and shadows. Retain original texture and grain; change only color. No rejuvenation, smoothing, replacement face, invented details, reframing, new objects, unrelated graphics, added text, added borders or watermark.",
+      "projectOutput": "/Users/mokafee/Documents/ChatGPT/网站制作-绿老头/public/portraits/king-color.webp"
+    }
+  ]
+}

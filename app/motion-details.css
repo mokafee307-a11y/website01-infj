@@ -35,7 +35,8 @@
 .thinker-motion { height: 411px; }
 .thinker-motion .border-glow-inner { height: 100%; }
 .thinker-motion .portrait-placeholder { position: absolute; inset: 0; aspect-ratio: auto; border: 0; }
-.thinker-motion .thinker-portrait { opacity: 1; object-position: center 20%; }
+.thinker-motion .thinker-portrait { opacity: 1; object-position: center 20%; filter: contrast(.95); }
+.salon-room .avatar-placeholder img { filter: none; }
 .thinker-motion .portrait-placeholder::after { background: linear-gradient(180deg, transparent 30%, #0b1b2333 45%, #0b1b23c7 68%, #0b1b23f5 88%, #0b1b23 100%); }
 .thinker-motion .thinker-info { position: absolute; z-index: 1; inset: auto 0 0; padding: 22px 16px; text-align: left; pointer-events: none; }
 .thinker-motion .thinker-info > .hint { display: inline-block; padding: 2px 5px; border-radius: 3px; background: #e0e8e4d9; color: #293b41; font-family: var(--serif); font-size: .75rem; font-weight: 600; line-height: 1.4; letter-spacing: .06em; }

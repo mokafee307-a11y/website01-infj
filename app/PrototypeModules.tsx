@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { examples, sampleReports, defaultQuestion, thinkers, getExampleId, hasCrisisLanguage, type ExampleId } from "./prototype-data";
 import ThinkerRail from "./ThinkerRail";
 import LatticeLoader from "./LatticeLoader";
+import { portraitImage } from "./portrait-images";
 export { default as Flashcards } from "./StackedCards";
 export type SavedInsight = {
     id: string;
@@ -104,7 +105,7 @@ type SalonRound = {
     isDefault: boolean;
 };
 function PersonAvatar({ id, name }: { id: string; name: string }) {
-    return <span className="avatar-placeholder"><img src={"/portraits/" + id + ".webp"} alt={name + "肖像"} width={42} height={52} /></span>;
+    return <span className="avatar-placeholder"><img src={portraitImage(id)} alt={name + "肖像"} width={42} height={52} /></span>;
 }
 export function Salon({ saved, onSave }: SaveProps) {
     const [selected, setSelected] = useState<string[]>(["jung", "hesse", "frankl"]);
