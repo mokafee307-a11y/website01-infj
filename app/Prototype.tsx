@@ -7,6 +7,7 @@ import SplitText from "./SplitText";
 import ClickSpark from "./ClickSpark";
 import OptionWheel from "./OptionWheel";
 import CognitiveMap from "./CognitiveMap";
+import CosmicFooter from "./CosmicFooter";
 const tabs = [
     { id: "map", title: "运行地图", description: "了解 INFJ 的内在运行机制" },
     { id: "salon", title: "星光会客厅", description: "同一个问题，听见不同的理解" },
@@ -67,5 +68,6 @@ export default function Prototype() {
       {tab.id === "map" ? <CognitiveMap /> : tab.id === "cards" ? <Flashcards saved={saved} onSave={onSave}/> : tab.id === "explore" ? <Exploration saved={saved} onSave={onSave}/> : <Salon saved={saved} onSave={onSave}/>}
     </section>)}
     </main>
+    <CosmicFooter />
   </div></LaunchScreen></ClickSpark>;
 }

@@ -1,0 +1,69 @@
+.cosmic-footer {
+  position: relative;
+  isolation: isolate;
+  min-height: min(880px, 100dvh);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  margin-top: clamp(56px, 8vw, 128px);
+  background: #030813 url("/media/cosmic-footer-poster.png") center/cover no-repeat;
+  color: #f6ede8;
+  font-family: var(--serif);
+}
+.cosmic-footer-media, .cosmic-footer-media video, .cosmic-footer-shade, .cosmic-footer-orbits { position: absolute; inset: 0; }
+.cosmic-footer-media { z-index: -3; }
+.cosmic-footer-media video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.cosmic-footer-shade {
+  z-index: -2;
+  background:
+    linear-gradient(180deg, #060f14 0%, #060f14cc 6%, transparent 30%, transparent 72%, #030711d9 100%),
+    radial-gradient(circle at 50% 45%, transparent 8%, #02040b24 42%, #02040b9c 100%);
+}
+.cosmic-footer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: .11;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.96' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h160v160H0z'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+.cosmic-footer-content { position: relative; z-index: 3; width: min(880px, calc(100% - 48px)); margin-top: -7vh; text-align: center; }
+.cosmic-footer-star { display: block; margin-bottom: 18px; color: #f7d8b8; font-size: 1.35rem; text-shadow: 0 0 22px #f8cfa8; }
+.cosmic-footer h2 { margin: 0; font-size: clamp(2rem, 4.5vw, 4.85rem); font-weight: 400; line-height: 1.24; letter-spacing: .08em; text-wrap: balance; text-shadow: 0 5px 36px #02040be6; }
+.cosmic-footer-content > p { margin: 24px auto 30px; color: #eaded7; font-size: clamp(1rem, 1.45vw, 1.35rem); letter-spacing: .12em; text-shadow: 0 3px 18px #02040b; }
+.blessing-button { min-width: 220px; padding: 13px 22px; border: 1px solid #f0d8ca8a; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 14px; background: linear-gradient(105deg, #2a1f3673, #40637975); color: #fff7f2; box-shadow: inset 0 1px 0 #fff5, 0 0 35px #cba8ea26; backdrop-filter: blur(14px); transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease; }
+.blessing-button:hover { transform: translateY(-2px); border-color: #ffe8d8d9; background: linear-gradient(105deg, #3c294d9e, #47778e9e); box-shadow: inset 0 1px 0 #fff7, 0 0 44px #d8b4f149; }
+.blessing-button span:last-child { color: #ffd8ad; transition: transform .5s ease; }
+.blessing-received .blessing-button span:last-child { transform: rotate(180deg) scale(1.25); }
+.blessing-status { min-height: 1.6em; display: block; margin-top: 15px; color: #f7dfcd; font-size: .875rem; letter-spacing: .12em; opacity: 0; transform: translateY(6px); transition: opacity .5s ease, transform .5s ease; }
+.blessing-received .blessing-status { opacity: .9; transform: none; }
+.cosmic-footer-orbits { z-index: 1; pointer-events: none; }
+.orbit { position: absolute; left: 50%; top: 48%; border: 1px solid #f2d1cb3b; border-radius: 50%; transform: translate(-50%, -50%) rotate(-6deg); box-shadow: 0 0 30px #c2b7ff0d; }
+.orbit-outer { width: min(1180px, 88vw); height: min(475px, 42vw); }
+.orbit-inner { width: min(810px, 63vw); height: min(330px, 31vw); transform: translate(-50%, -50%) rotate(9deg); }
+.orbit-blessing { position: absolute; color: #f6e7dfa8; font-size: clamp(.78rem, .95vw, 1rem); letter-spacing: .08em; text-shadow: 0 2px 14px #02040b; white-space: nowrap; }
+.orbit-blessing i { display: inline-block; width: 5px; height: 5px; margin-right: 10px; border-radius: 50%; background: #ffd5a8; box-shadow: 0 0 12px 4px #ffd5a899; vertical-align: middle; }
+.blessing-one { left: 20%; top: 31%; }.blessing-two { left: 13%; top: 55%; }.blessing-three { left: 24%; top: 72%; }.blessing-four { right: 17%; top: 31%; }.blessing-five { right: 12%; top: 55%; }.blessing-six { right: 19%; top: 72%; }
+.cosmic-footer-bottom { position: absolute; z-index: 3; left: clamp(24px, 4vw, 72px); right: clamp(24px, 4vw, 72px); bottom: 28px; min-height: 40px; padding-top: 18px; border-top: 1px solid #f6e5dc3d; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; color: #e0d8d2a6; font: .72rem/1.5 ui-sans-serif, system-ui, sans-serif; letter-spacing: .2em; }
+.cosmic-footer-bottom > span:last-child { text-align: right; }
+.cosmic-footer-bottom nav { display: flex; gap: 24px; letter-spacing: .08em; }
+.cosmic-footer-bottom a { text-decoration: none; transition: color .2s ease; }
+.cosmic-footer-bottom a:hover { color: #fff5ef; }
+@media (max-width: 760px) {
+  .cosmic-footer { min-height: 760px; margin-top: 56px; }
+  .cosmic-footer-content { width: calc(100% - 42px); margin-top: -4vh; }
+  .cosmic-footer h2 { font-size: clamp(2rem, 10vw, 3rem); letter-spacing: .04em; }
+  .cosmic-footer-content > p { max-width: 19em; font-size: 1rem; line-height: 1.9; }
+  .orbit { left: 50%; top: 51%; }
+  .orbit-outer { width: 142vw; height: 65vw; }.orbit-inner { width: 104vw; height: 48vw; }
+  .orbit-blessing { display: none; }
+  .cosmic-footer-bottom { grid-template-columns: 1fr; justify-items: center; gap: 9px; bottom: 20px; text-align: center; }
+  .cosmic-footer-bottom > span:last-child { text-align: center; }
+  .cosmic-footer-bottom nav { order: -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-footer-media { display: none; }
+  .blessing-button, .blessing-status { transition: none; }
+}
