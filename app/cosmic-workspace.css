@@ -11,6 +11,8 @@ body { background: #060f14; }
 .app-shell button:hover, .slice-dialog button:hover { background: #b4ebd71a; border-color: #b6e7d57a; }
 .app-shell .primary, .slice-dialog .primary { background: linear-gradient(120deg, #c3eddb, #98cbd0); color: #102b2b; border-color: #b6e7d5; box-shadow: 0 4px 24px #8ad6bb16; font-weight: 600; }
 .app-shell .primary:hover, .slice-dialog .primary:hover { background: linear-gradient(120deg, #d9f7e9, #b1e4e5); box-shadow: 0 4px 30px #8ad6bb30; }
+.ai-thinking-label { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-width: max-content; }
+.ai-thinking-label canvas { display: block; flex: 0 0 20px; }
 .app-shell button:disabled, .slice-dialog button:disabled { opacity: .4; }
 .app-shell :is(button,a,input,textarea,summary,[tabindex]):focus-visible, .slice-dialog :is(button,input,textarea):focus-visible { outline: 2px solid #b6e7d5; outline-offset: 4px; }
 .app-shell .text-button { background: transparent; color: var(--accent); border: 0; }

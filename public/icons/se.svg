@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="se-halo" cx="0" cy="0" r="1" gradientTransform="translate(32 32) rotate(90) scale(28)">
+      <stop stop-color="#BDECD7" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#78B8B7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="se-line" x1="13" y1="15" x2="51" y2="49" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DDF9E9"/>
+      <stop offset="1" stop-color="#78B7BE"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="29" fill="url(#se-halo)"/>
+  <circle cx="32" cy="32" r="8" stroke="url(#se-line)" stroke-width="1.8"/>
+  <circle cx="32" cy="32" r="3" fill="#DDF9E9"/>
+  <path d="M32 11v8M32 45v8M11 32h8M45 32h8M17.2 17.2l5.7 5.7M41.1 41.1l5.7 5.7M46.8 17.2l-5.7 5.7M22.9 41.1l-5.7 5.7" stroke="url(#se-line)" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M14.5 44.5c4.3 4.8 10.5 7.5 17.5 7.5s13.2-2.7 17.5-7.5" stroke="#B8E7D3" stroke-opacity=".3" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2 4"/>
+  <path d="M14.5 19.5C18.8 14.7 25 12 32 12s13.2 2.7 17.5 7.5" stroke="#B8E7D3" stroke-opacity=".3" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2 4"/>
+</svg>

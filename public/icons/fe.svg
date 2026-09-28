@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="fe-halo" cx="0" cy="0" r="1" gradientTransform="translate(32 31) rotate(90) scale(27)">
+      <stop stop-color="#BDECD7" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#78B8B7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fe-line" x1="14" y1="15" x2="50" y2="49" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DDF9E9"/>
+      <stop offset="1" stop-color="#78B7BE"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="29" fill="url(#fe-halo)"/>
+  <path d="M16.5 26.5C20 17.8 29.8 13.6 38.4 17M47.5 37.2C44 46 34.2 50.2 25.6 46.8" stroke="#B8E7D3" stroke-opacity=".32" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="2 4"/>
+  <circle cx="16" cy="32" r="4" stroke="url(#fe-line)" stroke-width="1.7"/>
+  <circle cx="48" cy="32" r="4" stroke="url(#fe-line)" stroke-width="1.7"/>
+  <path d="M32 43.8S20.5 36.5 20.5 28.1c0-4.2 2.9-7.1 6.7-7.1 2.4 0 4.1 1.2 4.8 3 1-1.8 2.6-3 4.9-3 3.7 0 6.6 2.9 6.6 7.1 0 8.4-11.5 15.7-11.5 15.7Z" stroke="url(#fe-line)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M27.2 31.5h3.1l1.7-3.7 2.2 7 1.5-3.3h2.9" stroke="#DDF9E9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
