@@ -1,7 +1,36 @@
-/* Reduce the first heading's whitespace below the header to one third.
-   Desktop was 26px workspace padding + 32px section padding. */
+/* Keep the first section close to the header; its title moves into the
+   desktop header so the description and map can rise in sequence. */
+.app-shell .site-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
 .app-shell #workspace { padding-top: calc(26px / 3); }
 #workspace > #map { padding-top: calc(32px / 3); }
+#workspace > #map .workspace-heading { margin-bottom: 20px; }
+#workspace > #map .workspace-heading h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+#workspace > #map .workspace-heading p { margin-top: 0; }
 @media (max-width: 700px) {
   .app-shell #workspace { padding-top: calc(20px / 3); }
+  #workspace > #map .workspace-heading { margin-bottom: 24px; }
+  #workspace > #map .workspace-heading h1 {
+    position: static;
+    width: auto;
+    height: auto;
+    padding-block: 4px;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+  #workspace > #map .workspace-heading p { margin-top: 10px; }
 }
