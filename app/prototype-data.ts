@@ -9,6 +9,9 @@ export type ScenarioCard = {
 };
 export const categories = ["职场问题", "人际关系", "亲密关系"];
 export const scenarioCards: ScenarioCard[] = [
+    { id: "social-7", category: "人际关系", title: "朋友们单独聚会，我觉得自己被排除在外", scene: "看到合照才知道他们见过面，你很失落，却又不好意思问为什么没叫你。", blind: "把一次没有被邀请，解释成自己在所有人心里都不重要。", reframe: "失落值得被看见，但一次聚会的安排还不足以说明整段关系。", action: "先确认是否存在信息差，也可以向熟悉的朋友表达：“下次有合适的活动，我也想一起参加。”" },
+    { id: "love-7", category: "亲密关系", title: "刷到别人的恋爱日常，我觉得我们不够幸福", scene: "看到别人收到惊喜和礼物，你开始比较，忽略了两个人原本相处舒服的时刻。", blind: "拿别人精心展示的片段，衡量自己关系的全部。", reframe: "你羡慕的可能是被惦记的感觉，而不一定是同样的礼物或仪式。", action: "说出一个具体愿望：“我想和你安排一次不被工作打断的约会。”再听听对方的想法。" },
+    { id: "work-7", category: "职场问题", title: "同龄人接连升职，我开始怀疑自己的节奏", scene: "刷到朋友的新职位，你明明刚完成一项工作，却突然觉得自己的努力不值一提。", blind: "把别人的一个结果，当成衡量自己全部进展的标准。", reframe: "岗位、资源与目标不同，进展不必发生在同一个时间点。羡慕也可以是了解愿望的线索。", action: "写下你真正羡慕的是什么，再选一个本周能了解或尝试的小步骤，不急着追赶整个人生。" },
     { id: "work-1", category: "职场问题", title: "同事总找我帮忙，拒绝的话说不出口", scene: "自己还有任务没完成，对方一句“只有你能帮我”，你又答应了。", blind: "把“对方有困难”直接等同于“我必须解决”。", reframe: "愿意帮忙与能够承担是两件事。一次拒绝不等于否定关系。", action: "先确认余量再答复：“我今天需要先完成手头任务，这次没办法接。可以给你一个参考资料。”" },
     { id: "work-2", category: "职场问题", title: "领导一句含糊的评价，我反复想了一晚上", scene: "他说“这个方案再想想”，你开始怀疑自己的整个工作能力。", blind: "从一条模糊反馈，推演出对整个人的否定。", reframe: "反馈针对的可能是方向、信息或表达。现在还没有足够证据判断。", action: "确认具体标准：“你希望我重点调整目标、结构，还是执行细节？”" },
     { id: "work-3", category: "职场问题", title: "工作稳定，却越来越不像自己", scene: "收入和生活都还不错，但每天只是在完成任务。想变化，又有现实责任。", blind: "把选择压缩成“继续忍耐”或“辞职重来”两种。", reframe: "保留稳定与探索愿望可以并存。先知道想改变的具体部分。", action: "写下工作中想保留与想调整的各一件事，再找一个不影响基本收入的试探空间。" },
@@ -29,7 +32,7 @@ export const scenarioCards: ScenarioCard[] = [
     { id: "love-6", category: "亲密关系", title: "还没有做出决定，就已经担心多年后会后悔", scene: "关系进入下一阶段，你不断预演未来，想排除所有不确定再答应。", blind: "试图用更长的推演换取没有风险的承诺。", reframe: "重要决定需要信息与沟通，但没有人能预先验证完整未来。", action: "列出三个现在可以讨论的具体问题，例如金钱、生活安排与冲突处理，而不是只问会不会后悔。" },
 ];
 export const defaultQuestionTitle = "同龄人比较与自己的节奏";
-export const defaultQuestion = "最近刷朋友圈，看到同龄人升职、旅行、做副业，感觉大家都在往前走，只有我还没找到方向。下班后明明想学点东西，却总是躺着刷手机，越刷越焦虑。我分不清自己是真的想改变，还是只是怕落后。我该怎么找到自己的节奏？";
+export const defaultQuestion = "看到同龄人升职、旅行，我很焦虑。下班想学习却总刷手机，怎么找到自己的节奏？";
 export const examples = [
     { id: "career", title: "比较与迷茫", question: defaultQuestion },
     { id: "boundary", title: "拒绝与内疚", question: "同事经常临时让我帮忙，我自己的事情已经很多，但每次都说好。这周又因此加班。我怕拒绝会破坏关系，可是答应后又很生气。怎样才能把自己的界限说清楚？" },
@@ -77,4 +80,6 @@ export const thinkers: Thinker[] = [
 export function hasCrisisLanguage(text: string) {
     return /自杀|轻生|自残|伤害自己|结束生命|结束自己的生命|结束我的生命|不想活|不想再活|活不下去|活着没意思|死了算了|想死|想去死|想跳楼|想跳桥|割腕|吞药|kill myself|end my life|suicid|self.harm/i.test(text);
 }
-export function getExampleId(question: string): ExampleId { return examples.find(example => example.question === question.trim())?.id ?? "custom"; }
+// Manual demo input may use different punctuation or line breaks, not different meaning.
+const normalizeQuestion = (question: string) => question.replace(/[\s，。！？、,.!?；;：“”‘’"'（）()]/g, "");
+export function getExampleId(question: string): ExampleId { return examples.find(example => normalizeQuestion(example.question) === normalizeQuestion(question))?.id ?? "custom"; }

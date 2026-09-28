@@ -38,7 +38,7 @@ export function SafetySupport() {
 export function Exploration({ saved, onSave }: SaveProps) {
     const [reports, setReports] = useState<Report[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
-    const [question, setQuestion] = useState(defaultQuestion);
+    const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [pending, setPending] = useState(false);
     const [busy, setBusy] = useState(false);
@@ -64,7 +64,7 @@ export function Exploration({ saved, onSave }: SaveProps) {
             return;
         }
         const safety = hasCrisisLanguage(q + " " + answer);
-        if (!safety && !skip && !pending && q.length < 40) {
+        if (!safety && !skip && !pending && getExampleId(q) === "custom" && q.length < 40) {
             setPending(true);
             setError("");
             return;
@@ -111,7 +111,7 @@ function PersonAvatar({ id, name }: { id: string; name: string }) {
 export function Salon({ saved, onSave }: SaveProps) {
     const [selected, setSelected] = useState<string[]>(["jung", "hesse", "frankl"]);
     const [inRoom, setInRoom] = useState(false);
-    const [question, setQuestion] = useState(defaultQuestion);
+    const [question, setQuestion] = useState("");
     const [rounds, setRounds] = useState<SalonRound[]>([]);
     const [pending, setPending] = useState<SalonRound | null>(null);
     const [error, setError] = useState("");
@@ -135,7 +135,7 @@ export function Salon({ saved, onSave }: SaveProps) {
             const q = question.trim();
             const round: SalonRound = {
                 id: crypto.randomUUID(), question: q, people: [...selected],
-                safety: hasCrisisLanguage(q), isDefault: q === defaultQuestion,
+                safety: hasCrisisLanguage(q), isDefault: getExampleId(q) === "career",
             };
             // Safety support should never wait for the presentation animation.
             if (round.safety) {
@@ -170,7 +170,7 @@ export function Salon({ saved, onSave }: SaveProps) {
         <section className="panel texture conversation-panel">
             <div className="panel-heading"><h2>一个问题，不同的理解</h2></div>
             <div className="conversation-scroll">
-                {rounds.length === 0 && !busy && <div className="conversation-empty"><h3>想从什么话题开始？</h3><p>默认问题：{defaultQuestionTitle}。</p><p className="hint">可以直接发送下方问题，开启对话。</p></div>}
+                {rounds.length === 0 && !busy && <div className="conversation-empty"><h3>想从什么话题开始？</h3><p className="hint">写下一件最近的困惑，或选择一个样例。</p></div>}
                 {rounds.map((round, index) => <div className="conversation-round" key={round.id} ref={index === rounds.length - 1 ? latest : null}>
                     <div className="user-message"><span className="eyebrow">我的问题</span><p>{round.question}</p></div>
                     {round.safety ? <SafetySupport /> : !round.isDefault ? <div className="note">

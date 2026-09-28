@@ -21,12 +21,13 @@ export default function StackedCards({ saved, onSave }: { saved: SavedInsight[];
     onEnd: dx => { if (Math.abs(dx) > 42) choose(active + (dx < 0 ? 1 : -1)); },
   });
   return <div className="stacked-cards">
-    <div className="module-toolbar"><div className="category-tabs" aria-label="问题分类">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); choose(0); }}>{item}<span className="count">6</span></button>)}</div></div>
+    <div className="module-toolbar"><div className="category-tabs" aria-label="问题分类">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); choose(0); }}>{item}<span className="count">{scenarioCards.filter(card => card.category === item).length}</span></button>)}</div></div>
     <div ref={stage} className="card-deck" role="region" aria-roledescription="卡片轮播" aria-label={`${category}场景卡片`} {...gesture} onKeyDown={event => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); choose(active + (event.key === "ArrowRight" ? 1 : -1)); }
     }}>
       {cards.map((card, index) => {
-        const offset = ((index - active + cards.length + 3) % cards.length) - 3;
+        const half = Math.floor(cards.length / 2);
+        const offset = ((index - active + cards.length + half) % cards.length) - half;
         const current = index === active;
         const isSaved = saved.some(item => item.id === card.id);
         return <article key={card.id} className={`deck-card ${current ? "is-current" : ""}`} style={{ "--offset": offset, "--depth": Math.abs(offset), zIndex: 20 - Math.abs(offset) } as MotionStyle} data-position={offset} aria-label={`第 ${index + 1} 张，共 ${cards.length} 张`}>

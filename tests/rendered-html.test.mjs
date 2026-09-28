@@ -35,7 +35,7 @@ test("renders the cosmic four-module experience", async () => {
   assert.match(html, /class="launch-edge edge-left"/);
   assert.doesNotMatch(html, /launch-masthead|launch-navigation/);
   assert.match(html, /<p id="launch-description">[\s\S]*?class="warp-text-fallback">在这里，我为你留了一盏灯，带上你的困惑，带上你自己<\/span>[\s\S]*?<\/p>/);
-  assert.match(html, /<textarea\b[^>]*id="exploration-question"[^>]*>最近刷朋友圈，看到同龄人升职、旅行、做副业，/);
+  assert.match(html, /<textarea\b[^>]*id="exploration-question"[^>]*><\/textarea>/);
   assert.match(html, /<span class="launch-button-text">开始漫游<\/span>/);
   assert.match(html, /class="launch-workspace" inert="" aria-hidden="true"/);
   assert.doesNotMatch(html, /codex-preview/);

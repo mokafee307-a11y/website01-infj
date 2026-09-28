@@ -2,10 +2,33 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
+import { categories, scenarioCards, defaultQuestion, getExampleId } from '../app/prototype-data.ts';
 
 const root = resolve('dist-pages');
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
 const assets = await readdir(resolve(root, 'assets'));
+
+test('each category has seven complete cards and a balanced circular fan', () => {
+  assert.equal(new Set(scenarioCards.map(card => card.id)).size, 21);
+  for (const category of categories) {
+    const cards = scenarioCards.filter(card => card.category === category);
+    assert.equal(cards.length, 7);
+    for (const card of cards) for (const value of Object.values(card)) assert.ok(value.trim());
+    for (let active = 0; active < cards.length; active++) {
+      const half = Math.floor(cards.length / 2);
+      const offsets = cards.map((_, index) => ((index - active + cards.length + half) % cards.length) - half);
+      assert.deepEqual(offsets.sort((a, b) => a - b), [-3, -2, -1, 0, 1, 2, 3]);
+    }
+  }
+});
+
+test('short manual demo input matches with either punctuation style', () => {
+  assert.ok(defaultQuestion.length <= 45);
+  assert.equal(getExampleId(defaultQuestion), 'career');
+  assert.equal(getExampleId(` ${defaultQuestion.replaceAll('，', ',').replaceAll('。', '.').replaceAll('？', '?')}\n`), 'career');
+  assert.equal(getExampleId('一个不同的新问题'), 'custom');
+  assert.equal(getExampleId(''), 'custom');
+});
 
 test('static entry has metadata and portable, existing entry assets', async () => {
   assert.match(html, /<html lang="zh-CN">/);
