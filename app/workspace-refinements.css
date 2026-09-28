@@ -2,8 +2,14 @@
    in-page animated heading treatment as the following sections. */
 .app-shell #workspace { padding-top: calc(26px / 3); }
 #workspace > #map { padding-top: calc(32px / 3); }
-#workspace > #map .workspace-heading { margin-bottom: 20px; }
+#workspace > #map .workspace-heading {
+  margin-top: -40px;
+  margin-bottom: 20px;
+}
 @media (max-width: 700px) {
   .app-shell #workspace { padding-top: calc(20px / 3); }
-  #workspace > #map .workspace-heading { margin-bottom: 24px; }
+  #workspace > #map .workspace-heading {
+    margin-top: -12px;
+    margin-bottom: 24px;
+  }
 }
