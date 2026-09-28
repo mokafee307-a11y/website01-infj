@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, type CSSProperties, type PointerEvent, type MouseEvent, type ReactNode } from "react";
+import BorderGlow from "./BorderGlow";
+import "./deck-glow.css";
 
 export function useHorizontalDrag({ onStart, onMove, onEnd, mouseOnly = false }: {
   onStart?: () => void;
@@ -75,10 +77,12 @@ export function FlipCard({ front, back, flipped, active }: {
   const tilt = useCardTilt(8);
   return <div className={`flip-card ${flipped ? "is-flipped" : ""}`} {...(active ? tilt : {})}>
     <div className="flip-tilt">
+      <BorderGlow className="deck-border-glow" borderRadius={22} backgroundColor="transparent">
       <div className="flip-rotator">
         <div className="flip-face texture flip-front-face" aria-hidden={!active || flipped} inert={!active || flipped}>{front}<span className="card-glare" aria-hidden="true" /></div>
         <div className="flip-face texture flip-back-face" aria-hidden={!active || !flipped} inert={!active || !flipped}>{back}<span className="card-glare" aria-hidden="true" /></div>
       </div>
+      </BorderGlow>
     </div>
   </div>;
 }

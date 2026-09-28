@@ -7,10 +7,10 @@ import SplitText from "./SplitText";
 import ClickSpark from "./ClickSpark";
 import OptionWheel from "./OptionWheel";
 const tabs = [
-    { id: "map", title: "认知运行地图", description: "了解 INFJ 的内在运行机制" },
-    { id: "cards", title: "卡点梳理", description: "从熟悉的生活场景，换一个角度看问题" },
-    { id: "explore", title: "自由探索", description: "把一件具体的困惑慢慢说清楚" },
-    { id: "salon", title: "群星会客厅", description: "同一个问题，听见不同的理解" },
+    { id: "map", title: "运行地图", description: "了解 INFJ 的内在运行机制" },
+    { id: "salon", title: "星光会客厅", description: "同一个问题，听见不同的理解" },
+    { id: "cards", title: "迷茫之境", description: "从熟悉的生活场景，换一个角度看问题" },
+    { id: "explore", title: "自由之海", description: "把一件具体的困惑慢慢说清楚" },
 ] as const;
 const cognition = [
     { key: "Ni", name: "内倾直觉", role: "主导功能", plain: "串联线索，看见潜在走向", strength: "善于把零散信息联系起来，形成整体理解和长期构想。", blind: "线索不足时，可能把自己的推测当成已经发生的事实。", example: "对方今天话很少 → 我是不是做错了什么 → 他是不是不想再和我来往了？", reminder: "区分“我观察到了什么”和“我推测了什么”。为同一件事保留不止一种解释。" },
@@ -42,7 +42,6 @@ function CognitiveMap() {
     <aside className="panel texture function-list"><p className="eyebrow">典型功能顺序</p>{cognition.map((item, i) => <button key={item.key} className={`function-item ${selected === i ? "selected" : ""}`} onClick={() => setSelected(i)} aria-pressed={selected === i}><span className="function-key">{item.key}</span><span><strong>{item.name}</strong><small>{item.role}</small></span><span aria-hidden="true">›</span></button>)}<p className="hint">这是一种理解自己的参考语言，不是对所有 INFJ 的统一描述。</p></aside>
     <section className="panel texture radar-panel"><div className="panel-heading"><h2>INFJ 认知运行地图</h2><span className="badge">类型示意</span></div><Radar selected={selected} onSelect={setSelected}/><div className="note">先形成整体理解，再关注关系与逻辑，借助当下经验校准。实际使用会因人、情境和成长经历而不同。</div></section>
     <section className="panel texture function-detail" aria-live="polite"><div className="eyebrow">{current.role} / {current.key}</div><h2>{current.name}</h2><p className="lead">{current.plain}</p><div className="detail-block"><h3>可能的优势</h3><p>{current.strength}</p></div><div className="detail-block"><h3>需要留意的盲区</h3><p>{current.blind}</p></div><div className="note"><h3>生活中可能这样出现</h3><p>{current.example}</p></div><div className="detail-block"><h3>可以怎样平衡</h3><p>{current.reminder}</p></div></section>
-    <div className="map-footer"><span>认知功能不是医学诊断，也不决定一个人的能力与价值。</span><details><summary>其他四种功能怎么看？</summary><p>Ne：探索多种可能；Fi：辨认个人价值；Te：组织外部任务；Si：参照已有经验。它们并非 INFJ 所没有的能力，本图只呈现常见的四功能顺序，不为“八维强弱”编造分数。</p></details></div>
   </div>;
 }
 export default function Prototype() {
@@ -68,7 +67,7 @@ export default function Prototype() {
             for (const tab of tabs) {
                 if ((document.getElementById(tab.id)?.getBoundingClientRect().top ?? Infinity) <= line) current = tab.id;
             }
-            if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 3) current = "salon";
+            if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 3) current = tabs[tabs.length - 1].id;
             setActive(current);
         };
         const schedule = () => { if (!frame) frame = requestAnimationFrame(sync); };
@@ -95,7 +94,7 @@ export default function Prototype() {
     <div className="header-actions"><DailySlice saved={saved}/></div></header>
     <OptionWheel items={tabs} selectedIndex={tabs.findIndex(tab => tab.id === active)} onChange={navigate} />
     <main id="workspace" tabIndex={-1}>{tabs.map(tab => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
-      <div className="workspace-heading"><div><SplitText id={`heading-${tab.id}`} text={tab.id === "map" ? "绿老头认知运行地图" : tab.title}/><p>{tab.description}</p></div></div>
+      <div className="workspace-heading"><div><SplitText id={`heading-${tab.id}`} text={tab.title}/><p>{tab.description}</p></div></div>
       {tab.id === "map" ? <CognitiveMap /> : tab.id === "cards" ? <Flashcards saved={saved} onSave={onSave}/> : tab.id === "explore" ? <Exploration saved={saved} onSave={onSave}/> : <Salon saved={saved} onSave={onSave}/>}
     </section>)}
     </main>

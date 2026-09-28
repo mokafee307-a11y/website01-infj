@@ -42,8 +42,9 @@ test("renders the cosmic four-module experience", async () => {
   assert.match(html, /非实测分数/);
   assert.doesNotMatch(html, /未接入模型|class="section-number"|class="portrait-index"|class="deck-question-number"/);
   assert.match(html, /class="option-wheel/);
-  assert.match(html, /绿老头认知运行地图/);
-  assert.match(html, /群星会客厅/);
+  for (const label of ["运行地图", "星光会客厅", "迷茫之境", "自由之海"]) assert.ok(html.includes(label));
+  assert.doesNotMatch(html, /认知功能不是医学诊断，也不决定一个人的能力与价值。|其他四种功能怎么看|群星会客厅/);
+  assert.match(html, /border-glow-card deck-border-glow/);
   assert.doesNotMatch(html, /奇点会客厅|老头会客厅|左右滑动查看全部\s*10\s*位人物|选择想邀请的人物，可以单选或多选|向左浏览人物|向右浏览人物/);
   assert.match(html, /class="click-spark-canvas"/);
   assert.match(html, /border-glow-card/);
@@ -55,6 +56,7 @@ test("renders the cosmic four-module experience", async () => {
   assert.doesNotMatch(html, /three-button-particles/);
   const panels = [...html.matchAll(/<section\b[^>]*class="module-panel scroll-section"[^>]*>/g)].map(([tag]) => tag);
   assert.equal(panels.length, 4, "Exactly four independent anchored sections");
+  assert.deepEqual(panels.map(tag => tag.match(/ id="([^"]+)"/)?.[1]), ["map", "salon", "cards", "explore"], "Sections follow the same journey as the navigation");
   assert.equal(panels.filter(tag => !/\bhidden(?:=|\s|>)/.test(tag)).length, 4, "All four sections are available by page scrolling");
   for (const id of ["map", "cards", "explore", "salon"]) {
     assert.match(html, new RegExp(`id="tab-${id}"[^>]*href="#${id}"`));
