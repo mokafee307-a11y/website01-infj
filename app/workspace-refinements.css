@@ -1,15 +1,18 @@
-/* Keep the first section close to the header while retaining the same
-   in-page animated heading treatment as the following sections. */
+/* Pull the whole first module upward in normal flow, including its
+   animated heading, description and cards. */
 .app-shell #workspace { padding-top: calc(26px / 3); }
-#workspace > #map { padding-top: calc(32px / 3); }
+#workspace > #map {
+  margin-top: -50px;
+  padding-top: calc(32px / 3);
+}
 #workspace > #map .workspace-heading {
-  margin-top: -40px;
+  margin-top: 0;
   margin-bottom: 20px;
 }
 @media (max-width: 700px) {
   .app-shell #workspace { padding-top: calc(20px / 3); }
+  #workspace > #map { margin-top: -20px; }
   #workspace > #map .workspace-heading {
-    margin-top: -12px;
     margin-bottom: 24px;
   }
 }

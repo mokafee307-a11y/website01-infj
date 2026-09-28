@@ -1,0 +1,25 @@
+.warp-text {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  isolation: isolate;
+  /* Extra drawing room without changing the headline's position or flow. */
+  padding: .12em .18em;
+  margin: -.12em -.18em;
+}
+.warp-text-fallback { display: block; white-space: pre; }
+.warp-text canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+}
+.warp-text-ready > .warp-text-fallback { opacity: 0; }
+.warp-text-ready > canvas { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .warp-text-ready > .warp-text-fallback { opacity: 1; }
+  .warp-text-ready > canvas { opacity: 0; }
+}

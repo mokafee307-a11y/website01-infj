@@ -13,7 +13,7 @@ function ThinkerCard({ person, selected, toggle }: { person: Thinker; selected: 
   return <div className="thinker-motion" {...tilt}>
     <BorderGlow>
     <button className={`thinker-card texture ${selected ? "selected" : ""}`} aria-pressed={selected} aria-label={`${selected ? "取消选择" : "选择"}${person.name}`} onClick={toggle}>
-      <div className="portrait-placeholder" aria-hidden="true">{portrait ? <img className="thinker-portrait" src={portraitImage(person.id)} alt="" loading="lazy" width={600} height={800} draggable={false} /> : <span className="portrait-monogram">{person.short}</span>}<span className="selection-check">{selected ? "✓" : "+"}</span><span className="portrait-hover-caption">{selected ? "点击移出本次邀请" : "点击邀请，一起探索"}</span></div>
+      <div className="portrait-placeholder" aria-hidden="true">{portrait ? <img className="thinker-portrait" src={portraitImage(person.id)} alt="" loading="lazy" width={600} height={800} draggable={false} /> : <span className="portrait-monogram">{person.short}</span>}<span className="selection-check">{selected ? "✓" : "+"}</span></div>
       <div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p></div><span className="card-glare" aria-hidden="true" />
     </button>
     </BorderGlow>

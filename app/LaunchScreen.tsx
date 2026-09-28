@@ -1,15 +1,25 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import WarpText from "./WarpText";
+import { ENTRY_START_RATE, getEntryTiming } from "./launch-timing";
 
 const LaunchEnteredContext = createContext(false);
 export const useLaunchEntered = () => useContext(LaunchEnteredContext);
+
+const launchWarpProps = {
+  color: "inherit", fontSize: "inherit", fontWeight: "inherit",
+  fontFamily: "inherit", letterSpacing: "inherit", lineHeight: "inherit",
+  pointerInfluence: 0.85, pointerStrength: 1.2, hoverOnly: true,
+};
 
 /** A page-session welcome: no storage, no artificial loading, no module resets. */
 export default function LaunchScreen({ children }: { children: ReactNode }) {
   const [phase, setPhase] = useState<"welcome" | "leaving" | "entered">("welcome");
   const screen = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const entryVideo = useRef<HTMLVideoElement>(null);
+  const [entryPlaying, setEntryPlaying] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
   const locked = phase !== "entered";
@@ -23,36 +33,25 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const player = video.current;
-    if (!player || !locked || reducedMotion || videoFailed) return;
+    if (!player || !locked || entryPlaying || reducedMotion || videoFailed) return;
     const sync = () => {
       if (document.hidden) player.pause();
       else void player.play().catch(() => setVideoFailed(true));
     };
     sync(); document.addEventListener("visibilitychange", sync);
     return () => { document.removeEventListener("visibilitychange", sync); player.pause(); };
-  }, [locked, reducedMotion, videoFailed]);
-
-  useEffect(() => {
-    const element = screen.current;
-    if (!element) return;
-    // Track the black-hole center after the 16:9 video is cropped with object-fit: cover.
-    const sync = () => {
-      const { width, height } = element.getBoundingClientRect();
-      const scale = Math.max(width / 1280, height / 720);
-      const x = (width - 1280 * scale) / 2 + 1280 * scale * .55;
-      const y = (height - 720 * scale) / 2 + 720 * scale * .39;
-      element.style.setProperty("--portal-x", `${x}px`);
-      element.style.setProperty("--portal-y", `${y}px`);
-      element.style.setProperty("--portal-dx", `${width / 2 - x}px`);
-      element.style.setProperty("--portal-dy", `${height / 2 - y}px`);
-    };
-    const observer = new ResizeObserver(sync); observer.observe(element); sync();
-    return () => observer.disconnect();
-  }, [locked]);
+  }, [locked, entryPlaying, reducedMotion, videoFailed]);
 
   function enter() {
     if (phase !== "welcome") return;
     setPhase("leaving");
+    if (reducedMotion) return;
+    const player = entryVideo.current;
+    if (!player || player.error) { setPhase("entered"); return; }
+    player.currentTime = 0;
+    player.playbackRate = ENTRY_START_RATE;
+    // Start inside the click gesture, including on mobile browsers.
+    void player.play().catch(() => setPhase("entered"));
   }
 
   useEffect(() => {
@@ -64,10 +63,35 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (phase !== "leaving") return;
-    const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 160 : 1100;
-    const timer = window.setTimeout(() => setPhase("entered"), duration);
-    return () => window.clearTimeout(timer);
-  }, [phase]);
+    if (reducedMotion) {
+      const timer = window.setTimeout(() => setPhase("entered"), 160);
+      return () => window.clearTimeout(timer);
+    }
+    const player = entryVideo.current;
+    if (!player) return;
+    let frame = 0;
+    let previousTime = player.currentTime;
+    let lastProgress = performance.now();
+    const sync = () => {
+      if (document.hidden || player.currentTime !== previousTime) {
+        previousTime = player.currentTime;
+        lastProgress = performance.now();
+      }
+      // Use media time so buffering and tab suspension cannot finish the fade early.
+      if (screen.current && Number.isFinite(player.duration) && player.duration > 0) {
+        const timing = getEntryTiming(player.currentTime, player.duration);
+        player.playbackRate = timing.playbackRate;
+        screen.current.style.opacity = String(timing.opacity);
+      }
+      if (player.ended || performance.now() - lastProgress > 15000) {
+        setPhase("entered");
+        return;
+      }
+      frame = requestAnimationFrame(sync);
+    };
+    frame = requestAnimationFrame(sync);
+    return () => { cancelAnimationFrame(frame); player.pause(); };
+  }, [phase, reducedMotion]);
 
   useEffect(() => {
     if (phase !== "entered") return;
@@ -83,10 +107,21 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
       <div className="launch-media" aria-hidden="true">
         <video ref={video} className={videoFailed ? "video-unavailable" : ""} src={reducedMotion ? undefined : "/media/cosmic-launch.mp4"} poster="/media/cosmic-launch-poster.jpg" muted loop playsInline preload="metadata" disablePictureInPicture tabIndex={-1} onError={() => setVideoFailed(true)} />
       </div>
+      <div className={`launch-entry-media${entryPlaying ? " is-playing" : ""}`} aria-hidden="true">
+        <video ref={entryVideo} src={reducedMotion ? undefined : "/media/cosmic-entry-v2.mp4"} muted playsInline preload="auto" disablePictureInPicture tabIndex={-1}
+          onPlaying={() => setEntryPlaying(true)} onEnded={() => setPhase("entered")}
+          onError={() => { if (phase === "leaving") setPhase("entered"); }} />
+      </div>
       <div className="launch-shade" aria-hidden="true" />
       <div className="launch-content launch-ui">
-        <h1 id="launch-title"><span>欢迎搭乘</span><span>绿老头漫游飞船</span></h1>
-        <p id="launch-description">在这里，我为你留了一盏灯，带上你的困惑，带上你自己</p>
+        <h1 id="launch-title"><span>
+          <WarpText {...launchWarpProps} text="欢迎搭乘" />
+        </span><span>
+          <WarpText {...launchWarpProps} text="绿老头漫游飞船" />
+        </span></h1>
+        <p id="launch-description">
+          <WarpText {...launchWarpProps} text="在这里，我为你留了一盏灯，带上你的困惑，带上你自己" />
+        </p>
         <button type="button" className="launch-enter" aria-disabled={phase === "leaving"} onClick={() => enter()}>
           <span className="launch-button-text">开始漫游</span>
           <span className="launch-edge edge-left" aria-hidden="true" /><span className="launch-edge edge-right" aria-hidden="true" /><span className="launch-edge edge-top" aria-hidden="true" /><span className="launch-edge edge-bottom" aria-hidden="true" />

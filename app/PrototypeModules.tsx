@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ThinkingOrb } from "thinking-orbs";
-import { examples, sampleReports, defaultQuestion, thinkers, getExampleId, hasCrisisLanguage, type ExampleId } from "./prototype-data";
+import { examples, sampleReports, defaultQuestion, defaultQuestionTitle, thinkers, getExampleId, hasCrisisLanguage, type ExampleId } from "./prototype-data";
 import ThinkerRail from "./ThinkerRail";
 import LatticeLoader from "./LatticeLoader";
 import { portraitImage } from "./portrait-images";
@@ -38,7 +38,7 @@ export function SafetySupport() {
 export function Exploration({ saved, onSave }: SaveProps) {
     const [reports, setReports] = useState<Report[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
-    const [question, setQuestion] = useState("");
+    const [question, setQuestion] = useState(defaultQuestion);
     const [answer, setAnswer] = useState("");
     const [pending, setPending] = useState(false);
     const [busy, setBusy] = useState(false);
@@ -170,7 +170,7 @@ export function Salon({ saved, onSave }: SaveProps) {
         <section className="panel texture conversation-panel">
             <div className="panel-heading"><h2>一个问题，不同的理解</h2></div>
             <div className="conversation-scroll">
-                {rounds.length === 0 && !busy && <div className="conversation-empty"><h3>想从什么话题开始？</h3><p>默认问题：生活稳定，却越来越不像自己。</p><p className="hint">可以直接发送下方问题，开启对话。</p></div>}
+                {rounds.length === 0 && !busy && <div className="conversation-empty"><h3>想从什么话题开始？</h3><p>默认问题：{defaultQuestionTitle}。</p><p className="hint">可以直接发送下方问题，开启对话。</p></div>}
                 {rounds.map((round, index) => <div className="conversation-round" key={round.id} ref={index === rounds.length - 1 ? latest : null}>
                     <div className="user-message"><span className="eyebrow">我的问题</span><p>{round.question}</p></div>
                     {round.safety ? <SafetySupport /> : !round.isDefault ? <div className="note">
@@ -181,7 +181,7 @@ export function Salon({ saved, onSave }: SaveProps) {
                         <div className="response-body">{person.response.split("\n\n").map((paragraph, i) => <p key={i}>{paragraph}</p>)}</div>
                         <div className="response-actions">
                             <a href={person.source} target="_blank" rel="noreferrer">思想背景资料 ↗</a>
-                            <SavedButton item={{ id: round.id + "-" + person.id, source: "星光会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：稳定与自我\n" + person.response }} saved={saved} onSave={onSave}/>
+                            <SavedButton item={{ id: round.id + "-" + person.id, source: "星光会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：" + defaultQuestionTitle + "\n" + person.response }} saved={saved} onSave={onSave}/>
                         </div>
                     </article>)}
                 </div>)}
