@@ -106,10 +106,10 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
   return <LaunchEnteredContext.Provider value={!locked}>
     {locked && <section ref={screen} className={`launch-screen cosmic-launch${phase === "leaving" ? " is-leaving" : ""}`} aria-labelledby="launch-title" aria-describedby="launch-description" aria-busy={phase === "leaving"}>
       <div className="launch-media" aria-hidden="true">
-        <video ref={video} className={videoFailed ? "video-unavailable" : ""} src={reducedMotion ? undefined : publicAsset("/media/cosmic-launch.mp4")} poster={publicAsset("/media/cosmic-launch-poster.jpg")} muted loop playsInline preload="metadata" disablePictureInPicture tabIndex={-1} onError={() => setVideoFailed(true)} />
+        <video ref={video} className={videoFailed ? "video-unavailable" : ""} src={reducedMotion ? undefined : publicAsset("/media/cosmic-launch-original.mp4")} poster={publicAsset("/media/cosmic-launch-poster.jpg")} muted loop playsInline preload="metadata" disablePictureInPicture tabIndex={-1} onError={() => setVideoFailed(true)} />
       </div>
       <div className={`launch-entry-media${entryPlaying ? " is-playing" : ""}`} aria-hidden="true">
-        <video ref={entryVideo} src={reducedMotion ? undefined : publicAsset("/media/cosmic-entry-v2.mp4")} muted playsInline preload="auto" disablePictureInPicture tabIndex={-1}
+        <video ref={entryVideo} src={reducedMotion ? undefined : publicAsset("/media/cosmic-entry-v2-original.mp4")} muted playsInline preload="auto" disablePictureInPicture tabIndex={-1}
           onPlaying={() => setEntryPlaying(true)} onEnded={() => setPhase("entered")}
           onError={() => { if (phase === "leaving") setPhase("entered"); }} />
       </div>

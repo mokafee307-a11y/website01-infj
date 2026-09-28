@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
 import { categories, scenarioCards, defaultQuestion, getExampleId } from '../app/prototype-data.ts';
 
 const root = resolve('dist-pages');
@@ -67,7 +68,19 @@ test('all public assets are included unchanged', async () => {
 
 test('client bundle contains the launch experience without Sites runtime', async () => {
   const js = (await Promise.all(assets.filter(name => name.endsWith('.js')).map(name => readFile(resolve(root, 'assets', name), 'utf8')))).join('\n');
-  assert.match(js, /cosmic-entry-v2\.mp4/);
+  assert.match(js, /cosmic-entry-v2-original\.mp4/);
+  assert.match(js, /cosmic-launch-original\.mp4/);
   assert.match(js, /绿老头漫游飞船/);
   assert.doesNotMatch(js, /signin-with-chatgpt|chatgpt\.site|process\.env\.NEXT_PUBLIC_ASSET_BASE/);
+});
+
+test('published launch videos are byte-identical to the supplied originals', async () => {
+  const originals = {
+    'cosmic-entry-v2-original.mp4': '79ce15dad91ac7c07af1afe4b43df30a1f2e240b33ea6c289969af46c032c5a7',
+    'cosmic-launch-original.mp4': 'f38010bc6a8d7bb0a1dd85e11fec35c4252c429abc07e044d04243700681a9d9',
+  };
+  for (const [name, expected] of Object.entries(originals)) {
+    const bytes = await readFile(resolve(root, 'media', name));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), expected, name);
+  }
 });
