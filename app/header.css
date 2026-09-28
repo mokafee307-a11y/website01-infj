@@ -12,14 +12,6 @@
 }
 .site-header .brand { justify-self: start; white-space: nowrap; gap: 10px; }
 .site-header .brand strong { font-size: 1rem; }
-.site-header .header-section-title {
-  grid-column: 2;
-  justify-self: center;
-  font: 500 clamp(1.25rem, 2vw, 1.7rem)/1 var(--serif);
-  letter-spacing: .12em;
-  color: #e1f0e9;
-  white-space: nowrap;
-}
 .site-header .main-tabs {
   position: relative;
   top: auto;
@@ -45,7 +37,6 @@
   .site-header { gap: 12px; padding: 0 12px; min-height: 62px; }
   .site-header .brand-mark { display: none; }
   .site-header .brand strong { font-size: .875rem; }
-  .site-header .header-section-title { display: none; }
   .site-header .main-tabs { justify-self: stretch; gap: 18px; }
   .site-header .main-tabs a { font-size: .875rem; padding: 21px 0 19px; }
   .site-header .header-actions > button { font-size: .875rem; padding: 8px; }

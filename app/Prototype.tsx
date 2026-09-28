@@ -61,7 +61,6 @@ export default function Prototype() {
     <BlinkingDots />
     <a href="#workspace" className="skip-link">跳到模块内容</a>
     <header ref={header} className="site-header"><div className="brand"><span className="brand-mark" aria-hidden="true">I</span><strong>INFJ漫游飞船</strong></div>
-    <strong className="header-section-title" aria-hidden="true">{tabs.find(tab => tab.id === active)?.title}</strong>
     <div className="header-actions"><DailySlice saved={saved}/></div></header>
     <OptionWheel items={tabs} selectedIndex={tabs.findIndex(tab => tab.id === active)} onChange={navigate} />
     <main id="workspace" tabIndex={-1}>{tabs.map(tab => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
