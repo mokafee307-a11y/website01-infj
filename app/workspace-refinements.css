@@ -1,0 +1,7 @@
+/* Reduce the first heading's whitespace below the header to one third.
+   Desktop was 26px workspace padding + 32px section padding. */
+.app-shell #workspace { padding-top: calc(26px / 3); }
+#workspace > #map { padding-top: calc(32px / 3); }
+@media (max-width: 700px) {
+  .app-shell #workspace { padding-top: calc(20px / 3); }
+}

@@ -6,6 +6,7 @@
 @import "./launch-cosmic.css";
 @import "./cosmic-workspace.css";
 @import "./motion-details.css";
+@import "./workspace-refinements.css";
 
 :root {
   color-scheme: dark;
