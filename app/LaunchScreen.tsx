@@ -81,7 +81,6 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
       // Use media time so buffering and tab suspension cannot finish the fade early.
       if (screen.current && Number.isFinite(player.duration) && player.duration > 0) {
         const timing = getEntryTiming(player.currentTime, player.duration);
-        player.playbackRate = timing.playbackRate;
         screen.current.style.opacity = String(timing.opacity);
       }
       if (player.ended || performance.now() - lastProgress > 15000) {
@@ -109,7 +108,7 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
         <video ref={video} className={videoFailed ? "video-unavailable" : ""} src={reducedMotion ? undefined : publicAsset("/media/cosmic-launch-original.mp4")} poster={publicAsset("/media/cosmic-launch-poster.jpg")} muted loop playsInline preload="metadata" disablePictureInPicture tabIndex={-1} onError={() => setVideoFailed(true)} />
       </div>
       <div className={`launch-entry-media${entryPlaying ? " is-playing" : ""}`} aria-hidden="true">
-        <video ref={entryVideo} src={reducedMotion ? undefined : publicAsset("/media/cosmic-entry-v2-original.mp4")} muted playsInline preload="auto" disablePictureInPicture tabIndex={-1}
+        <video ref={entryVideo} src={reducedMotion ? undefined : publicAsset("/media/cosmic-entry-sep29.mp4")} muted playsInline preload="auto" disablePictureInPicture tabIndex={-1}
           onPlaying={() => setEntryPlaying(true)} onEnded={() => setPhase("entered")}
           onError={() => { if (phase === "leaving") setPhase("entered"); }} />
       </div>
