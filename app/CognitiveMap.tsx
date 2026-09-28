@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLaunchEntered } from "./LaunchScreen";
+import { publicAsset } from "./public-asset";
 import "./cognitive-map.css";
 
 const cognition = [
@@ -36,8 +37,8 @@ function CosmicGuide() {
     return () => { observer.disconnect(); motion.removeEventListener("change", sync); document.removeEventListener("visibilitychange", sync); node.pause(); };
   }, [entered, safari]);
   return <div className="map-guide" aria-hidden="true">
-    <img src="/cognition/guide-poster.png" alt="" width={360} height={640} style={{ visibility: playing && !still ? "hidden" : "visible" }}/>
-    <video ref={video} src={safari ? "/cognition/guide-alpha.mov" : "/cognition/guide-alpha.webm"} className={still ? "guide-still" : ""} muted loop playsInline preload="metadata" poster="/cognition/guide-poster.png" disablePictureInPicture onPlaying={() => setPlaying(true)} onError={() => setStill(true)} tabIndex={-1}/>
+    <img src={publicAsset("/cognition/guide-poster.png")} alt="" width={360} height={640} style={{ visibility: playing && !still ? "hidden" : "visible" }}/>
+    <video ref={video} src={publicAsset(safari ? "/cognition/guide-alpha.mov" : "/cognition/guide-alpha.webm")} className={still ? "guide-still" : ""} muted loop playsInline preload="metadata" poster={publicAsset("/cognition/guide-poster.png")} disablePictureInPicture onPlaying={() => setPlaying(true)} onError={() => setStill(true)} tabIndex={-1}/>
   </div>;
 }
 
@@ -76,7 +77,7 @@ export default function CognitiveMap() {
     </section>
     <section id="cognitive-reading" className="panel texture map-reading" aria-live="polite" aria-label={`${current.name}功能解读`}>
       <div className="map-reading-intro"><div className="eyebrow">{current.role} / {current.key}</div><h2>{current.name}</h2><p className="lead">{current.plain}</p>
-        <img key={current.key} className="map-function-art" src={current.icon} alt={`${current.name}星云图标`} width={160} height={160}/>
+        <img key={current.key} className="map-function-art" src={publicAsset(current.icon)} alt={`${current.name}星云图标`} width={160} height={160}/>
       </div>
       <div className="detail-block"><h3>可能的优势</h3><p>{current.strength}</p></div>
       <div className="detail-block"><h3>需要留意的盲区</h3><p>{current.blind}</p></div>

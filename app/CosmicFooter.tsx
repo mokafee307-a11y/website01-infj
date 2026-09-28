@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { publicAsset } from "./public-asset";
 
 const blessings = [
   { text: "你已经足够好", className: "blessing-one" },
@@ -16,8 +17,8 @@ export default function CosmicFooter() {
 
   return <footer className={`cosmic-footer${received ? " blessing-received" : ""}`} aria-labelledby="cosmic-footer-title">
     <div className="cosmic-footer-media" aria-hidden="true">
-      <video autoPlay muted loop playsInline preload="metadata" poster="/media/cosmic-footer-poster.png">
-        <source src="/media/cosmic-footer.mp4" type="video/mp4" />
+      <video autoPlay muted loop playsInline preload="metadata" poster={publicAsset("/media/cosmic-footer-poster.png")}>
+        <source src={publicAsset("/media/cosmic-footer.mp4")} type="video/mp4" />
       </video>
     </div>
     <div className="cosmic-footer-shade" aria-hidden="true" />
