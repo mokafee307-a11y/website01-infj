@@ -7,7 +7,7 @@ import SplitText from "./SplitText";
 import ClickSpark from "./ClickSpark";
 import OptionWheel from "./OptionWheel";
 const tabs = [
-    { id: "map", title: "认知运行地图", description: "了解典型 INFJ 的内在运行机制" },
+    { id: "map", title: "认知运行地图", description: "了解 INFJ 的内在运行机制" },
     { id: "cards", title: "卡点梳理", description: "从熟悉的生活场景，换一个角度看问题" },
     { id: "explore", title: "自由探索", description: "把一件具体的困惑慢慢说清楚" },
     { id: "salon", title: "奇点会客厅", description: "同一个问题，听见不同的理解" },

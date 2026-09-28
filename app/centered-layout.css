@@ -17,7 +17,16 @@
 .panel-heading { justify-content: center; flex-wrap: wrap; text-align: center; }
 .intro-copy, .report-title, .thinker-info, .room-sidebar > h2 { text-align: center; }
 /* Keep the cognitive map's original list / radar / interpretation structure. */
+.map-layout { align-items: stretch; }
 .map-layout .panel-heading { justify-content: space-between; text-align: left; }
+.salon-room .conversation-scroll { height: auto; max-height: none; overflow: visible; overscroll-behavior: auto; }
+.salon-room .room-person .avatar-placeholder { display: block; }
+.salon-room .avatar-placeholder { width: 42px; height: 52px; }
+.salon-room .room-sidebar { position: static; }
+.salon-room .response-body { max-width: 78ch; }
+.conversation-round, .salon-loading { scroll-margin-top: 110px; }
+.salon-loading { padding: 28px 0; }
+.salon-loading > .hint { margin-top: 14px; }
 .salon-selection > .selection-panel { justify-content: center; text-align: center; }
 .salon-selection > .selection-panel > .guest-list { flex: 0 1 auto; justify-content: center; }
 .salon-selection > .selection-panel > .full-width { margin-left: 0; }

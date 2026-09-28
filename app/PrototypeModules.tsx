@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { examples, sampleReports, defaultQuestion, thinkers, getExampleId, hasCrisisLanguage, type ExampleId } from "./prototype-data";
 import ThinkerRail from "./ThinkerRail";
+import LatticeLoader from "./LatticeLoader";
 export { default as Flashcards } from "./StackedCards";
 export type SavedInsight = {
     id: string;
@@ -102,42 +103,103 @@ type SalonRound = {
     safety: boolean;
     isDefault: boolean;
 };
+function PersonAvatar({ id, name }: { id: string; name: string }) {
+    return <span className="avatar-placeholder"><img src={"/portraits/" + id + ".webp"} alt={name + "肖像"} width={42} height={52} /></span>;
+}
 export function Salon({ saved, onSave }: SaveProps) {
     const [selected, setSelected] = useState<string[]>(["jung", "hesse", "frankl"]);
     const [inRoom, setInRoom] = useState(false);
     const [question, setQuestion] = useState(defaultQuestion);
     const [rounds, setRounds] = useState<SalonRound[]>([]);
-    const [busy, setBusy] = useState(false);
+    const [pending, setPending] = useState<SalonRound | null>(null);
     const [error, setError] = useState("");
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const latest = useRef<HTMLDivElement>(null);
+    const loading = useRef<HTMLDivElement>(null);
+    const busy = pending !== null;
     const people = thinkers.filter(person => selected.includes(person.id));
-    useEffect(() => () => { if (timer.current)
-        clearTimeout(timer.current); }, []);
-    useEffect(() => { if (rounds.length && latest.current && !latest.current.closest("[hidden]"))
-        latest.current.scrollIntoView({ block: "nearest", behavior: "auto" }); }, [rounds.length]);
+    useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+    useEffect(() => {
+        const target = pending ? loading.current : latest.current;
+        if (inRoom && target && !target.closest("[hidden]")) {
+            target.scrollIntoView({ block: "start", behavior: "instant" });
+        }
+    }, [pending, rounds.length, inRoom]);
     function toggle(id: string) { setSelected(current => current.includes(id) ? current.filter(value => value !== id) : [...current, id]); }
     function send() {
-        if (busy || !question.trim() || !people.length)
-            return;
-        const q = question.trim();
-        setBusy(true);
+        if (timer.current || busy || !question.trim() || !people.length) return;
         setError("");
-        timer.current = setTimeout(() => {
-            try {
-                setRounds(items => [...items, { id: crypto.randomUUID(), question: q, people: [...selected], safety: hasCrisisLanguage(q), isDefault: q === defaultQuestion }]);
+        try {
+            const q = question.trim();
+            const round: SalonRound = {
+                id: crypto.randomUUID(), question: q, people: [...selected],
+                safety: hasCrisisLanguage(q), isDefault: q === defaultQuestion,
+            };
+            // Safety support should never wait for the presentation animation.
+            if (round.safety) {
+                setRounds(items => [...items, round]);
                 setQuestion("");
-                setBusy(false);
+                return;
             }
-            catch {
-                setBusy(false);
-                setError("这次没能准备好回复，问题仍保留，请再试一次。");
-            }
-        }, 450);
+            setPending(round);
+            timer.current = setTimeout(() => {
+                setRounds(items => [...items, round]);
+                setQuestion("");
+                setPending(null);
+                timer.current = null;
+            }, 1400);
+        } catch {
+            setPending(null);
+            setError("这次没能准备好回复，问题仍保留，请再试一次。");
+        }
     }
     if (!inRoom)
-        return <div className="salon-selection"><ThinkerRail selected={selected} toggle={toggle}/><aside className="panel texture selection-panel"><h2>本次邀请</h2><p className="hint">已选择 {selected.length} 位</p><div className="guest-list">{people.length ? people.map(person => <div key={person.id}><span>{person.name}</span><button onClick={() => toggle(person.id)} aria-label={`移除${person.name}`}>×</button></div>) : <p className="hint">先选一位你想听听的人。</p>}</div><button className="primary full-width" disabled={!people.length} onClick={() => setInRoom(true)}>进入会客厅{people.length ? `（${people.length}）` : ""}</button><div className="note"><h3>分别回答，不自动辩论</h3><p>每个人从自己的思想视角回应同一问题。</p></div><p className="hint">历史人物的 INFJ 类型属于公开推测，并非已证实身份。回复为思想演绎，不是本人言论。</p></aside></div>;
-    return <div className="salon-room"><aside className="panel texture room-sidebar"><button className="full-width" onClick={() => setInRoom(false)} disabled={busy}>← 调整邀请人物</button><h2>本次在场 · {people.length} 位</h2>{people.map(person => <div className="room-person" key={person.id}><span className="avatar-placeholder" aria-hidden="true">{person.short.slice(0, 1)}</span><div><strong>{person.name}</strong><small>{person.angle}</small></div></div>)}<div className="note">每轮问题独立回答，不会自动串联自由探索中的内容，也不会让人物彼此辩论。</div></aside><section className="panel texture conversation-panel"><div className="panel-heading"><h2>一个问题，不同的理解</h2></div><div className="conversation-scroll" aria-live="polite">{rounds.length === 0 ? <div className="conversation-empty"><h3>想从什么话题开始？</h3><p>默认问题：生活稳定，却越来越不像自己。</p><p className="hint">可以直接发送下方问题，开启对话。</p></div> : rounds.map((round, index) => <div className="conversation-round" key={round.id} ref={index === rounds.length - 1 ? latest : null}><div className="user-message"><span className="eyebrow">我的问题</span><p>{round.question}</p></div>{round.safety ? <SafetySupport /> : !round.isDefault ? <div className="note"><h3>问题已保留，这个话题还没有预设回复。</h3><p>可以先尝试下方话题，听听他们各自的理解。</p><button onClick={() => setQuestion(defaultQuestion)} disabled={busy}>填入默认问题，体验分别回答</button></div> : thinkers.filter(person => round.people.includes(person.id)).map(person => <article className="persona-response" key={person.id}><div className="response-header"><span className="avatar-placeholder" aria-hidden="true">{person.short.slice(0, 1)}</span><div><h3>{person.name}</h3><small>{person.angle} · 思想演绎，非本人原话</small></div></div><div className="response-body">{person.response.split("\n\n").map((paragraph, i) => <p key={i}>{paragraph}</p>)}</div><div className="response-actions"><a href={person.source} target="_blank" rel="noreferrer">思想背景资料 ↗</a><SavedButton item={{ id: `${round.id}-${person.id}`, source: "奇点会客厅", title: `${person.name} · ${person.angle}`, text: `预设思想演绎，非人物原话\n话题：稳定与自我\n${person.response}` }} saved={saved} onSave={onSave}/></div></article>)}</div>)}</div><div className="salon-composer"><div className="composer-caption"><label className="field-label" htmlFor="salon-question">想听他们怎么看？</label><button className="text-button" disabled={busy} onClick={() => setQuestion(defaultQuestion)}>使用默认问题</button></div><textarea id="salon-question" value={question} disabled={busy} maxLength={2000} onChange={event => setQuestion(event.target.value)} placeholder="写下一个困惑或你想探讨的话题……"/><div className="form-actions"><span className="hint">{question.length}/2000 · 思想演绎，不替代专业支持</span><button className="primary" disabled={busy || !question.trim()} onClick={send}>{busy ? "正在准备回复…" : `请 ${people.length} 位分别回答`}</button></div>{error && <p role="alert" className="error-text">{error}</p>}</div></section></div>;
+        return <div className="salon-selection"><ThinkerRail selected={selected} toggle={toggle}/><aside className="panel texture selection-panel"><h2>本次邀请</h2><p className="hint">已选择 {selected.length} 位</p><div className="guest-list">{people.length ? people.map(person => <div key={person.id}><span>{person.name}</span><button onClick={() => toggle(person.id)} aria-label={"移除" + person.name}>×</button></div>) : <p className="hint">先选一位你想听听的人。</p>}</div><button className="primary full-width" disabled={!people.length} onClick={() => setInRoom(true)}>进入会客厅{people.length ? "（" + people.length + "）" : ""}</button><div className="note"><h3>分别回答，不自动辩论</h3><p>每个人从自己的思想视角回应同一问题。</p></div><p className="hint">历史人物的 INFJ 类型属于公开推测，并非已证实身份。回复为思想演绎，不是本人言论。</p></aside></div>;
+    return <div className="salon-room">
+        <aside className="panel texture room-sidebar">
+            <button className="full-width" onClick={() => setInRoom(false)} disabled={busy}>← 调整邀请人物</button>
+            <h2>本次在场 · {people.length} 位</h2>
+            {people.map(person => <div className="room-person" key={person.id}>
+                <PersonAvatar id={person.id} name={person.name}/>
+                <div><strong>{person.name}</strong><small>{person.angle}</small></div>
+            </div>)}
+            <div className="note">每轮问题独立回答，不会自动串联自由探索中的内容，也不会让人物彼此辩论。</div>
+        </aside>
+        <section className="panel texture conversation-panel">
+            <div className="panel-heading"><h2>一个问题，不同的理解</h2></div>
+            <div className="conversation-scroll">
+                {rounds.length === 0 && !busy && <div className="conversation-empty"><h3>想从什么话题开始？</h3><p>默认问题：生活稳定，却越来越不像自己。</p><p className="hint">可以直接发送下方问题，开启对话。</p></div>}
+                {rounds.map((round, index) => <div className="conversation-round" key={round.id} ref={index === rounds.length - 1 ? latest : null}>
+                    <div className="user-message"><span className="eyebrow">我的问题</span><p>{round.question}</p></div>
+                    {round.safety ? <SafetySupport /> : !round.isDefault ? <div className="note">
+                        <h3>问题已保留，这个话题还没有预设回复。</h3><p>可以先尝试下方话题，听听他们各自的理解。</p>
+                        <button onClick={() => setQuestion(defaultQuestion)} disabled={busy}>填入默认问题，体验分别回答</button>
+                    </div> : thinkers.filter(person => round.people.includes(person.id)).map(person => <article className="persona-response" key={person.id}>
+                        <div className="response-header"><PersonAvatar id={person.id} name={person.name}/><div><h3>{person.name}</h3><small>{person.angle} · 思想演绎，非本人原话</small></div></div>
+                        <div className="response-body">{person.response.split("\n\n").map((paragraph, i) => <p key={i}>{paragraph}</p>)}</div>
+                        <div className="response-actions">
+                            <a href={person.source} target="_blank" rel="noreferrer">思想背景资料 ↗</a>
+                            <SavedButton item={{ id: round.id + "-" + person.id, source: "奇点会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：稳定与自我\n" + person.response }} saved={saved} onSave={onSave}/>
+                        </div>
+                    </article>)}
+                </div>)}
+                {pending && <div className="salon-loading" ref={loading}>
+                    <div className="user-message"><span className="eyebrow">我的问题</span><p>{pending.question}</p></div>
+                    <LatticeLoader label="正在准备回答" color="#cde7d5" />
+                    <p className="hint">{people.map(person => person.short).join(" · ")}</p>
+                </div>}
+            </div>
+            <div className="salon-composer">
+                <div className="composer-caption"><label className="field-label" htmlFor="salon-question">想听他们怎么看？</label><button className="text-button" disabled={busy} onClick={() => setQuestion(defaultQuestion)}>使用默认问题</button></div>
+                <textarea id="salon-question" value={question} disabled={busy} maxLength={2000} onChange={event => setQuestion(event.target.value)} placeholder="写下一个困惑或你想探讨的话题……"/>
+                <div className="form-actions"><span className="hint">{question.length}/2000 · 思想演绎，不替代专业支持</span>
+                    <button className="primary" disabled={busy || !question.trim()} onClick={send}>{busy ? "正在准备回复…" : "请 " + people.length + " 位分别回答"}</button>
+                </div>
+                {error && <p role="alert" className="error-text">{error}</p>}
+                <span className="lattice-loader__sr" role="status">{!busy && rounds.length ? "已展开 " + rounds.length + " 轮回应" : ""}</span>
+            </div>
+        </section>
+    </div>;
 }
 export function DailySlice({ saved }: {
     saved: SavedInsight[];
