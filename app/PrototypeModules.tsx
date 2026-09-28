@@ -180,7 +180,7 @@ export function Salon({ saved, onSave }: SaveProps) {
                         <div className="response-body">{person.response.split("\n\n").map((paragraph, i) => <p key={i}>{paragraph}</p>)}</div>
                         <div className="response-actions">
                             <a href={person.source} target="_blank" rel="noreferrer">思想背景资料 ↗</a>
-                            <SavedButton item={{ id: round.id + "-" + person.id, source: "奇点会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：稳定与自我\n" + person.response }} saved={saved} onSave={onSave}/>
+                            <SavedButton item={{ id: round.id + "-" + person.id, source: "群星会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：稳定与自我\n" + person.response }} saved={saved} onSave={onSave}/>
                         </div>
                     </article>)}
                 </div>)}
