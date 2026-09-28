@@ -1,0 +1,51 @@
+.cognitive-map { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+.cognitive-map .panel { border-radius: 20px; }
+.map-atlas { position: relative; display: flex; flex-direction: column; min-height: 540px; padding: 24px; overflow: hidden; }
+.map-atlas-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: relative; z-index: 2; }
+.map-atlas-heading h2 { font-size: 1rem; }
+.map-instruments { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 16px; align-items: center; margin: 12px 0 20px; }
+.map-radar { width: 100%; max-width: 390px; padding-left: 38px; }
+.map-radar svg { max-height: 330px; }
+.map-function-switches { display: grid; gap: 8px; position: relative; z-index: 3; }
+.map-function { display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; padding: 14px 12px; border: 1px solid #badbce26; border-radius: 10px; background: #162c3059; }
+.map-function.selected { background: linear-gradient(115deg, #679a8333, #1a333747); border-color: #a2d8bf70; box-shadow: inset 0 1px 0 #d9f9e41c; }
+.map-function:hover { background: #456f6438; border-color: #b8e7d58c; }
+.map-function-key { font: italic 600 1.5rem/1 var(--serif); color: #bfe5d7; width: 28px; flex-shrink: 0; }
+.map-function strong { display: block; font-size: .9375rem; }
+.map-function small { display: block; margin-top: 4px; font-size: .875rem; color: #a6bfba; }
+.map-function > span:last-child { margin-left: auto; }
+.map-imprint { margin: auto 0 4px 155px; padding: 18px 20px; border: 1px solid #abcfc01a; border-radius: 10px; background: #739c9c1c; position: relative; z-index: 2; }
+.map-imprint h3 { font-family: var(--serif); font-size: 1.0625rem; margin-bottom: 7px; letter-spacing: .08em; }
+.map-imprint p { font-size: .875rem; line-height: 1.85; color: #acc6bd; }
+.map-guide { position: absolute; width: 192px; height: 342px; left: 2px; bottom: 2px; pointer-events: none; z-index: 2; }
+.map-guide img, .map-guide video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
+.map-guide video.guide-still { visibility: hidden; }
+.map-reading { padding: 28px; }
+.map-reading-intro { position: relative; min-height: 144px; padding: 0 148px 8px 0; }
+.map-reading-intro .eyebrow { margin: 0 0 8px; }
+.map-reading-intro h2 { font: 500 1.65rem/1.5 var(--serif); letter-spacing: .06em; }
+.map-reading-intro .lead { font-size: .9375rem; margin: 8px 0 0; }
+.map-function-art { position: absolute; top: -12px; right: -10px; width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 12px #b5edd51a); }
+.map-reading .detail-block { margin: 0 0 22px; }
+.map-reading .detail-block:last-child { margin-bottom: 0; }
+.map-reading .note { margin: 0 0 22px; border-left: 2px solid #86bda6a6; border-radius: 9px; }
+.map-reading p { font-size: .9375rem; line-height: 1.85; }
+@media (min-width: 1500px) { .map-atlas { min-height: 580px; } .map-radar svg { max-height: 350px; } .map-guide { width: 210px; height: 374px; } .map-imprint { margin-left: 180px; } }
+@media (max-width: 1100px) { .cognitive-map { grid-template-columns: 1fr; } .map-atlas { min-height: 520px; } .map-instruments { grid-template-columns: minmax(0, 1fr) minmax(180px, .65fr); } .map-radar { padding-left: 30px; } .map-reading-intro { min-height: 135px; } }
+@media (max-width: 600px) {
+  .cognitive-map { gap: 16px; }
+  .cognitive-map .panel { padding: 18px; border-radius: 16px; }
+  .map-atlas { min-height: 0; }
+  .map-atlas-heading h2 { font-size: .9375rem; }
+  .map-instruments { grid-template-columns: 1fr; gap: 8px; margin: 18px 0 24px; }
+  .map-radar { padding-left: 0; max-width: 340px; }
+  .map-function-switches { grid-template-columns: 1fr 1fr; }
+  .map-function { padding: 12px 8px; gap: 8px; }
+  .map-function-key { width: 24px; font-size: 1.25rem; }
+  .map-function strong, .map-function small { font-size: .875rem; }
+  .map-imprint { margin: 0 0 4px 110px; padding: 14px; min-height: 220px; }
+  .map-guide { width: 155px; height: 276px; left: -10px; bottom: 2px; }
+  .map-reading-intro { padding-right: 114px; min-height: 125px; }
+  .map-function-art { width: 120px; height: 120px; right: -5px; top: -3px; }
+  .map-reading-intro h2 { font-size: 1.45rem; }
+}

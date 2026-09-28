@@ -40,6 +40,10 @@ test("renders the cosmic four-module experience", async () => {
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /黑白原型|交互原型/);
   assert.match(html, /非实测分数/);
+  assert.match(html, /class="cognitive-map"/);
+  assert.match(html, /人格印迹/);
+  assert.match(html, /\/cognition\/ni.png/);
+  assert.match(html, /\/cognition\/guide-alpha.webm/);
   assert.doesNotMatch(html, /未接入模型|class="section-number"|class="portrait-index"|class="deck-question-number"/);
   assert.match(html, /class="option-wheel/);
   for (const label of ["运行地图", "星光会客厅", "迷茫之境", "自由之海"]) assert.ok(html.includes(label));
