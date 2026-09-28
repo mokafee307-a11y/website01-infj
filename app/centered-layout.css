@@ -37,6 +37,7 @@
 .deck-back-content > h2 { text-align: center; }
 .report-block-title { justify-content: center; text-align: center; }
 .report-block-title small { margin-left: 0; }
+.report-block > p { text-align: center; }
 @media (max-width: 1100px) {
   .side-tabs { width: 140px; right: 16px; }
   .side-tabs a[aria-current=location] { font-size: 1.125rem; }
