@@ -35,7 +35,11 @@
 .thinker-motion { height: 411px; }
 .thinker-motion .border-glow-inner { height: 100%; }
 .thinker-motion .portrait-placeholder { position: absolute; inset: 0; aspect-ratio: auto; border: 0; }
-.thinker-motion .thinker-portrait { opacity: 1; object-position: center 20%; filter: contrast(.95); }
+.thinker-motion .thinker-portrait { opacity: 1; object-position: center 20%; filter: grayscale(1) contrast(.95); }
+.thinker-motion .thinker-card.selected .thinker-portrait { filter: contrast(.95); }
+.app-shell .thinker-motion .thinker-card.selected { border-width: 2px; border-color: #bde4cd; box-shadow: 0 0 0 2px #bde4cd66, 0 0 28px #a0d6b322; }
+.guest-list .avatar-placeholder { width: 30px; height: 36px; display: block; }
+.guest-list .avatar-placeholder img { filter: none; }
 .salon-room .avatar-placeholder img { filter: none; }
 .thinker-motion .portrait-placeholder::after {
   background:
@@ -45,7 +49,7 @@
 }
 .thinker-motion .thinker-info { position: absolute; z-index: 1; inset: auto 0 0; padding: 22px 16px; text-align: left; pointer-events: none; }
 .thinker-motion .thinker-info > .hint { display: inline-block; padding: 2px 5px; border-radius: 3px; background: #e0e8e4d9; color: #293b41; font-family: var(--serif); font-size: .75rem; font-weight: 600; line-height: 1.4; letter-spacing: .06em; }
-.thinker-motion .thinker-info h2 { margin: 14px 0 8px; color: #f2f7f4; font-size: 1.375rem; font-weight: 600; line-height: 1.4; letter-spacing: .015em; text-wrap: balance; text-shadow: 0 2px 12px #07131866; }
+.thinker-motion .thinker-info h2 { margin: 14px 0 8px; color: #f2f7f4; font-size: 35px; font-weight: 600; line-height: 1.4; letter-spacing: .015em; text-wrap: balance; overflow-wrap: anywhere; text-shadow: 0 2px 12px #07131866; }
 .thinker-motion .thinker-info p { margin: 0; color: #b7cec2; font-family: var(--serif); font-size: .875rem; font-weight: 600; line-height: 1.65; }
 .thinker-motion .portrait-hover-caption { top: 44px; bottom: auto; font-size: .75rem; padding: 8px 4px; }
 @media (max-width: 700px) { .thinker-motion { height: 381px; } }

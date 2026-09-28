@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import WarpText from "./WarpText";
-import { ENTRY_START_RATE, getEntryTiming } from "./launch-timing";
+import { getEntryTiming } from "./launch-timing";
 import { publicAsset } from "./public-asset";
 
 const LaunchEnteredContext = createContext(false);
@@ -50,7 +50,7 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
     const player = entryVideo.current;
     if (!player || player.error) { setPhase("entered"); return; }
     player.currentTime = 0;
-    player.playbackRate = ENTRY_START_RATE;
+    player.playbackRate = getEntryTiming(0, player.duration).playbackRate;
     // Start inside the click gesture, including on mobile browsers.
     void player.play().catch(() => setPhase("entered"));
   }
@@ -81,6 +81,7 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
       // Use media time so buffering and tab suspension cannot finish the fade early.
       if (screen.current && Number.isFinite(player.duration) && player.duration > 0) {
         const timing = getEntryTiming(player.currentTime, player.duration);
+        if (player.playbackRate !== timing.playbackRate) player.playbackRate = timing.playbackRate;
         screen.current.style.opacity = String(timing.opacity);
       }
       if (player.ended || performance.now() - lastProgress > 15000) {
@@ -109,6 +110,7 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
       </div>
       <div className={`launch-entry-media${entryPlaying ? " is-playing" : ""}`} aria-hidden="true">
         <video ref={entryVideo} src={reducedMotion ? undefined : publicAsset("/media/cosmic-entry-sep29.mp4")} muted playsInline preload="auto" disablePictureInPicture tabIndex={-1}
+          onLoadedMetadata={event => { const player = event.currentTarget; player.playbackRate = getEntryTiming(0, player.duration).playbackRate; }}
           onPlaying={() => setEntryPlaying(true)} onEnded={() => setPhase("entered")}
           onError={() => { if (phase === "leaving") setPhase("entered"); }} />
       </div>

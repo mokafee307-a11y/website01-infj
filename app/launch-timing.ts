@@ -1,4 +1,5 @@
 export const ENTRY_START_RATE = 1;
+export const ENTRY_MAX_SECONDS = 3.5;
 export const ENTRY_FADE_SECONDS = 0.5;
 
 export function getEntryTiming(currentTime: number, duration: number) {
@@ -7,10 +8,10 @@ export function getEntryTiming(currentTime: number, duration: number) {
   }
 
   const time = Number.isFinite(currentTime) ? Math.max(0, Math.min(duration, currentTime)) : 0;
-  const playbackRate = ENTRY_START_RATE;
-  // Normal-speed playback: fade only during the final 0.5 seconds of media time.
-  const remainingSeconds = duration - time;
-  const fadeSeconds = Math.min(ENTRY_FADE_SECONDS, duration);
+  const playbackRate = Math.max(ENTRY_START_RATE, duration / ENTRY_MAX_SECONDS);
+  // Keep the full video within 3.5 viewing seconds, including the final fade.
+  const remainingSeconds = (duration - time) / playbackRate;
+  const fadeSeconds = Math.min(ENTRY_FADE_SECONDS, duration / playbackRate);
   const opacity = Math.max(0, Math.min(1, remainingSeconds / fadeSeconds));
   return { playbackRate, remainingSeconds, opacity };
 }

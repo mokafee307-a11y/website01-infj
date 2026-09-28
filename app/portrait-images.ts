@@ -5,6 +5,6 @@ export const colorizedPortraits = new Set([
   "jung", "hesse", "frankl", "dostoevsky", "kierkegaard", "king",
 ]);
 
-export function portraitImage(id: string) {
-  return publicAsset(`/portraits/${id}${colorizedPortraits.has(id) ? "-color" : ""}.webp`);
+export function portraitImage(id: string, color = true) {
+  return publicAsset(`/portraits/${id}${color && colorizedPortraits.has(id) ? "-color" : ""}.webp`);
 }
