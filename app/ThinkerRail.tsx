@@ -11,7 +11,7 @@ function ThinkerCard({ person, selected, toggle }: { person: Thinker; selected: 
   const tilt = useCardTilt(12);
   const portrait = portraitCredits.find(item => item.id === person.id);
   return <div className="thinker-motion" {...tilt}>
-    <BorderGlow>
+    <BorderGlow className={selected ? "is-selected" : ""}>
     <button className={`thinker-card texture ${selected ? "selected" : ""}`} aria-pressed={selected} aria-label={`${selected ? "取消选择" : "选择"}${person.name}`} onClick={toggle}>
       <div className="portrait-placeholder" aria-hidden="true">{portrait ? <img className="thinker-portrait" src={portraitImage(person.id, selected)} alt="" loading="lazy" width={600} height={800} draggable={false} /> : <span className="portrait-monogram">{person.short}</span>}<span className="selection-check">{selected ? "✓" : "+"}</span></div>
       <div className="thinker-info"><span className="hint">{person.field}</span><h2>{person.name}</h2><p>{person.angle}</p></div><span className="card-glare" aria-hidden="true" />
