@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ThinkingOrb } from "thinking-orbs";
-import { examples, sampleReports, defaultQuestion, defaultQuestionTitle, thinkers, getExampleId, hasCrisisLanguage, type ExampleId } from "./prototype-data";
+import { examples, sampleReports, salonQuestion, salonQuestionTitle, thinkers, getExampleId, isSalonQuestion, hasCrisisLanguage, type ExampleId } from "./prototype-data";
 import ThinkerRail from "./ThinkerRail";
 import LatticeLoader from "./LatticeLoader";
 import { portraitImage } from "./portrait-images";
@@ -135,7 +135,7 @@ export function Salon({ saved, onSave }: SaveProps) {
             const q = question.trim();
             const round: SalonRound = {
                 id: crypto.randomUUID(), question: q, people: [...selected],
-                safety: hasCrisisLanguage(q), isDefault: getExampleId(q) === "career",
+                safety: hasCrisisLanguage(q), isDefault: isSalonQuestion(q),
             };
             // Safety support should never wait for the presentation animation.
             if (round.safety) {
@@ -175,13 +175,13 @@ export function Salon({ saved, onSave }: SaveProps) {
                     <div className="user-message"><span className="eyebrow">我的问题</span><p>{round.question}</p></div>
                     {round.safety ? <SafetySupport /> : !round.isDefault ? <div className="note">
                         <h3>问题已保留，这个话题还没有预设回复。</h3><p>可以先尝试下方话题，听听他们各自的理解。</p>
-                        <button onClick={() => setQuestion(defaultQuestion)} disabled={busy}>填入默认问题，体验分别回答</button>
+                        <button onClick={() => setQuestion(salonQuestion)} disabled={busy}>填入默认问题，体验分别回答</button>
                     </div> : thinkers.filter(person => round.people.includes(person.id)).map(person => <article className="persona-response" key={person.id}>
                         <div className="response-header"><PersonAvatar id={person.id} name={person.name}/><div><h3>{person.name}</h3><small>{person.angle} · 思想演绎，非本人原话</small></div></div>
                         <div className="response-body">{person.response.split("\n\n").map((paragraph, i) => <p key={i}>{paragraph}</p>)}</div>
                         <div className="response-actions">
                             <a href={person.source} target="_blank" rel="noreferrer">思想背景资料 ↗</a>
-                            <SavedButton item={{ id: round.id + "-" + person.id, source: "星光会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：" + defaultQuestionTitle + "\n" + person.response }} saved={saved} onSave={onSave}/>
+                            <SavedButton item={{ id: round.id + "-" + person.id, source: "星光会客厅", title: person.name + " · " + person.angle, text: "预设思想演绎，非人物原话\n话题：" + salonQuestionTitle + "\n" + person.response }} saved={saved} onSave={onSave}/>
                         </div>
                     </article>)}
                 </div>)}
@@ -192,7 +192,7 @@ export function Salon({ saved, onSave }: SaveProps) {
                 </div>}
             </div>
             <div className="salon-composer">
-                <div className="composer-caption"><label className="field-label" htmlFor="salon-question">想听他们怎么看？</label><button className="text-button" disabled={busy} onClick={() => setQuestion(defaultQuestion)}>使用默认问题</button></div>
+                <div className="composer-caption"><label className="field-label" htmlFor="salon-question">想听他们怎么看？</label><button className="text-button" disabled={busy} onClick={() => setQuestion(salonQuestion)}>使用默认问题</button></div>
                 <textarea id="salon-question" value={question} disabled={busy} maxLength={2000} onChange={event => setQuestion(event.target.value)} placeholder="写下一个困惑或你想探讨的话题……"/>
                 <div className="form-actions"><span className="hint">{question.length}/2000 · 思想演绎，不替代专业支持</span>
                     <button className="primary" disabled={busy || !question.trim()} onClick={send}>{busy ? "正在准备回复…" : "请 " + people.length + " 位分别回答"}</button>

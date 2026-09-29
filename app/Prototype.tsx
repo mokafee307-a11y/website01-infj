@@ -64,7 +64,7 @@ export default function Prototype() {
     <div className="header-actions"><DailySlice saved={saved}/></div></header>
     <OptionWheel items={tabs} selectedIndex={tabs.findIndex(tab => tab.id === active)} onChange={navigate} />
     <main id="workspace" tabIndex={-1}>{tabs.map(tab => <section key={tab.id} id={tab.id} aria-labelledby={`heading-${tab.id}`} className="module-panel scroll-section">
-      <div className="workspace-heading"><div><SplitText id={`heading-${tab.id}`} text={tab.title}/><p>{tab.description}</p></div></div>
+      <div className="workspace-heading"><div><SplitText id={`heading-${tab.id}`} text={tab.id === "map" ? "INFJ认知运行地图" : tab.title}/><p>{tab.description}</p></div></div>
       {tab.id === "map" ? <CognitiveMap /> : tab.id === "cards" ? <Flashcards saved={saved} onSave={onSave}/> : tab.id === "explore" ? <Exploration saved={saved} onSave={onSave}/> : <Salon saved={saved} onSave={onSave}/>}
     </section>)}
     </main>

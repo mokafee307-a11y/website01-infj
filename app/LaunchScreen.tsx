@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import WarpText from "./WarpText";
 import { getEntryTiming } from "./launch-timing";
 import { publicAsset } from "./public-asset";
+import { prepareFirstModule } from "./launch-navigation";
 
 const LaunchEnteredContext = createContext(false);
 export const useLaunchEntered = () => useContext(LaunchEnteredContext);
@@ -45,6 +46,8 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
 
   function enter() {
     if (phase !== "welcome") return;
+    // Settle the workspace BEFORE the video fades, never after revealing it.
+    prepareFirstModule(window);
     setPhase("leaving");
     if (reducedMotion) return;
     const player = entryVideo.current;
@@ -55,11 +58,16 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
     void player.play().catch(() => setPhase("entered"));
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!locked) return;
     const previous = document.body.style.overflow;
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = previous; };
+    return () => {
+      document.body.style.overflow = previous;
+      window.history.scrollRestoration = previousRestoration;
+    };
   }, [locked]);
 
   useEffect(() => {
@@ -94,12 +102,11 @@ export default function LaunchScreen({ children }: { children: ReactNode }) {
     return () => { cancelAnimationFrame(frame); player.pause(); };
   }, [phase, reducedMotion]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (phase !== "entered") return;
-    const id = window.location.hash.slice(1);
-    const target = ["map", "cards", "explore", "salon"].includes(id) ? document.getElementById(id) : null;
-    if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
-    else window.scrollTo({ top: 0, behavior: "instant" });
+    // Also cover reduced motion, playback failure and browser scroll restoration.
+    // Layout effect runs before the first frame without the launch overlay.
+    prepareFirstModule(window);
     document.getElementById("workspace")?.focus({ preventScroll: true });
   }, [phase]);
 

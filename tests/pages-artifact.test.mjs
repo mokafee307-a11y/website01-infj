@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { createHash } from 'node:crypto';
-import { categories, scenarioCards, defaultQuestion, getExampleId } from '../app/prototype-data.ts';
+import { categories, scenarioCards, defaultQuestion, getExampleId, salonQuestion, salonQuestionTitle, isSalonQuestion, thinkers, hasCrisisLanguage } from '../app/prototype-data.ts';
 
 const root = resolve('dist-pages');
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
@@ -29,6 +29,24 @@ test('short manual demo input matches with either punctuation style', () => {
   assert.equal(getExampleId(` ${defaultQuestion.replaceAll('，', ',').replaceAll('。', '.').replaceAll('？', '?')}\n`), 'career');
   assert.equal(getExampleId('一个不同的新问题'), 'custom');
   assert.equal(getExampleId(''), 'custom');
+});
+
+test('salon philosophy topic is independent of exploration and accepts manual punctuation', () => {
+  assert.equal(salonQuestion, '你们怎么看待，人生无意义但仍要热爱生活这件事？');
+  assert.equal(salonQuestionTitle, '人生无意义，但仍要热爱生活');
+  assert.ok(isSalonQuestion(salonQuestion));
+  assert.ok(isSalonQuestion(' 你们怎么看待人生无意义，但仍要热爱生活这件事?\n'));
+  assert.equal(isSalonQuestion(defaultQuestion), false);
+  assert.equal(isSalonQuestion(''), false);
+  assert.equal(getExampleId(salonQuestion), 'custom');
+  assert.equal(getExampleId(defaultQuestion), 'career');
+  assert.equal(hasCrisisLanguage(salonQuestion), false);
+  assert.equal(hasCrisisLanguage(salonQuestion + '我想伤害自己'), true);
+  assert.equal(new Set(thinkers.map(person => person.response)).size, thinkers.length);
+  for (const person of thinkers) {
+    assert.match(person.response, /意义|热爱|爱生活/);
+    assert.doesNotMatch(person.response, /升职|刷手机|同龄人/);
+  }
 });
 
 test('static entry has metadata and portable, existing entry assets', async () => {
